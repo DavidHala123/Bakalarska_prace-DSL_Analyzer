@@ -18,6 +18,7 @@ namespace ssh_test1
         string selectedPort;
         public static List<bool> graphSelector;
         SendData sendit = new SendData();
+        ConsoleLogic consoleLog;
         public Window1()
         {
             try 
@@ -25,8 +26,8 @@ namespace ssh_test1
                 graphSelector = new List<bool>() { true, true, true, true, true, true, true };
                 async Task Initialize() 
                 {
-                    List<PortData> listofobj = await Task.Run(() => sendit.FillComboBox(sendit.sendCommandGetResponse
-                       ("show xdsl operational-data line") ?? throw new ArgumentNullException()));
+                    List<PortData> listofobj = await Task.Run(() => new PortBoxLogic(sendit.sendCommandGetResponse
+                       ("show xdsl operational-data line") ?? throw new ArgumentNullException()).getPortDataCombo());
                     foreach (PortData obj in listofobj)
                     {
                         PortBox.Items.Add(obj);
@@ -78,18 +79,21 @@ namespace ssh_test1
                     {
                         if (graphSelector[i] == true)
                         {
+                            GraphLogic graphLog  = await Task.Run(() => new GraphLogic(sendit.indexes[i],
+                                                    sendit.indexes[i + 1], sendCommandOutput));
+
                             Chart chart = new Chart();
                             LineGraph graph = new LineGraph();
-                            var y = (await Task.Run(() => sendit.getGraph(sendit.SelectData(sendit.indexes[i],
-                                                    sendit.indexes[i + 1], sendCommandOutput))));
+                            var y = graphLog.getGraphDecValues();
                             var x = Enumerable.Range(0, y.Count()).Select(i => i).ToArray();
                             graph.Plot(x, y);
                             graph.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString("#76EB7E");
                             graph.StrokeThickness = 2;
+                            graph.Description = graphLog.getName();
                             chart.Content = graph;
                             GraphField.Items.Add(new TabItem
                             {
-                                Header = selectedPort,
+                                Header = graphLog.getName().Replace("-up", "").Replace("-down", "") + " [" + selectedPort + "]",
                                 Content = chart
                             });
                         }
@@ -118,13 +122,13 @@ namespace ssh_test1
                 advinfo.Items.Clear();
                 try 
                 {
-                    List<PortData> infoListData = await Task.Run(() => sendit.FillInfoTable(selectedPort,
+                    List<PortData> infoListData = await Task.Run(() => new InfoTableLogic(selectedPort,
                     sendit.sendCommandGetResponse("show xdsl operational-data far-end line " + selectedPort + " detail")
                     ?? throw new ArgumentNullException(),
                         sendit.sendCommandGetResponse("show xdsl operational-data near-end line " + selectedPort + " detail")
                         ?? throw new ArgumentNullException(),
                         sendit.sendCommandGetResponse("show xdsl operational-data line " + selectedPort + " detail")
-                        ?? throw new ArgumentNullException()));
+                        ?? throw new ArgumentNullException()).getPortData());
                     foreach (PortData data in infoListData)
                     {
                         if (data.portInfo != null)
@@ -148,12 +152,12 @@ namespace ssh_test1
         private async Task con()
         {
             string outputbefore = "";
-            string output = "";
+            //string output = "";
             while (true)
             {
-                output = sendit.setConsoleText();
+                consoleLog = new ConsoleLogic(sendit.progressionInfo, sendit.lengthNow);
 
-                if (output != "") 
+                if (consoleLog.ConsoleText != "") 
                 {
                     gif.Visibility = Visibility.Visible;
                     XDSLStandart.Margin = new Thickness(77, 0, 0, 0);
@@ -170,10 +174,10 @@ namespace ssh_test1
                     send.Content = "Analyze";
                 }
 
-                if (output != outputbefore)
+                if (consoleLog.ConsoleText != outputbefore)
                 {
-                    await setAppCons(output);
-                    outputbefore = output;
+                    await setAppCons(consoleLog.ConsoleText);
+                    outputbefore = consoleLog.ConsoleText;
                 }
                 else
                     await Task.Delay(200);
