@@ -72,6 +72,8 @@ namespace ssh_test1
                 string sendCommandOutput = await Task.Run(() =>
                                         sendit.sendCommandGetResponse("show xdsl carrier-data far-end " + selectedPort + " detail")
                                         ?? throw new ArgumentNullException());
+                string sendCommandOutput2 = await Task.Run(() => sendit.sendCommandGetResponse("show xdsl carrier-data near-end " + selectedPort + " detail") 
+                                        ?? throw new ArgumentException());
 
                 for (int i = 0; i <= 6; i++)
                 {
@@ -79,29 +81,46 @@ namespace ssh_test1
                     {
                         if (graphSelector[i] == true)
                         {
-                            GraphLogic graphLog  = await Task.Run(() => new GraphLogic(sendit.indexes[i],
-                                                    sendit.indexes[i + 1], sendCommandOutput));
-
+                            GraphLogic dataFarEnd  = await Task.Run(() => new GraphLogic(sendCommandOutput, i));
+                            GraphLogic dataNearEnd = await Task.Run(() => new GraphLogic(sendCommandOutput2, i));
+                            var yFar = dataFarEnd.getGraphDecValues();
+                            var xFar = Enumerable.Range(0, yFar.Count()).Select(i => i).ToArray();
+                            var yNear = dataNearEnd.getGraphDecValues();
+                            var xNear = Enumerable.Range(xFar.Count(), yNear.Count()).Select(i => i).ToArray();
                             Chart chart = new Chart();
-                            LineGraph graph = new LineGraph();
-                            var y = graphLog.getGraphDecValues();
-                            var x = Enumerable.Range(0, y.Count()).Select(i => i).ToArray();
-                            graph.Plot(x, y);
-                            graph.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString("#76EB7E");
-                            graph.StrokeThickness = 2;
-                            graph.Description = graphLog.getName();
-                            chart.Content = graph;
-                            GraphField.Items.Add(new TabItem
+                            Grid graphGrid = new Grid();
+                            LineGraph graphFar = new LineGraph() 
                             {
-                                Header = graphLog.getName().Replace("-up", "").Replace("-down", "") + " [" + selectedPort + "]",
-                                Content = chart
-                            });
+                                Stroke = new SolidColorBrush(Colors.Blue),
+                                Description = dataFarEnd.getName(),
+                                StrokeThickness = 2,
+                            };
+                            LineGraph graphNear = new LineGraph() 
+                            {
+                                Stroke = new SolidColorBrush(Colors.Red),
+                                Description = dataNearEnd.getName(),
+                                StrokeThickness = 2,
+                            };
+                            graphFar.Plot(xFar, yFar);
+                            graphNear.Plot(xNear, yNear);
+                            graphGrid.Children.Add(graphFar);
+                            graphGrid.Children.Add(graphNear);
+                            chart.Content = graphGrid;
+                            try
+                            {
+                                GraphField.Items.Add(new TabItem
+                                {
+                                    Header = dataFarEnd.getName().Replace("-up", "").Replace("-down", "") + " [" + selectedPort + "]",
+                                    Content = chart
+                                });
+                            }
+                            catch { continue; }
                         }
 
                     }
                 }
             }
-            catch { }
+            catch(Exception ex) { MessageBox.Show(ex.ToString()); }
             send.IsEnabled = true;
             PortBox.IsEnabled = true;
             send.Content = "Analyze";

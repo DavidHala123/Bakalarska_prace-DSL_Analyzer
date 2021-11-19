@@ -10,15 +10,16 @@ namespace ssh_test1
     internal class GraphLogic
     {
         private List<int> decValues = new List<int>();
-        private int startIndex;
-        private int stopIndex;
         private string outputOfDSLAM;
         private string name;
-        public GraphLogic(int startIndex, int stopIndex, string outputOfDSLAM) 
+        private List<int> indexes = new List<int>();
+        private List<int> groupIndexes = new List<int>();
+        private int listindex;
+        public GraphLogic(string outputOfDSLAM, int listindex) 
         {
-            this.startIndex = startIndex;
-            this.stopIndex = stopIndex;
+
             this.outputOfDSLAM = outputOfDSLAM;
+            this.listindex = listindex;
             SelectData();
         }
         public string getName() 
@@ -28,9 +29,16 @@ namespace ssh_test1
 
         private void SelectData()
         {
+            int index = 0;
             String[] outputSplit = outputOfDSLAM.Split('\n');
+            foreach(string line in outputSplit) 
+            {
+                getIndexes(line, index);
+                index++;
+            }
+            indexes.Add(groupIndexes[0]);
             string output = "";
-            for (int i = startIndex; i < stopIndex; i++)
+            for (int i = indexes[listindex]; i < indexes[listindex+1]; i++)
             {
                 output += outputSplit[i] + '\n';
             }
@@ -59,6 +67,24 @@ namespace ssh_test1
             }
             decValues = listOfDecValues;
         }
-       
+
+        private void getIndexes(string line, int index)
+        {
+            switch (line)
+            {
+                case string lineNow when line.Contains("grp") || line.Contains("grop") || line.Contains("vect-qln")
+                || line.Contains("rmc-carr") | line.Contains("gf"):
+                    groupIndexes.Add(index);
+                    break;
+                case string lineNow when line.Contains("load-distribution") || line.Contains("gain-allocation")
+                || line.Contains("snr") || line.Contains("qln") || line.Contains("char-func-complex")
+                || line.Contains("char-func-real") || line.Contains("tx-psd"):
+                    indexes.Add(index);
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 }

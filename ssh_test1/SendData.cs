@@ -14,7 +14,6 @@ namespace ssh_test1
         public bool graphRequired = false;
         public int progressionInfo = 0;
         public int lengthNow = 0;
-        public List<int> indexes = new List<int>();
 
         public SendData()
         {
@@ -51,19 +50,11 @@ namespace ssh_test1
                                 if (line != null)
                                 {
                                     output = output + line + '\n';
-                                    if (graphRequired == true)
-                                    {
-                                        getIndexes(line, index);
-                                    }
                                     Thread.Sleep(10);
                                 }
                                 lengthNow = output.Length;
                                 if (lengthNow == lengthBefore && line == null)
                                 {
-                                    if (graphRequired == true) 
-                                    {
-                                        indexes.Add(index);
-                                    }
                                     break;
                                 }
                                 lengthBefore = lengthNow;
@@ -88,36 +79,6 @@ namespace ssh_test1
                 MessageBox.Show("An Error has occured, please check your connection");
                 progressionInfo = 0;
                 return null;
-            }
-        }
-
-        private void getIndexes(string line, int index)
-        {
-            switch (line)
-            {
-                case string lineNow when line.Contains("load-distribution"):
-                    indexes.Add(index);
-                    break;
-                case string lineNow when line.Contains("gain-allocation"):
-                    indexes.Add(index);
-                    break;
-                case string lineNow when line.Contains("snr"):
-                    indexes.Add(index);
-                    break;
-                case string lineNow when line.Contains("qln"):
-                    indexes.Add(index);
-                    break;
-                case string lineNow when line.Contains("char-func-complex"):
-                    indexes.Add(index);
-                    break;
-                case string lineNow when line.Contains("char-func-real"):
-                    indexes.Add(index);
-                    break;
-                case string lineNow when line.Contains("tx-psd"):
-                    indexes.Add(index);
-                    break;
-                default:
-                    break;
             }
         }
     }
