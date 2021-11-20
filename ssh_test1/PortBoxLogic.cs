@@ -23,7 +23,7 @@ namespace ssh_test1
         }
         private void setPortDataCombo() 
         {
-            //send.progressionInfo = 3;
+            ConsoleLogic.ConsoleText = "3";
             List<PortData> output = new List<PortData>();
             using var sr = new StringReader(commandOutput);
             {
@@ -46,7 +46,7 @@ namespace ssh_test1
                         continue;
                     }
                 }
-                //send.progressionInfo = 0;
+                ConsoleLogic.ConsoleText = "0";
                 portDatasCombo = output;
             }
         }

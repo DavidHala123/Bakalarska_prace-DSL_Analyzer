@@ -157,15 +157,15 @@ namespace ssh_test1
         }
         private async Task setAppCons(string input) 
         {
-            AppConsole.Text = input;
+            AppConsole.Text = ConsoleLogic.ConsoleText;
         }
-        private async Task con()
+        public async Task con()
         {
             string outputbefore = "";
             while (true)
             {
-                consoleLog = new ConsoleLogic(1, sendit.lengthNow);
-                if (consoleLog.ConsoleText != "") 
+
+                if (ConsoleLogic.ConsoleText != "")
                 {
                     gif.Visibility = Visibility.Visible;
                     XDSLStandart.Margin = new Thickness(77, 0, 0, 0);
@@ -173,7 +173,7 @@ namespace ssh_test1
                     PortBox.IsEnabled = false;
                     send.Content = "Processing";
                 }
-                else 
+                else
                 {
                     gif.Visibility = Visibility.Collapsed;
                     XDSLStandart.Margin = new Thickness(15, 0, 0, 0);
@@ -182,16 +182,16 @@ namespace ssh_test1
                     send.Content = "Analyze";
                 }
 
-                if (consoleLog.ConsoleText != outputbefore)
+                if (ConsoleLogic.ConsoleText != outputbefore)
                 {
-                    await setAppCons(consoleLog.ConsoleText);
-                    outputbefore = consoleLog.ConsoleText;
+                    await setAppCons(ConsoleLogic.ConsoleText);
+                    outputbefore = ConsoleLogic.ConsoleText;
                 }
                 else
                     await Task.Delay(200);
             }
         }
-        
+
         protected override void OnClosed(EventArgs e) 
         {
             base.OnClosed(e);

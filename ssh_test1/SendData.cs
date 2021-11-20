@@ -12,7 +12,6 @@ namespace ssh_test1
     class SendData
     {
         public bool graphRequired = false;
-        //public int progressionInfo = 0;
         public int lengthNow = 0;
 
         public SendData()
@@ -23,7 +22,7 @@ namespace ssh_test1
         {
             try
             {
-                //progressionInfo = 1;
+                ConsoleLogic.ConsoleText = "1";
                 using (var vclient = new SshClient(ConData.ipv4, ConData.name, ConData.password))
                 {
                     string output = "";
@@ -43,7 +42,7 @@ namespace ssh_test1
                             {
                                 Thread.Sleep(500);
                             }
-                            //progressionInfo = 2;
+                            ConsoleLogic.ConsoleText = "2";
                             while (true)
                             {
                                 string line = reader.ReadLine();
@@ -64,20 +63,20 @@ namespace ssh_test1
                         catch (Exception ex)
                         {
                             MessageBox.Show("exception: " + ex.ToString());
-                            //progressionInfo = 0;
+                            ConsoleLogic.ConsoleText = "0";
                             return null;
                         }
                         shell.Close();
                     }
                     vclient.Disconnect();
-                    //progressionInfo = 0;
+                    ConsoleLogic.ConsoleText = "0";
                     return output;
                 }
             }
             catch
             {
                 MessageBox.Show("An Error has occured, please check your connection");
-                //progressionInfo = 0;
+                ConsoleLogic.ConsoleText = "0";
                 return null;
             }
         }

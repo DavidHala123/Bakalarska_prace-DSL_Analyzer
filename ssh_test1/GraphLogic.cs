@@ -25,7 +25,9 @@ namespace ssh_test1
 
         public List<List<int>> getGraphDecValues(string outputOfDSLAM, List<bool> graphselector) 
         {
+            ConsoleLogic.ConsoleText = "3";
             FillInedex(outputOfDSLAM, graphselector);
+            ConsoleLogic.ConsoleText = "0";
             return decValues;
         }
         private void setGraphDecValues(string input)

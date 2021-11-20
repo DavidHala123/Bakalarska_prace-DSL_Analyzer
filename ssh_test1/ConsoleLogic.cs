@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace ssh_test1
 {
     internal class ConsoleLogic
     {
-        private string consoleText;
+        private static string consoleText = "0";
         private string progressionInfo;
         private int length;
         public ConsoleLogic(int progressionInfo, int length)
@@ -19,7 +20,7 @@ namespace ssh_test1
             ConsoleText = this.progressionInfo;
         }
 
-        public string ConsoleText
+        public static string ConsoleText
         {
             get
             {
@@ -37,7 +38,7 @@ namespace ssh_test1
                         output = "Sending request to DSLAM";
                         break;
                     case "2":
-                        output = "Reading response (" + length.ToString() + " symbols)";
+                        output = "Reading response";
                         break;
                     case "3":
                         output = "Processing data";
