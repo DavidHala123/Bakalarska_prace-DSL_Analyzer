@@ -9,50 +9,28 @@ namespace ssh_test1
 {
     internal class GraphLogic
     {
-        private List<int> decValues = new List<int>();
-        private string outputOfDSLAM;
-        private string name;
-        private List<int> indexes = new List<int>();
-        private List<int> groupIndexes = new List<int>();
-        private int listindex;
-        int ind = 0;
-        public GraphLogic(string outputOfDSLAM) 
+        private List<List<int>> decValues = new List<List<int>>();
+        List<int> indexes = new List<int>();
+        List<int> groupIndexes = new List<int>();
+        private List<string> name = new List<string>();
+        public GraphLogic(string outputOfDSLAM, List<bool> graphselector) 
         {
-
-            this.outputOfDSLAM = outputOfDSLAM;
-            setGraphDecValues(this.outputOfDSLAM);
+            FillInedex(outputOfDSLAM, graphselector);
         }
-        public string getName() 
+        public List<string> getName() 
         {
             return name;
         }
 
-        private void SelectData()
-        {
-            int index = 0;
-            String[] outputSplit = outputOfDSLAM.Split('\n');
-            foreach(string line in outputSplit) 
-            {
-                //getIndexes(line, index);
-                index++;
-            }
-            indexes.Add(groupIndexes[0]);
-            string output = "";
-            for (int i = indexes[listindex]; i < indexes[listindex+1]; i++)
-            {
-                output += outputSplit[i] + '\n';
-            }
-            setGraphDecValues(output);
-        }
-        public List<int> getGraphDecValues() 
+        public List<List<int>> getGraphDecValues() 
         {
             return decValues;
         }
-        private async Task setGraphDecValues(string input)
+        private void setGraphDecValues(string input)
         {
             List<int> listOfDecValues = new List<int>();
             string[] outputSplit = input.Split(':');
-            name = outputSplit[0].Trim();
+            name.Add(outputSplit[0].Trim());
             for (int i = 6; i <= outputSplit.Count(); i++)
             {
                 try
@@ -69,26 +47,23 @@ namespace ssh_test1
                     continue;
                 }
             }
-            decValues = listOfDecValues;
+            decValues.Add(listOfDecValues);
         }
 
-        //private void getIndexes(string line, int index)
-        //{
-        //    switch (line)
-        //    {
-        //        case string lineNow when line.Contains("grp") || line.Contains("grop") || line.Contains("vect-qln")
-        //        || line.Contains("rmc-carr") | line.Contains("gf"):
-        //            groupIndexes.Add(index);
-        //            break;
-        //        case string lineNow when line.Contains("load-distribution") || line.Contains("gain-allocation")
-        //        || line.Contains("snr") || line.Contains("qln") || line.Contains("char-func-complex")
-        //        || line.Contains("char-func-real") || line.Contains("tx-psd"):
-        //            indexes.Add(index);
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
-
+        private void FillInedex(string outputOfDSLAM, List<bool> graphSelector)
+        {
+            string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd", "tx-psd-carr-grop" };
+            List<string> substrings = new List<string>();
+            for (int i = 0; i < graphSelector.Count; i++) 
+            {
+                if(graphSelector[i] == true) 
+                {
+                    string substring = outputOfDSLAM.Substring(outputOfDSLAM.IndexOf(substringIndexes[i]),
+                            outputOfDSLAM.IndexOf(substringIndexes[i+1]) - outputOfDSLAM.IndexOf(substringIndexes[i]));
+                    setGraphDecValues(substring);
+                }
+            }
+        }
     }
 }
+
