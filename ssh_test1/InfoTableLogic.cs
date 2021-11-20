@@ -28,7 +28,7 @@ namespace ssh_test1
         }
         private void setPortData()
         {
-            send.progressionInfo = 3;
+            //send.progressionInfo = 3;
             string infoListData = commandOutput1 + commandOutput2 + commandOutput3;
             string[] output = infoListData.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
             List<PortData> outputList = new List<PortData>();
@@ -88,7 +88,7 @@ namespace ssh_test1
             }
             outputList.Add(new PortData { portInfo = noiseMarginInfo });
             outputList.Add(new PortData { portInfo = "output-power down/up: " + outputPowerInfoDown + "/" + outputPowerInfoUp });
-            send.progressionInfo = 0;
+            //send.progressionInfo = 0;
             portDatas = outputList;
         }
     }

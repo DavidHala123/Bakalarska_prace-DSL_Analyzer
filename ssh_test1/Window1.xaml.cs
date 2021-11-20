@@ -39,7 +39,6 @@ namespace ssh_test1
                     }
                     else
                         XDSLStandart.Text = "Gfast";
-
                 }
                 InitializeComponent();
                 con();
@@ -67,46 +66,49 @@ namespace ssh_test1
         {
             try
             {
-                GraphLogic dataFarEnd = await Task.Run(() => new GraphLogic(sendit.sendCommandGetResponse("show xdsl carrier-data far-end " + selectedPort + " detail")
-                                        ?? throw new ArgumentNullException(), graphSelector));
-                GraphLogic dataNearEnd = await Task.Run(() => new GraphLogic(sendit.sendCommandGetResponse("show xdsl carrier-data near-end " + selectedPort + " detail")
+                GraphLogic dataFarEnd = new GraphLogic();
+                GraphLogic dataNearEnd = new GraphLogic();
+                List<List<int>> dataFarEndList = await Task.Run(() => dataFarEnd.getGraphDecValues(sendit.sendCommandGetResponse("show xdsl carrier-data far-end " + selectedPort + " detail")
                         ?? throw new ArgumentNullException(), graphSelector));
+                List<List<int>> dataNearEndList = await Task.Run(() => dataNearEnd.getGraphDecValues(sendit.sendCommandGetResponse("show xdsl carrier-data near-end " + selectedPort + " detail")
+                        ?? throw new ArgumentNullException(), graphSelector));
+                List<string> namesFarEnd = dataFarEnd.getName();
+                List<string> namesNearEnd = dataNearEnd.getName();
                 GraphField.Items.Clear();
                 for (int i = 0; i <= 6; i++)
                 {
-                        Grid graphGrid = new Grid();
-                        var yFar = dataFarEnd.getGraphDecValues()[i];
-                        var xFar = Enumerable.Range(0, yFar.Count()).Select(i => i).ToArray();
-                        var yNear = dataNearEnd.getGraphDecValues()[i];
-                        var xNear = Enumerable.Range(xFar.Count(), yNear.Count()).Select(i => i).ToArray();
-                        Chart chart = new Chart();
-                        LineGraph graphFar = new LineGraph()
+                    Grid graphGrid = new Grid();
+                    var yFar = dataFarEndList[i];
+                    var xFar = Enumerable.Range(0, yFar.Count()).Select(i => i).ToArray();
+                    var yNear = dataNearEndList[i];
+                    var xNear = Enumerable.Range(xFar.Count(), yNear.Count()).Select(i => i).ToArray();
+                    Chart chart = new Chart();
+                    LineGraph graphFar = new LineGraph()
+                    {
+                        Stroke = new SolidColorBrush(Colors.Blue),
+                        Description = namesFarEnd[i],
+                        StrokeThickness = 1,
+                    };
+                    LineGraph graphNear = new LineGraph()
+                    {
+                        Stroke = new SolidColorBrush(Colors.Red),
+                        Description = namesNearEnd[i],
+                        StrokeThickness = 1,
+                    };
+                    graphFar.Plot(xFar, yFar);
+                    graphNear.Plot(xNear, yNear);
+                    graphGrid.Children.Add(graphFar);
+                    graphGrid.Children.Add(graphNear);
+                    chart.Content = graphGrid;
+                    try
+                    {
+                        GraphField.Items.Add(new TabItem
                         {
-                            Stroke = new SolidColorBrush(Colors.Blue),
-                            Description = dataFarEnd.getName()[i],
-                            StrokeThickness = 1,
-                        };
-                        LineGraph graphNear = new LineGraph()
-                        {
-                            Stroke = new SolidColorBrush(Colors.Red),
-                            Description = dataNearEnd.getName()[i],
-                            StrokeThickness = 1,
-                        };
-                        graphFar.Plot(xFar, yFar);
-                        graphNear.Plot(xNear, yNear);
-                        graphGrid.Children.Add(graphFar);
-                        graphGrid.Children.Add(graphNear);
-                        chart.Content = graphGrid;
-                        try
-                        {
-                            GraphField.Items.Add(new TabItem
-                            {
-                                Header = dataFarEnd.getName()[i].Replace("-up", "").Replace("-down", "") + " [" + selectedPort + "]",
-                                Content = chart
-                            });
-                        }
-                        catch { continue; }
-                    //}
+                            Header = namesFarEnd[i].Replace("-up", "").Replace("-down", "") + " [" + selectedPort + "]",
+                            Content = chart
+                        });
+                    }
+                    catch { continue; }
                 }
             }
             catch(Exception ex) { MessageBox.Show(ex.ToString()); }
@@ -162,8 +164,7 @@ namespace ssh_test1
             string outputbefore = "";
             while (true)
             {
-                consoleLog = new ConsoleLogic(sendit.progressionInfo, sendit.lengthNow);
-
+                consoleLog = new ConsoleLogic(1, sendit.lengthNow);
                 if (consoleLog.ConsoleText != "") 
                 {
                     gif.Visibility = Visibility.Visible;

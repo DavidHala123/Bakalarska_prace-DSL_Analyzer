@@ -13,17 +13,19 @@ namespace ssh_test1
         List<int> indexes = new List<int>();
         List<int> groupIndexes = new List<int>();
         private List<string> name = new List<string>();
-        public GraphLogic(string outputOfDSLAM, List<bool> graphselector) 
+
+        public GraphLogic() 
         {
-            FillInedex(outputOfDSLAM, graphselector);
+
         }
         public List<string> getName() 
         {
             return name;
         }
 
-        public List<List<int>> getGraphDecValues() 
+        public List<List<int>> getGraphDecValues(string outputOfDSLAM, List<bool> graphselector) 
         {
+            FillInedex(outputOfDSLAM, graphselector);
             return decValues;
         }
         private void setGraphDecValues(string input)
@@ -39,7 +41,6 @@ namespace ssh_test1
                     {
                         int testValue = Int32.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
                         listOfDecValues.Add(testValue);
-
                     }
                 }
                 catch
@@ -50,13 +51,13 @@ namespace ssh_test1
             decValues.Add(listOfDecValues);
         }
 
-        private void FillInedex(string outputOfDSLAM, List<bool> graphSelector)
+        public void FillInedex(string outputOfDSLAM, List<bool> graphselector)
         {
             string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd", "tx-psd-carr-grop" };
             List<string> substrings = new List<string>();
-            for (int i = 0; i < graphSelector.Count; i++) 
+            for (int i = 0; i < graphselector.Count; i++) 
             {
-                if(graphSelector[i] == true) 
+                if(graphselector[i] == true) 
                 {
                     string substring = outputOfDSLAM.Substring(outputOfDSLAM.IndexOf(substringIndexes[i]),
                             outputOfDSLAM.IndexOf(substringIndexes[i+1]) - outputOfDSLAM.IndexOf(substringIndexes[i]));
