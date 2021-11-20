@@ -15,12 +15,12 @@ namespace ssh_test1
         private List<int> indexes = new List<int>();
         private List<int> groupIndexes = new List<int>();
         private int listindex;
-        public GraphLogic(string outputOfDSLAM, int listindex) 
+        int ind = 0;
+        public GraphLogic(string outputOfDSLAM) 
         {
 
             this.outputOfDSLAM = outputOfDSLAM;
-            this.listindex = listindex;
-            SelectData();
+            setGraphDecValues(this.outputOfDSLAM);
         }
         public string getName() 
         {
@@ -33,7 +33,7 @@ namespace ssh_test1
             String[] outputSplit = outputOfDSLAM.Split('\n');
             foreach(string line in outputSplit) 
             {
-                getIndexes(line, index);
+                //getIndexes(line, index);
                 index++;
             }
             indexes.Add(groupIndexes[0]);
@@ -48,43 +48,47 @@ namespace ssh_test1
         {
             return decValues;
         }
-        private void setGraphDecValues(string input)
+        private async Task setGraphDecValues(string input)
         {
             List<int> listOfDecValues = new List<int>();
-            string[] outputSPlit = input.Split(':');
-            foreach (string j in outputSPlit)
+            string[] outputSplit = input.Split(':');
+            name = outputSplit[0].Trim();
+            for (int i = 6; i <= outputSplit.Count(); i++)
             {
                 try
                 {
-                    listOfDecValues.Add(Int32.Parse(j, System.Globalization.NumberStyles.HexNumber));
+                    foreach (char c in outputSplit[i])
+                    {
+                        int testValue = Int32.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
+                        listOfDecValues.Add(testValue);
+
+                    }
                 }
                 catch
                 {
-                    if(!String.IsNullOrEmpty(j.Trim()))
-                        name = j.Trim();
                     continue;
                 }
             }
             decValues = listOfDecValues;
         }
 
-        private void getIndexes(string line, int index)
-        {
-            switch (line)
-            {
-                case string lineNow when line.Contains("grp") || line.Contains("grop") || line.Contains("vect-qln")
-                || line.Contains("rmc-carr") | line.Contains("gf"):
-                    groupIndexes.Add(index);
-                    break;
-                case string lineNow when line.Contains("load-distribution") || line.Contains("gain-allocation")
-                || line.Contains("snr") || line.Contains("qln") || line.Contains("char-func-complex")
-                || line.Contains("char-func-real") || line.Contains("tx-psd"):
-                    indexes.Add(index);
-                    break;
-                default:
-                    break;
-            }
-        }
+        //private void getIndexes(string line, int index)
+        //{
+        //    switch (line)
+        //    {
+        //        case string lineNow when line.Contains("grp") || line.Contains("grop") || line.Contains("vect-qln")
+        //        || line.Contains("rmc-carr") | line.Contains("gf"):
+        //            groupIndexes.Add(index);
+        //            break;
+        //        case string lineNow when line.Contains("load-distribution") || line.Contains("gain-allocation")
+        //        || line.Contains("snr") || line.Contains("qln") || line.Contains("char-func-complex")
+        //        || line.Contains("char-func-real") || line.Contains("tx-psd"):
+        //            indexes.Add(index);
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
     }
 }

@@ -14,6 +14,10 @@ namespace ssh_test1
         public bool graphRequired = false;
         public int progressionInfo = 0;
         public int lengthNow = 0;
+        public string midString = "";
+        List<int> indexes = new List<int>();
+        List<int> groupIndexes = new List<int>();
+        List<string> messages = new List<string>();
 
         public SendData()
         {
@@ -50,11 +54,15 @@ namespace ssh_test1
                                 if (line != null)
                                 {
                                     output = output + line + '\n';
+                                    if(command.Contains("carrier-data"))
+                                        FillInedex(line, index);
                                     Thread.Sleep(10);
                                 }
                                 lengthNow = output.Length;
                                 if (lengthNow == lengthBefore && line == null)
                                 {
+                                    if (command.Contains("carrier-data"))
+                                        indexes.Add(index);
                                     break;
                                 }
                                 lengthBefore = lengthNow;
@@ -80,6 +88,43 @@ namespace ssh_test1
                 progressionInfo = 0;
                 return null;
             }
+        }
+
+        private void FillInedex(string line, int index)
+        {
+            switch (line)
+            {
+                case string lineNow when line.Contains("grp") || line.Contains("grop") || line.Contains("vect-qln")
+                || line.Contains("rmc-carr") | line.Contains("gf"):
+                    groupIndexes.Add(index);
+                    break;
+                case string lineNow when line.Contains("load-distribution") || line.Contains("gain-allocation")
+                || line.Contains("snr") || line.Contains("qln") || line.Contains("char-func-complex")
+                || line.Contains("char-func-real") || line.Contains("tx-psd"):
+                    indexes.Add(index);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public List<string> getLines(string DSLAMouput) 
+        {
+            indexes.Add(groupIndexes[0]);
+            List<string> outLines = new List<string>();
+            string[] splitOutput = DSLAMouput.Split('\n');
+            string output = "";
+            for (int i =0 ; i < indexes.Count-1; i++) 
+            {
+                for(int j = indexes[i]; j< indexes[i+1]; j++) 
+                {
+                    output += splitOutput[j].Trim();
+                }
+                outLines.Add(output);
+                output = "";
+            }
+            indexes.Clear();
+            return outLines;
         }
     }
 }

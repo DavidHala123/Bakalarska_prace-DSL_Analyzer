@@ -4,9 +4,9 @@ namespace ssh_test1
 {
     class Connect
     {
-        string ipv4;
-        string name;
-        string password;
+        private string ipv4;
+        private string name;
+        private string password;
         MainWindow main;
         public bool connected = false;
         public Connect(string ipv4, string name, string password)
