@@ -17,7 +17,6 @@ namespace ssh_test1
     {
         string selectedPort;
         public static List<bool> graphSelector;
-        SendData sendit = new SendData();
         ConsoleLogic consoleLog;
         public Window1()
         {
@@ -26,13 +25,13 @@ namespace ssh_test1
                 graphSelector = new List<bool>() { true, true, true, true, true, true, true };
                 async Task Initialize() 
                 {
-                    List<PortData> listofobj = await Task.Run(() => new PortBoxLogic(sendit.sendCommandGetResponse
-                       ("show xdsl operational-data line") ?? throw new ArgumentNullException()).getPortDataCombo());
+                    List<PortData> listofobj = await Task.Run(() => new PortBoxLogic(new SendData
+                       ("show xdsl operational-data line").getResponse() ?? throw new ArgumentNullException()).getPortDataCombo());
                     foreach (PortData obj in listofobj)
                     {
                         PortBox.Items.Add(obj);
                     }
-                    string xdslStandartStr = await Task.Run(() => sendit.sendCommandGetResponse("show xdsl operational-data line | match match exact:gfast"));
+                    string xdslStandartStr = await Task.Run(() => new SendData("show xdsl operational-data line | match match exact:gfast").getResponse());
                     if (!xdslStandartStr.Contains("up"))
                     {
                         XDSLStandart.Text = "ADSL/VDSL";
@@ -68,9 +67,9 @@ namespace ssh_test1
             {
                 GraphLogic dataFarEnd = new GraphLogic();
                 GraphLogic dataNearEnd = new GraphLogic();
-                List<List<int>> dataFarEndList = await Task.Run(() => dataFarEnd.getGraphDecValues(sendit.sendCommandGetResponse("show xdsl carrier-data far-end " + selectedPort + " detail")
+                List<List<int>> dataFarEndList = await Task.Run(() => dataFarEnd.getGraphDecValues(new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse()
                         ?? throw new ArgumentNullException(), graphSelector));
-                List<List<int>> dataNearEndList = await Task.Run(() => dataNearEnd.getGraphDecValues(sendit.sendCommandGetResponse("show xdsl carrier-data near-end " + selectedPort + " detail")
+                List<List<int>> dataNearEndList = await Task.Run(() => dataNearEnd.getGraphDecValues(new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse()
                         ?? throw new ArgumentNullException(), graphSelector));
                 List<string> namesFarEnd = dataFarEnd.getName();
                 List<string> namesNearEnd = dataNearEnd.getName();
@@ -115,7 +114,6 @@ namespace ssh_test1
             send.IsEnabled = true;
             PortBox.IsEnabled = true;
             send.Content = "Analyze";
-            sendit.graphRequired = false;
         }
 
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -133,11 +131,11 @@ namespace ssh_test1
                 try 
                 {
                     List<PortData> infoListData = await Task.Run(() => new InfoTableLogic(selectedPort,
-                    sendit.sendCommandGetResponse("show xdsl operational-data far-end line " + selectedPort + " detail")
+                    new SendData("show xdsl operational-data far-end line " + selectedPort + " detail").getResponse()
                     ?? throw new ArgumentNullException(),
-                        sendit.sendCommandGetResponse("show xdsl operational-data near-end line " + selectedPort + " detail")
+                        new SendData("show xdsl operational-data near-end line " + selectedPort + " detail").getResponse()
                         ?? throw new ArgumentNullException(),
-                        sendit.sendCommandGetResponse("show xdsl operational-data line " + selectedPort + " detail")
+                        new SendData("show xdsl operational-data line " + selectedPort + " detail").getResponse()
                         ?? throw new ArgumentNullException()).getPortData());
                     foreach (PortData data in infoListData)
                     {

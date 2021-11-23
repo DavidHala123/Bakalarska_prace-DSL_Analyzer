@@ -8,7 +8,6 @@ namespace ssh_test1
 {
     internal class InfoTableLogic
     {
-        SendData send = new SendData();
         private List<PortData> portDatas = new List<PortData>();
         private string selectedPort;
         string commandOutput1;
@@ -41,45 +40,7 @@ namespace ssh_test1
                 string trimS = s.Trim();
                 try
                 {
-                    if (char.IsLetter(trimS[0]) && trimS.Contains(":") && !trimS.Contains("ISAM"))
-                    {
-                        switch (trimS)
-                        {
-                            case string infoListInput when infoListInput.Contains("if-index"):
-                                if (count == 0)
-                                    outputList.Add(new PortData { portInfo = infoListInput.Replace(":", " : ") });
-                                count++;
-                                break;
-
-                            case string infoListInput when infoListInput.Contains("noise-margin"):
-                                string[] noise = infoListInput.Split(':');
-                                if (infoListInput.Contains("down"))
-                                {
-                                    noiseMarginInfo = noiseMarginInfo + noise[1].Trim();
-                                }
-                                if (infoListInput.Contains("up"))
-                                {
-                                    noiseMarginInfo = noiseMarginInfo + "/" + noise[1].Trim();
-                                }
-                                break;
-
-                            case string infoListInput when infoListInput.Contains("output-power"):
-                                string[] power = infoListInput.Split(':');
-                                if (infoListInput.Contains("down"))
-                                {
-                                    outputPowerInfoDown = power[1].Trim();
-                                }
-                                if (infoListInput.Contains("up"))
-                                {
-                                    outputPowerInfoUp = power[1].Trim();
-                                }
-                                break;
-
-                            default:
-                                outputList.Add(new PortData { advancedPortInfo = trimS });
-                                break;
-                        }
-                    }
+                    SplitDataToRead(outputList, ref noiseMarginInfo, ref outputPowerInfoDown, ref outputPowerInfoUp, ref count, trimS);
                 }
                 catch
                 {
@@ -90,6 +51,49 @@ namespace ssh_test1
             outputList.Add(new PortData { portInfo = "output-power down/up: " + outputPowerInfoDown + "/" + outputPowerInfoUp });
             ConsoleLogic.ConsoleText = "0";
             portDatas = outputList;
+        }
+
+        private static void SplitDataToRead(List<PortData> outputList, ref string noiseMarginInfo, ref string outputPowerInfoDown, ref string outputPowerInfoUp, ref int count, string trimS)
+        {
+            if (char.IsLetter(trimS[0]) && trimS.Contains(":") && !trimS.Contains("ISAM"))
+            {
+                switch (trimS)
+                {
+                    case string infoListInput when infoListInput.Contains("if-index"):
+                        if (count == 0)
+                            outputList.Add(new PortData { portInfo = infoListInput.Replace(":", " : ") });
+                        count++;
+                        break;
+
+                    case string infoListInput when infoListInput.Contains("noise-margin"):
+                        string[] noise = infoListInput.Split(':');
+                        if (infoListInput.Contains("down"))
+                        {
+                            noiseMarginInfo = noiseMarginInfo + noise[1].Trim();
+                        }
+                        if (infoListInput.Contains("up"))
+                        {
+                            noiseMarginInfo = noiseMarginInfo + "/" + noise[1].Trim();
+                        }
+                        break;
+
+                    case string infoListInput when infoListInput.Contains("output-power"):
+                        string[] power = infoListInput.Split(':');
+                        if (infoListInput.Contains("down"))
+                        {
+                            outputPowerInfoDown = power[1].Trim();
+                        }
+                        if (infoListInput.Contains("up"))
+                        {
+                            outputPowerInfoUp = power[1].Trim();
+                        }
+                        break;
+
+                    default:
+                        outputList.Add(new PortData { advancedPortInfo = trimS });
+                        break;
+                }
+            }
         }
     }
 }

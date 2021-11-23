@@ -9,7 +9,6 @@ namespace ssh_test1
 {
     internal class PortBoxLogic
     {
-        SendData send = new SendData();
         private List<PortData> portDatasCombo = new List<PortData>();
         private string commandOutput;
         public PortBoxLogic(string commandOutput) 
@@ -32,14 +31,7 @@ namespace ssh_test1
                 {
                     try
                     {
-                        if (char.IsNumber(line[0]))
-                        {
-                            string[] info = line.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                            if (info[2].Equals("down"))
-                                output.Add(new PortData { portName = info[0], portState = @"Images\down.png" });
-                            else
-                                output.Add(new PortData { portName = info[0], portState = @"Images\up.png" });
-                        }
+                        AddPortToList(output, line);
                     }
                     catch
                     {
@@ -48,6 +40,15 @@ namespace ssh_test1
                 }
                 ConsoleLogic.ConsoleText = "0";
                 portDatasCombo = output;
+            }
+        }
+
+        private static void AddPortToList(List<PortData> output, string line)
+        {
+            if (char.IsNumber(line[0]))
+            {
+                string[] info = line.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                output.Add(new PortData { portName = info[0], portState = @"Images\" + info[2] + ".png" });
             }
         }
     }

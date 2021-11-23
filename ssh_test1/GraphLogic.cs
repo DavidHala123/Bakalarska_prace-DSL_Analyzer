@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using InteractiveDataDisplay.WPF;
 
 namespace ssh_test1
 {
@@ -14,6 +15,7 @@ namespace ssh_test1
         List<int> groupIndexes = new List<int>();
         private List<string> name = new List<string>();
 
+        private LineGraph graphOutput;
         public GraphLogic() 
         {
 
