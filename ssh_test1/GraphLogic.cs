@@ -4,40 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using InteractiveDataDisplay.WPF;
 
 namespace ssh_test1
 {
     internal class GraphLogic
     {
-        private List<List<int>> decValues = new List<List<int>>();
-        List<int> indexes = new List<int>();
-        List<int> groupIndexes = new List<int>();
+        private List<bool> graphSelector = new List<bool>();
+        private List<Chart> outputListOfCharts = new List<Chart>();
         private List<string> name = new List<string>();
+        private string outputOfDSLAMFar;
+        private string outputOfDSLAMNear;
+        private List<List<int>> listOfChartVals = new List<List<int>>();
 
-        private LineGraph graphOutput;
-        public GraphLogic() 
+        public GraphLogic(string outputOfDSLAFar, string outputOfDSLAMNear, List<bool> graphSelector)
         {
-
+            ConsoleLogic.ConsoleText = "3";
+            this.outputOfDSLAMFar = outputOfDSLAFar;
+            this.outputOfDSLAMNear = outputOfDSLAMNear;
+            this.graphSelector = graphSelector;
+            SelectGraphNeeeded();
         }
-        public List<string> getName() 
+
+        public List<List<int>> getListChartDecValues() 
+        {
+            return listOfChartVals;
+        }
+
+        public List<string> getListOfNames() 
         {
             return name;
         }
 
-        public List<List<int>> getGraphDecValues(string outputOfDSLAM, List<bool> graphselector) 
-        {
-            ConsoleLogic.ConsoleText = "3";
-            FillInedex(outputOfDSLAM, graphselector);
-            ConsoleLogic.ConsoleText = "0";
-            return decValues;
-        }
-        private void setGraphDecValues(string input)
+        private List<int> setGraphDecValuesAsync(string inputString)
         {
             List<int> listOfDecValues = new List<int>();
-            string[] outputSplit = input.Split(':');
+            string[] outputSplit = inputString.Split(':');
             name.Add(outputSplit[0].Trim());
-            for (int i = 6; i <= outputSplit.Count(); i++)
+            for (int i = 1; i <= outputSplit.Count(); i++)
             {
                 try
                 {
@@ -52,20 +58,20 @@ namespace ssh_test1
                     continue;
                 }
             }
-            decValues.Add(listOfDecValues);
+            return listOfDecValues;
         }
 
-        public void FillInedex(string outputOfDSLAM, List<bool> graphselector)
+        private void SelectGraphNeeeded() 
         {
             string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd", "tx-psd-carr-grop" };
-            List<string> substrings = new List<string>();
-            for (int i = 0; i < graphselector.Count; i++) 
+            for(int i = 0; i < graphSelector.Count; i++) 
             {
-                if(graphselector[i] == true) 
+                if(graphSelector[i] == true)
                 {
-                    string substring = outputOfDSLAM.Substring(outputOfDSLAM.IndexOf(substringIndexes[i]),
-                            outputOfDSLAM.IndexOf(substringIndexes[i+1]) - outputOfDSLAM.IndexOf(substringIndexes[i]));
-                    setGraphDecValues(substring);
+                    string substringFarEnd = outputOfDSLAMFar.Substring(outputOfDSLAMFar.IndexOf(substringIndexes[i]), outputOfDSLAMFar.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMFar.IndexOf(substringIndexes[i]));
+                    string substringNearEnd = outputOfDSLAMNear.Substring(outputOfDSLAMNear.IndexOf(substringIndexes[i]), outputOfDSLAMNear.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMNear.IndexOf(substringIndexes[i]));
+                    listOfChartVals.Add(setGraphDecValuesAsync(substringFarEnd));
+                    listOfChartVals.Add(setGraphDecValuesAsync(substringNearEnd));
                 }
             }
         }

@@ -17,7 +17,7 @@ namespace ssh_test1
     {
         string selectedPort;
         public static List<bool> graphSelector;
-        ConsoleLogic consoleLog;
+        public static bool isOnline = false;
         public Window1()
         {
             try 
@@ -63,57 +63,63 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
+            if(PortBox.SelectedItem == null) 
+            {
+                MessageBox.Show("Please select port you wish to analyze first");
+            }
             try
             {
-                GraphLogic dataFarEnd = new GraphLogic();
-                GraphLogic dataNearEnd = new GraphLogic();
-                List<List<int>> dataFarEndList = await Task.Run(() => dataFarEnd.getGraphDecValues(new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse()
-                        ?? throw new ArgumentNullException(), graphSelector));
-                List<List<int>> dataNearEndList = await Task.Run(() => dataNearEnd.getGraphDecValues(new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse()
-                        ?? throw new ArgumentNullException(), graphSelector));
-                List<string> namesFarEnd = dataFarEnd.getName();
-                List<string> namesNearEnd = dataNearEnd.getName();
+                send.IsEnabled = false;
                 GraphField.Items.Clear();
-                for (int i = 0; i <= 6; i++)
+                GraphLogic graphLog = await Task.Run(() => new GraphLogic(
+                    new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse() 
+                    ?? throw new ArgumentNullException(),
+                    new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse() 
+                    ?? throw new ArgumentNullException(), graphSelector));
+                List<List<int>> graphValues = graphLog.getListChartDecValues();
+                List<string> graphNames = graphLog.getListOfNames();
+                for (int i = 0; i < graphValues.Count(); i+=2)
                 {
-                    Grid graphGrid = new Grid();
-                    var yFar = dataFarEndList[i];
-                    var xFar = Enumerable.Range(0, yFar.Count()).Select(i => i).ToArray();
-                    var yNear = dataNearEndList[i];
-                    var xNear = Enumerable.Range(xFar.Count(), yNear.Count()).Select(i => i).ToArray();
                     Chart chart = new Chart();
-                    LineGraph graphFar = new LineGraph()
+                    chart.Content = getChart(i, graphValues, graphNames);
+                    GraphField.Items.Add(new TabItem
                     {
-                        Stroke = new SolidColorBrush(Colors.Blue),
-                        Description = namesFarEnd[i],
-                        StrokeThickness = 1,
-                    };
-                    LineGraph graphNear = new LineGraph()
-                    {
-                        Stroke = new SolidColorBrush(Colors.Red),
-                        Description = namesNearEnd[i],
-                        StrokeThickness = 1,
-                    };
-                    graphFar.Plot(xFar, yFar);
-                    graphNear.Plot(xNear, yNear);
-                    graphGrid.Children.Add(graphFar);
-                    graphGrid.Children.Add(graphNear);
-                    chart.Content = graphGrid;
-                    try
-                    {
-                        GraphField.Items.Add(new TabItem
-                        {
-                            Header = namesFarEnd[i].Replace("-up", "").Replace("-down", "") + " [" + selectedPort + "]",
-                            Content = chart
-                        });
-                    }
-                    catch { continue; }
+                        Header = graphNames[i].Replace("-up", "").Replace("-down", ""),
+                        Content = chart
+                    });
                 }
             }
             catch(Exception ex) { MessageBox.Show(ex.ToString()); }
+            ConsoleLogic.ConsoleText = "0";
             send.IsEnabled = true;
             PortBox.IsEnabled = true;
             send.Content = "Analyze";
+        }
+
+        private Grid getChart(int i, List<List<int>> graphValues, List<string> graphName) 
+        {
+            Grid grid = new Grid();
+            Chart chart = new Chart();
+            string check = "";
+            LineGraph lineGraphFar = new LineGraph()
+            {
+                Description = graphName[i],
+                Stroke = new SolidColorBrush(Colors.Blue)
+            };
+            LineGraph lineGraphNear = new LineGraph()
+            {
+                Description = graphName[i+1],
+                Stroke = new SolidColorBrush(Colors.Red)
+            };
+            var yFar = graphValues[i];
+            var yNear = graphValues[i + 1];
+            var xFar = Enumerable.Range(0, yFar.Count()).Select(i => i).ToArray();
+            var xNear = Enumerable.Range(yFar.Count(), yNear.Count()).Select(i => i).ToArray();
+            lineGraphFar.Plot(xFar, yFar);
+            lineGraphNear.Plot(xNear, yNear);
+            grid.Children.Add(lineGraphFar);
+            grid.Children.Add(lineGraphNear);
+            return grid;
         }
 
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -162,7 +168,6 @@ namespace ssh_test1
             string outputbefore = "";
             while (true)
             {
-
                 if (ConsoleLogic.ConsoleText != "")
                 {
                     gif.Visibility = Visibility.Visible;
@@ -175,9 +180,9 @@ namespace ssh_test1
                 {
                     gif.Visibility = Visibility.Collapsed;
                     XDSLStandart.Margin = new Thickness(15, 0, 0, 0);
-                    send.IsEnabled = true;
                     PortBox.IsEnabled = true;
                     send.Content = "Analyze";
+                    send.IsEnabled = true;
                 }
 
                 if (ConsoleLogic.ConsoleText != outputbefore)
