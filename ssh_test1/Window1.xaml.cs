@@ -69,7 +69,6 @@ namespace ssh_test1
             }
             try
             {
-                send.IsEnabled = false;
                 GraphField.Items.Clear();
                 GraphLogic graphLog = await Task.Run(() => new GraphLogic(
                     new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse() 
@@ -91,16 +90,12 @@ namespace ssh_test1
             }
             catch(Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleLogic.ConsoleText = "0";
-            send.IsEnabled = true;
-            PortBox.IsEnabled = true;
-            send.Content = "Analyze";
         }
 
         private Grid getChart(int i, List<List<int>> graphValues, List<string> graphName) 
         {
             Grid grid = new Grid();
             Chart chart = new Chart();
-            string check = "";
             LineGraph lineGraphFar = new LineGraph()
             {
                 Description = graphName[i],

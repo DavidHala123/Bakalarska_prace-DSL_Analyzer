@@ -43,7 +43,7 @@ namespace ssh_test1
             List<int> listOfDecValues = new List<int>();
             string[] outputSplit = inputString.Split(':');
             name.Add(outputSplit[0].Trim());
-            for (int i = 1; i <= outputSplit.Count(); i++)
+            for (int i = 5; i <= outputSplit.Count(); i++)
             {
                 try
                 {
