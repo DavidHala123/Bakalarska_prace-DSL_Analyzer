@@ -17,7 +17,8 @@ namespace ssh_test1
         private List<string> name = new List<string>();
         private string outputOfDSLAMFar;
         private string outputOfDSLAMNear;
-        private List<List<int>> listOfChartVals = new List<List<int>>();
+        private List<List<int>> listOfChartYVals = new List<List<int>>();
+        private List<List<int>> listOfChartXVals = new List<List<int>>();
 
         public GraphLogic(string outputOfDSLAFar, string outputOfDSLAMNear, List<bool> graphSelector)
         {
@@ -25,12 +26,15 @@ namespace ssh_test1
             this.outputOfDSLAMFar = outputOfDSLAFar;
             this.outputOfDSLAMNear = outputOfDSLAMNear;
             this.graphSelector = graphSelector;
-            SelectGraphNeeeded();
         }
 
-        public List<List<int>> getListChartDecValues() 
+        public List<List<int>> getYValues() 
         {
-            return listOfChartVals;
+            return listOfChartYVals;
+        }
+        public List<List<int>> getXValues()
+        {
+            return listOfChartXVals;
         }
 
         public List<string> getListOfNames() 
@@ -38,42 +42,68 @@ namespace ssh_test1
             return name;
         }
 
-        private List<int> setGraphDecValuesAsync(string inputString)
+        private int GetDecValues(string c)
         {
-            List<int> listOfDecValues = new List<int>();
-            string[] outputSplit = inputString.Split(':');
-            name.Add(outputSplit[0].Trim());
-            for (int i = 5; i <= outputSplit.Count(); i++)
-            {
-                try
-                {
-                    foreach (char c in outputSplit[i])
-                    {
-                        int testValue = Int32.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
-                        listOfDecValues.Add(testValue);
-                    }
-                }
-                catch
-                {
-                    continue;
-                }
-            }
-            return listOfDecValues;
+            return Int32.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
         }
 
-        private void SelectGraphNeeeded() 
+        private void SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int divider)
+        {
+            List<int> outputListY = new List<int>();
+            List<int> outputListX = new List<int>();
+            int charIndex = charIndexOfStart;
+            for (int i = startIndex; i <= stopIndex; i += NumberOfNibble)
+            {
+                string input = "";
+                for(int j = 0; j < NumberOfNibble; j++)
+                    input += inputString[charIndex+j];
+                outputListY.Add(GetDecValues(input)/divider);
+                outputListX.Add(i);
+                charIndex++;
+            }
+            listOfChartYVals.Add(outputListY);
+            listOfChartXVals.Add(outputListX);
+        }
+
+        private void getGraphLogic(string inputString)
+        {
+            string startIndex = "";
+            string stopIndex = "";
+            int i = 0;
+            string[] inputSplit = inputString.Split(new[] { ':' }, 2);
+            name.Add(inputSplit[0]);
+            string bitload = String.Concat(inputSplit[1].Replace(":", "").Where(c => !Char.IsWhiteSpace(c)));
+            if (inputSplit[0].Contains("load-distribution"))
+            {
+                for (i = 0; i < 8; i++)
+                {
+                    if (i < 4)
+                        startIndex += bitload[i];
+                    else
+                        stopIndex += bitload[i];
+                }
+                SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i+1, 1, 1);
+            }
+            if (inputSplit[0].Contains("gain-allocation"))
+            {
+                for (i = 0; i < 8; i++)
+                {
+                    if (i < 4)
+                        startIndex += bitload[i];
+                    else
+                        stopIndex += bitload[i];
+                }
+                SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i + 1, 3, 512);
+            }
+        }
+
+        public void SelectGraphNeeeded(int i) 
         {
             string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd", "tx-psd-carr-grop" };
-            for(int i = 0; i < graphSelector.Count; i++) 
-            {
-                if(graphSelector[i] == true)
-                {
-                    string substringFarEnd = outputOfDSLAMFar.Substring(outputOfDSLAMFar.IndexOf(substringIndexes[i]), outputOfDSLAMFar.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMFar.IndexOf(substringIndexes[i]));
-                    string substringNearEnd = outputOfDSLAMNear.Substring(outputOfDSLAMNear.IndexOf(substringIndexes[i]), outputOfDSLAMNear.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMNear.IndexOf(substringIndexes[i]));
-                    listOfChartVals.Add(setGraphDecValuesAsync(substringFarEnd));
-                    listOfChartVals.Add(setGraphDecValuesAsync(substringNearEnd));
-                }
-            }
+            string substringFarEnd = outputOfDSLAMFar.Substring(outputOfDSLAMFar.IndexOf(substringIndexes[i]), outputOfDSLAMFar.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMFar.IndexOf(substringIndexes[i]));
+            string substringNearEnd = outputOfDSLAMNear.Substring(outputOfDSLAMNear.IndexOf(substringIndexes[i]), outputOfDSLAMNear.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMNear.IndexOf(substringIndexes[i]));
+            getGraphLogic(substringFarEnd);
+            getGraphLogic(substringNearEnd);
         }
     }
 }

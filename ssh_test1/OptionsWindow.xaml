@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ssh_test1"
         mc:Ignorable="d"
-        Title="OptionsWindow" Height="270" Width="200" ResizeMode="NoResize">
+        Title="OptionsWindow" Height="300" Width="200" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
 

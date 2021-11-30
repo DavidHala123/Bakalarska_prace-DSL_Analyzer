@@ -67,51 +67,54 @@ namespace ssh_test1
             {
                 MessageBox.Show("Please select port you wish to analyze first");
             }
-            try
-            {
+            //try
+            //{
+            int graphIndex = 0;
                 GraphField.Items.Clear();
                 GraphLogic graphLog = await Task.Run(() => new GraphLogic(
                     new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse() 
                     ?? throw new ArgumentNullException(),
                     new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse() 
                     ?? throw new ArgumentNullException(), graphSelector));
-                List<List<int>> graphValues = graphLog.getListChartDecValues();
-                List<string> graphNames = graphLog.getListOfNames();
-                for (int i = 0; i < graphValues.Count(); i+=2)
+            for (int i = 0; i < graphSelector.Count(); i++)
+            {
+                if (graphSelector[i] == true)
                 {
+                    graphLog.SelectGraphNeeeded(i);
                     Chart chart = new Chart();
-                    chart.Content = getChart(i, graphValues, graphNames);
+                    chart.Content = await Task.Run(()=> 
+                    getChart(graphIndex, graphLog.getYValues() ?? throw new ArgumentNullException(), 
+                    graphLog.getXValues() ?? throw new ArgumentNullException(), 
+                    graphLog.getListOfNames() ?? throw new ArgumentNullException()));
                     GraphField.Items.Add(new TabItem
                     {
-                        Header = graphNames[i].Replace("-up", "").Replace("-down", ""),
+                        Header = "idk",
                         Content = chart
                     });
+                    graphIndex += 2;
                 }
             }
-            catch(Exception ex) { MessageBox.Show(ex.ToString()); }
+            //}
+            //catch(Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleLogic.ConsoleText = "0";
         }
 
-        private Grid getChart(int i, List<List<int>> graphValues, List<string> graphName) 
+        private Grid getChart(int i, List<List<int>> graphValuesY, List<List<int>> graphValuesX, List<string> graphName)
         {
             Grid grid = new Grid();
             Chart chart = new Chart();
             LineGraph lineGraphFar = new LineGraph()
             {
                 Description = graphName[i],
-                Stroke = new SolidColorBrush(Colors.Blue)
+                Stroke = new SolidColorBrush(Colors.Blue),
             };
             LineGraph lineGraphNear = new LineGraph()
             {
-                Description = graphName[i+1],
+                Description = graphName[i + 1],
                 Stroke = new SolidColorBrush(Colors.Red)
             };
-            var yFar = graphValues[i];
-            var yNear = graphValues[i + 1];
-            var xFar = Enumerable.Range(0, yFar.Count()).Select(i => i).ToArray();
-            var xNear = Enumerable.Range(yFar.Count(), yNear.Count()).Select(i => i).ToArray();
-            lineGraphFar.Plot(xFar, yFar);
-            lineGraphNear.Plot(xNear, yNear);
+            lineGraphFar.Plot(graphValuesX[i], graphValuesY[i]);
+            lineGraphNear.Plot(graphValuesX[i + 1], graphValuesY[i + 1]);
             grid.Children.Add(lineGraphFar);
             grid.Children.Add(lineGraphNear);
             return grid;
