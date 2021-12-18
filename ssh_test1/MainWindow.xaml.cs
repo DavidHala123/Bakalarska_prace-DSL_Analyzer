@@ -37,12 +37,12 @@ namespace ssh_test1
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
 
-            Connect connect = new Connect(ipv4.Text.ToString(), Name.Text.ToString(), password.Text.ToString());
+            Connect connect = new Connect(ipv4.Text.ToString(), Name.Text.ToString(), password.Password.ToString());
             if (connect.con() == true)
             {
                 ConData.ipv4 = ipv4.Text.ToString();
                 ConData.name = Name.Text.ToString();
-                ConData.password = password.Text.ToString();
+                ConData.password = password.Password.ToString();
                 Window1 wind = new Window1();
                 wind.Show();
                 this.Close();
@@ -87,24 +87,6 @@ namespace ssh_test1
             {
                 Name.Foreground = new SolidColorBrush(Colors.Gray);
                 Name.Text = "Name of User";
-            }
-        }
-
-        private void password_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (password.Text == "Password")
-            {
-                password.Foreground = new SolidColorBrush(Colors.Black);
-                password.Text = "";
-            }
-        }
-
-        private void password_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (password.Text == "")
-            {
-                password.Foreground = new SolidColorBrush(Colors.Gray);
-                password.Text = "Password";
             }
         }
     }

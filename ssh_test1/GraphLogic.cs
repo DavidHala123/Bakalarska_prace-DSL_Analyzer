@@ -47,63 +47,92 @@ namespace ssh_test1
             return Int32.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
         }
 
-        private void SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int divider)
-        {
-            List<int> outputListY = new List<int>();
-            List<int> outputListX = new List<int>();
-            int charIndex = charIndexOfStart;
-            for (int i = startIndex; i <= stopIndex; i += NumberOfNibble)
-            {
-                string input = "";
-                for(int j = 0; j < NumberOfNibble; j++)
-                    input += inputString[charIndex+j];
-                outputListY.Add(GetDecValues(input)/divider);
-                outputListX.Add(i);
-                charIndex++;
-            }
-            listOfChartYVals.Add(outputListY);
-            listOfChartXVals.Add(outputListX);
-        }
-
-        private void getGraphLogic(string inputString)
-        {
-            string startIndex = "";
-            string stopIndex = "";
-            int i = 0;
-            string[] inputSplit = inputString.Split(new[] { ':' }, 2);
-            name.Add(inputSplit[0]);
-            string bitload = String.Concat(inputSplit[1].Replace(":", "").Where(c => !Char.IsWhiteSpace(c)));
-            if (inputSplit[0].Contains("load-distribution"))
-            {
-                for (i = 0; i < 8; i++)
-                {
-                    if (i < 4)
-                        startIndex += bitload[i];
-                    else
-                        stopIndex += bitload[i];
-                }
-                SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i+1, 1, 1);
-            }
-            if (inputSplit[0].Contains("gain-allocation"))
-            {
-                for (i = 0; i < 8; i++)
-                {
-                    if (i < 4)
-                        startIndex += bitload[i];
-                    else
-                        stopIndex += bitload[i];
-                }
-                SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i + 1, 3, 512);
-            }
-        }
-
-        public void SelectGraphNeeeded(int i) 
+        public void SelectGraphNeeeded(int i)
         {
             string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd", "tx-psd-carr-grop" };
             string substringFarEnd = outputOfDSLAMFar.Substring(outputOfDSLAMFar.IndexOf(substringIndexes[i]), outputOfDSLAMFar.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMFar.IndexOf(substringIndexes[i]));
             string substringNearEnd = outputOfDSLAMNear.Substring(outputOfDSLAMNear.IndexOf(substringIndexes[i]), outputOfDSLAMNear.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMNear.IndexOf(substringIndexes[i]));
             getGraphLogic(substringFarEnd);
             getGraphLogic(substringNearEnd);
+        }
+
+        private void getGraphLogic(string inputString)
+        {
+            List<int> outputListY = new List<int>();
+            List<int> outputListX = new List<int>();
+            List<List<int>> outputVals = new List<List<int>>();
+            int i = 0;
+            int adder = 0;
+            string[] inputSplit = inputString.Split(new[] { ':' }, 2);
+            name.Add(inputSplit[0]);
+            string bitload = String.Concat(inputSplit[1].Replace(":", "").Where(c => !Char.IsWhiteSpace(c)));
+            switch (inputSplit[0]) 
+            {
+                case string name when inputSplit[0].Contains("load-distribution"):
+                    while(outputListY.Count + adder < bitload.Length)
+                    {
+                        string startIndex = "";
+                        string stopIndex = "";
+                        for (i = outputListY.Count + adder; i < outputListY.Count + adder + 8; i++)
+                        {
+                            if (i < outputListY.Count + adder + 4)
+                                startIndex += bitload[i];
+                            else
+                                stopIndex += bitload[i];
+                        }
+                        int DecValStart = GetDecValues(startIndex);
+                        int DecValStop = GetDecValues(stopIndex);
+                        if ((DecValStop - DecValStart) % 2 == 0)
+                        {
+                            adder += 9;
+                        }
+                        else
+                            adder += 8;
+                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 1, 1, 1);
+                        outputListY.AddRange(outputVals[0]);
+                        outputListX.AddRange(outputVals[1]);
+                    }
+                    break;
+                case string name when inputSplit[0].Contains("gain-allocation"):
+                    while(outputListY.Count < bitload.Length) 
+                    {
+                        string startIndex = "";
+                        string stopIndex = "";
+                        for (i = outputListY.Count; i < outputListY.Count + 8; i++)
+                        {
+                            if (i < outputListY.Count + 4)
+                                startIndex += bitload[i];
+                            else
+                                stopIndex += bitload[i];
+                        }
+                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i + 1, 3, 4, 512);
+                        outputListY.AddRange(outputVals[0]);
+                        outputListX.AddRange(outputVals[1]);
+                    }
+                    break;
+            }
+            listOfChartYVals.Add(outputListY);
+            listOfChartXVals.Add(outputListX);
+        }
+
+        private List<List<int>> SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int iterationIndex, int divider)
+        {
+            List<int> yVals = new List<int>();
+            List<int> xVals = new List<int>();
+            List<List<int>> outputList = new List<List<int>>();
+            int charIndex = charIndexOfStart;
+            for (int i = startIndex; i <= stopIndex; i += iterationIndex)
+            {
+                string input = "";
+                for(int j = 0; j < NumberOfNibble; j++)
+                    input += inputString[charIndex+j];
+                yVals.Add(GetDecValues(input)/divider);
+                xVals.Add(i);
+                charIndex += iterationIndex;
+            }
+            outputList.Add(yVals);
+            outputList.Add(xVals);
+            return outputList;
         }
     }
 }

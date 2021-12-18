@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using InteractiveDataDisplay.WPF;
 using System.Linq;
+using System.Windows.Shapes;
 
 namespace ssh_test1
 {
@@ -63,61 +64,153 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
-            if(PortBox.SelectedItem == null) 
+            if (PortBox.SelectedItem == null)
             {
                 MessageBox.Show("Please select port you wish to analyze first");
             }
-            //try
-            //{
-            int graphIndex = 0;
+            try
+            {
+                int graphIndex = 0;
                 GraphField.Items.Clear();
                 GraphLogic graphLog = await Task.Run(() => new GraphLogic(
-                    new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse() 
+                    new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse()
                     ?? throw new ArgumentNullException(),
-                    new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse() 
+                    new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse()
                     ?? throw new ArgumentNullException(), graphSelector));
-            for (int i = 0; i < graphSelector.Count(); i++)
-            {
-                if (graphSelector[i] == true)
+                for (int i = 0; i < graphSelector.Count(); i++)
                 {
-                    graphLog.SelectGraphNeeeded(i);
-                    Chart chart = new Chart();
-                    chart.Content = await Task.Run(()=> 
-                    getChart(graphIndex, graphLog.getYValues() ?? throw new ArgumentNullException(), 
-                    graphLog.getXValues() ?? throw new ArgumentNullException(), 
-                    graphLog.getListOfNames() ?? throw new ArgumentNullException()));
-                    GraphField.Items.Add(new TabItem
+                    if (graphSelector[i] == true)
                     {
-                        Header = "idk",
-                        Content = chart
-                    });
-                    graphIndex += 2;
+                        graphLog.SelectGraphNeeeded(i);
+                        Grid chartView = new Grid();
+                        Chart chart = new Chart() 
+                        {
+                            LegendVisibility = Visibility.Hidden,
+                        };
+                        chart.Content =
+                        getChart(graphIndex, graphLog.getYValues() ?? throw new ArgumentNullException(),
+                        graphLog.getXValues() ?? throw new ArgumentNullException(),
+                        graphLog.getListOfNames() ?? throw new ArgumentNullException());
+                        chartView.Children.Add(chart);
+                        chartView.Children.Add(setLegend());
+                        GraphField.Items.Add(new TabItem
+                        {
+                            Header = graphLog.getListOfNames()[i].Replace("-up", "").Replace("-down", ""),
+                            Content = chartView,
+                        });
+                        graphIndex += 2;
+                    }
                 }
             }
-            //}
-            //catch(Exception ex) { MessageBox.Show(ex.ToString()); }
+            catch(Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleLogic.ConsoleText = "0";
         }
 
         private Grid getChart(int i, List<List<int>> graphValuesY, List<List<int>> graphValuesX, List<string> graphName)
         {
-            Grid grid = new Grid();
-            Chart chart = new Chart();
-            LineGraph lineGraphFar = new LineGraph()
+            LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
+            Legend legend = new Legend()
             {
-                Description = graphName[i],
+                Content = legendItemsPanel
+            };
+            Grid grid = new Grid();
+            Chart chart = new Chart()
+            {
+                LegendVisibility = Visibility.Hidden,
+            };
+            List<List<int>> BanFar = splitListForBands(graphValuesX[i], graphValuesY[i]);
+            List<List<int>> BanNear = splitListForBands(graphValuesX[i+1], graphValuesY[i+1]);
+            for (int j = 0; j < BanFar.Count; j+=2)
+            {
+                LineGraph lineGraphFar = new LineGraph()
+                {
+                    Description = graphName[i],
+                    Stroke = new SolidColorBrush(Colors.Blue),
+                };
+                lineGraphFar.Plot(BanFar[j], BanFar[j+1]);
+                grid.Children.Add(lineGraphFar);
+            }
+            for (int j = 0; j < BanNear.Count; j += 2)
+            {
+                LineGraph lineGraphNear = new LineGraph()
+                {
+                    Description = graphName[i + 1],
+                    Stroke = new SolidColorBrush(Colors.Red),
+                };
+                lineGraphNear.Plot(BanNear[j], BanNear[j + 1]);
+                grid.Children.Add(lineGraphNear);
+            }
+            return grid;
+        }
+        private Legend setLegend() 
+        {
+            LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
+            Legend output = new Legend() 
+            {
+                Content = legendItemsPanel
+            };
+            Rectangle rectUP = new Rectangle()
+            {
+                Width = 10,
+                Height = 10,
+                Fill = new SolidColorBrush(Colors.Red),
+                Stroke = new SolidColorBrush(Colors.Red),
+            };
+
+            Rectangle rectDOWN = new Rectangle()
+            {
+                Width = 10,
+                Height = 10,
+                Fill = new SolidColorBrush(Colors.Blue),
                 Stroke = new SolidColorBrush(Colors.Blue),
             };
-            LineGraph lineGraphNear = new LineGraph()
+            TextBox textBoxUP = new TextBox()
             {
-                Description = graphName[i + 1],
-                Stroke = new SolidColorBrush(Colors.Red)
+                BorderThickness = new Thickness(0, 0, 0, 0),
+                Text = " Upstream"
             };
-            lineGraphFar.Plot(graphValuesX[i], graphValuesY[i]);
-            lineGraphNear.Plot(graphValuesX[i + 1], graphValuesY[i + 1]);
-            grid.Children.Add(lineGraphFar);
-            grid.Children.Add(lineGraphNear);
-            return grid;
+            TextBox textBoxDOWN = new TextBox()
+            {
+                BorderThickness = new Thickness(0, 0, 0, 0),
+                Text = " Downstream"
+            };
+            DockPanel dockUP = new DockPanel();
+            DockPanel dockDOWN = new DockPanel();
+            dockUP.Children.Add(rectUP);
+            dockUP.Children.Add(textBoxUP);
+            dockDOWN.Children.Add(rectDOWN);
+            dockDOWN.Children.Add(textBoxDOWN);
+            legendItemsPanel.Children.Add(dockUP);
+            legendItemsPanel.Children.Add(dockDOWN);
+            return output;
+        }
+
+
+        private List<List<int>> splitListForBands(List<int> graphValuesX, List<int> graphValuesY) 
+        {
+            List<int> valsX = new List<int>();
+            List<int> valsY = new List<int>();
+            List<List<int>> output = new List<List<int>>();
+            int xInd = 0;
+            for (int j = 0; j < graphValuesX.Count; j++)
+            {
+                try
+                {
+                    if (graphValuesX[j + 1] != graphValuesX[j] + 1)
+                    {
+                        output.Add(graphValuesX.GetRange(xInd, j + 1 - xInd));
+                        output.Add(graphValuesY.GetRange(xInd, j + 1 - xInd));
+                        xInd = j + 1;
+                    }
+                }
+                catch
+                {
+                    output.Add(graphValuesX.GetRange(xInd, j + 1 - xInd));
+                    output.Add(graphValuesY.GetRange(xInd, j + 1 - xInd));
+                    break;
+                }
+            }
+            return output;
         }
 
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

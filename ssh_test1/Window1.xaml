@@ -85,8 +85,5 @@
         <Grid Grid.Row="2" Grid.Column="1" Background="GhostWhite">
             <TextBlock x:Name="AppConsole" Padding="10,0" Background="#FFE7E7F0"/>
         </Grid>
-        <CheckBox Grid.Column="1" Content="CheckBox" HorizontalAlignment="Left" Margin="1475,114,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <Label Grid.Column="1" Content="Label" HorizontalAlignment="Left" Margin="1849,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
-
     </Grid>
 </Window>
