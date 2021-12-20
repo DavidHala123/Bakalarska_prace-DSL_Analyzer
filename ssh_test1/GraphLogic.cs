@@ -94,18 +94,19 @@ namespace ssh_test1
                     }
                     break;
                 case string name when inputSplit[0].Contains("gain-allocation"):
-                    while(outputListY.Count < bitload.Length) 
+                    while(outputListY.Count * 4 + adder < bitload.Length) 
                     {
                         string startIndex = "";
                         string stopIndex = "";
-                        for (i = outputListY.Count; i < outputListY.Count + 8; i++)
+                        for (i = outputListY.Count * 4 + adder; i < outputListY.Count * 4 + adder + 8; i++)
                         {
-                            if (i < outputListY.Count + 4)
+                            if (i < outputListY.Count * 4 + adder + 4)
                                 startIndex += bitload[i];
                             else
                                 stopIndex += bitload[i];
                         }
-                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i + 1, 3, 4, 512);
+                        adder += 8;
+                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 4, 4, 512);
                         outputListY.AddRange(outputVals[0]);
                         outputListX.AddRange(outputVals[1]);
                     }
@@ -115,20 +116,40 @@ namespace ssh_test1
             listOfChartXVals.Add(outputListX);
         }
 
+        //    private List<List<int>> SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int iterationIndex, int divider)
+        //    {
+        //        List<int> yVals = new List<int>();
+        //        List<int> xVals = new List<int>();
+        //        List<List<int>> outputList = new List<List<int>>();
+        //        int charIndex = charIndexOfStart;
+        //        for (int i = startIndex; i <= stopIndex; i += iterationIndex)
+        //        {
+        //            string input = "";
+        //            for(int j = 0; j < NumberOfNibble; j++)
+        //                input += inputString[charIndex+j];
+        //            yVals.Add(GetDecValues(input)/divider);
+        //            xVals.Add(i);
+        //            charIndex += iterationIndex;
+        //        }
+        //        outputList.Add(yVals);
+        //        outputList.Add(xVals);
+        //        return outputList;
+        //    }
+        //}
         private List<List<int>> SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int iterationIndex, int divider)
         {
             List<int> yVals = new List<int>();
             List<int> xVals = new List<int>();
             List<List<int>> outputList = new List<List<int>>();
             int charIndex = charIndexOfStart;
-            for (int i = startIndex; i <= stopIndex; i += iterationIndex)
+            for (int i = 0; i <= stopIndex - startIndex; i++)
             {
                 string input = "";
-                for(int j = 0; j < NumberOfNibble; j++)
-                    input += inputString[charIndex+j];
-                yVals.Add(GetDecValues(input)/divider);
-                xVals.Add(i);
-                charIndex += iterationIndex;
+                for (int j = 0; j < NumberOfNibble; j++)
+                    input += inputString[charIndex + j];
+                yVals.Add(GetDecValues(input) / divider);
+                xVals.Add(startIndex + i);
+                charIndex += NumberOfNibble;
             }
             outputList.Add(yVals);
             outputList.Add(xVals);

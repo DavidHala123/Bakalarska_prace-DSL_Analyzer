@@ -89,24 +89,23 @@ namespace ssh_test1
                         };
                         chart.Content =
                         getChart(graphIndex, graphLog.getYValues() ?? throw new ArgumentNullException(),
-                        graphLog.getXValues() ?? throw new ArgumentNullException(),
-                        graphLog.getListOfNames() ?? throw new ArgumentNullException());
+                        graphLog.getXValues() ?? throw new ArgumentNullException());
                         chartView.Children.Add(chart);
                         chartView.Children.Add(setLegend());
                         GraphField.Items.Add(new TabItem
                         {
-                            Header = graphLog.getListOfNames()[i].Replace("-up", "").Replace("-down", ""),
+                            Header = graphLog.getListOfNames()[i + 1].Replace("-up", "").Replace("-down", ""),  //Well... its gonna working for 2 graphs but not for more, jsou tam totiz 2 hodnoty pro kazdej typ grafu
                             Content = chartView,
                         });
                         graphIndex += 2;
                     }
                 }
             }
-            catch(Exception ex) { MessageBox.Show(ex.ToString()); }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleLogic.ConsoleText = "0";
         }
 
-        private Grid getChart(int i, List<List<int>> graphValuesY, List<List<int>> graphValuesX, List<string> graphName)
+        private Grid getChart(int i, List<List<int>> graphValuesY, List<List<int>> graphValuesX)
         {
             LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
             Legend legend = new Legend()
@@ -124,7 +123,6 @@ namespace ssh_test1
             {
                 LineGraph lineGraphFar = new LineGraph()
                 {
-                    Description = graphName[i],
                     Stroke = new SolidColorBrush(Colors.Blue),
                 };
                 lineGraphFar.Plot(BanFar[j], BanFar[j+1]);
@@ -134,7 +132,6 @@ namespace ssh_test1
             {
                 LineGraph lineGraphNear = new LineGraph()
                 {
-                    Description = graphName[i + 1],
                     Stroke = new SolidColorBrush(Colors.Red),
                 };
                 lineGraphNear.Plot(BanNear[j], BanNear[j + 1]);
