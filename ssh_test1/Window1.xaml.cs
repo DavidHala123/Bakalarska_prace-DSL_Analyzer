@@ -68,8 +68,9 @@ namespace ssh_test1
             {
                 MessageBox.Show("Please select port you wish to analyze first");
             }
-            try
-            {
+            //try
+            //{
+                int nameIndex = 0;
                 int graphIndex = 0;
                 GraphField.Items.Clear();
                 GraphLogic graphLog = await Task.Run(() => new GraphLogic(
@@ -94,14 +95,14 @@ namespace ssh_test1
                         chartView.Children.Add(setLegend());
                         GraphField.Items.Add(new TabItem
                         {
-                            Header = graphLog.getListOfNames()[i + 1].Replace("-up", "").Replace("-down", ""),  //Well... its gonna working for 2 graphs but not for more, jsou tam totiz 2 hodnoty pro kazdej typ grafu
+                            Header = graphLog.getListOfNames()[graphIndex].Replace("-up", "").Replace("-down", ""),
                             Content = chartView,
                         });
                         graphIndex += 2;
                     }
                 }
-            }
-            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            //}
+            //catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleLogic.ConsoleText = "0";
         }
 
@@ -164,11 +165,13 @@ namespace ssh_test1
             TextBox textBoxUP = new TextBox()
             {
                 BorderThickness = new Thickness(0, 0, 0, 0),
+                Background = new SolidColorBrush(Colors.Transparent),
                 Text = " Upstream"
             };
             TextBox textBoxDOWN = new TextBox()
             {
                 BorderThickness = new Thickness(0, 0, 0, 0),
+                Background = new SolidColorBrush(Colors.Transparent),
                 Text = " Downstream"
             };
             DockPanel dockUP = new DockPanel();

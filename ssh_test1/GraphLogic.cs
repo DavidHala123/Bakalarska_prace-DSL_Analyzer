@@ -49,14 +49,19 @@ namespace ssh_test1
 
         public void SelectGraphNeeeded(int i)
         {
-            string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd", "tx-psd-carr-grop" };
+            string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd" };
+            string[] carrGrpindex = {"load-carr-grp :", "gain-carr-grp :", "snr-carr-grp :", "qln-carr-grp :", "hlin-carr-grp :", "hlog-carr-grp :", "tx-psd-carr-grop :" };
             string substringFarEnd = outputOfDSLAMFar.Substring(outputOfDSLAMFar.IndexOf(substringIndexes[i]), outputOfDSLAMFar.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMFar.IndexOf(substringIndexes[i]));
             string substringNearEnd = outputOfDSLAMNear.Substring(outputOfDSLAMNear.IndexOf(substringIndexes[i]), outputOfDSLAMNear.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMNear.IndexOf(substringIndexes[i]));
-            getGraphLogic(substringFarEnd);
-            getGraphLogic(substringNearEnd);
+            string carrGrpFarEnd = outputOfDSLAMFar.Substring(outputOfDSLAMFar.IndexOf(carrGrpindex[i]) + carrGrpindex[i].Length, 3).Trim();
+            string carrGrpNearEnd = outputOfDSLAMNear.Substring(outputOfDSLAMNear.IndexOf(carrGrpindex[i]) + carrGrpindex[i].Length, 3).Trim();
+            MessageBox.Show(carrGrpNearEnd);
+            MessageBox.Show(carrGrpFarEnd);
+            getGraphLogic(substringFarEnd, Int32.Parse(carrGrpFarEnd));
+            getGraphLogic(substringNearEnd, Int32.Parse(carrGrpNearEnd));
         }
 
-        private void getGraphLogic(string inputString)
+        private void getGraphLogic(string inputString, int carrGrp)
         {
             List<int> outputListY = new List<int>();
             List<int> outputListX = new List<int>();
@@ -88,7 +93,7 @@ namespace ssh_test1
                         }
                         else
                             adder += 8;
-                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 1, 1, 1);
+                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 1, 0, 1, carrGrp);
                         outputListY.AddRange(outputVals[0]);
                         outputListX.AddRange(outputVals[1]);
                     }
@@ -106,12 +111,43 @@ namespace ssh_test1
                                 stopIndex += bitload[i];
                         }
                         adder += 8;
-                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 4, 4, 512);
+                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 4, 0, 512, carrGrp);
                         outputListY.AddRange(outputVals[0]);
                         outputListX.AddRange(outputVals[1]);
                     }
                     break;
+                case string name when inputSplit[0].Contains("snr"):
+                    adder = 4;
+                    while (outputListY.Count * 2 + adder < bitload.Length)
+                    {
+                        string startIndex = "";
+                        string stopIndex = "";
+                        MessageBox.Show("bitload count = " + bitload.Length.ToString());
+                        MessageBox.Show(bitload);
+                        for (i = outputListY.Count * 2 + adder; i < outputListY.Count * 2 + adder + 8; i++)
+                        {
+                            if (i < outputListY.Count * 2 + adder + 4)
+                                startIndex += bitload[i];
+                            else
+                                stopIndex += bitload[i];
+                        }
+                        MessageBox.Show("list count = " + outputListY.Count.ToString());
+                        MessageBox.Show("start = " + startIndex + ", " + GetDecValues(startIndex).ToString());
+                        MessageBox.Show("stop = " + stopIndex + ", " + GetDecValues(stopIndex).ToString());
+                        adder += 8;
+                        outputVals = SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -32, 2, carrGrp);
+                        outputListY.AddRange(outputVals[0]);
+                        outputListX.AddRange(outputVals[1]);            //SNR nefunguje
+                    }
+                    break;
             }
+            string text = "";
+            foreach(int wtf in outputListY) 
+            {
+                text += wtf.ToString() + ", ";
+            }
+            MessageBox.Show(text);
+            MessageBox.Show(text.Length.ToString());
             listOfChartYVals.Add(outputListY);
             listOfChartXVals.Add(outputListX);
         }
@@ -136,7 +172,7 @@ namespace ssh_test1
         //        return outputList;
         //    }
         //}
-        private List<List<int>> SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int iterationIndex, int divider)
+        private List<List<int>> SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int adder, int divider, int carrGrp)
         {
             List<int> yVals = new List<int>();
             List<int> xVals = new List<int>();
@@ -147,7 +183,7 @@ namespace ssh_test1
                 string input = "";
                 for (int j = 0; j < NumberOfNibble; j++)
                     input += inputString[charIndex + j];
-                yVals.Add(GetDecValues(input) / divider);
+                yVals.Add(adder + GetDecValues(input) / divider);
                 xVals.Add(startIndex + i);
                 charIndex += NumberOfNibble;
             }
