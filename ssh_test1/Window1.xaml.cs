@@ -68,9 +68,8 @@ namespace ssh_test1
             {
                 MessageBox.Show("Please select port you wish to analyze first");
             }
-            //try
-            //{
-                int nameIndex = 0;
+            try
+            {
                 int graphIndex = 0;
                 GraphField.Items.Clear();
                 GraphLogic graphLog = await Task.Run(() => new GraphLogic(
@@ -90,7 +89,7 @@ namespace ssh_test1
                         };
                         chart.Content =
                         getChart(graphIndex, graphLog.getYValues() ?? throw new ArgumentNullException(),
-                        graphLog.getXValues() ?? throw new ArgumentNullException());
+                        graphLog.getXValues() ?? throw new ArgumentNullException(), graphLog.getListOfNames()[graphIndex]);
                         chartView.Children.Add(chart);
                         chartView.Children.Add(setLegend());
                         GraphField.Items.Add(new TabItem
@@ -101,13 +100,15 @@ namespace ssh_test1
                         graphIndex += 2;
                     }
                 }
-            //}
-            //catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleLogic.ConsoleText = "0";
         }
 
-        private Grid getChart(int i, List<List<int>> graphValuesY, List<List<int>> graphValuesX)
+        private Grid getChart(int i, List<List<int>> graphValuesY, List<List<int>> graphValuesX, string name)
         {
+            List<List<int>> BandFar = new List<List<int>>();
+            List<List<int>> BandNear = new List<List<int>>();
             LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
             Legend legend = new Legend()
             {
@@ -118,24 +119,32 @@ namespace ssh_test1
             {
                 LegendVisibility = Visibility.Hidden,
             };
-            List<List<int>> BanFar = splitListForBands(graphValuesX[i], graphValuesY[i]);
-            List<List<int>> BanNear = splitListForBands(graphValuesX[i+1], graphValuesY[i+1]);
-            for (int j = 0; j < BanFar.Count; j+=2)
+            if (name.Contains("down") || name.Contains("char-func-real")) 
+            {
+                BandFar = splitListForBands(graphValuesX[i + 1], graphValuesY[i + 1]);
+                BandNear = splitListForBands(graphValuesX[i], graphValuesY[i]);
+            }
+            else 
+            {
+                BandFar = splitListForBands(graphValuesX[i], graphValuesY[i]);
+                BandNear = splitListForBands(graphValuesX[i + 1], graphValuesY[i + 1]);
+            }
+            for (int j = 0; j < BandFar.Count; j+=2)
             {
                 LineGraph lineGraphFar = new LineGraph()
                 {
-                    Stroke = new SolidColorBrush(Colors.Blue),
+                    Stroke = new SolidColorBrush(Colors.Red),
                 };
-                lineGraphFar.Plot(BanFar[j], BanFar[j+1]);
+                lineGraphFar.Plot(BandFar[j], BandFar[j+1]);
                 grid.Children.Add(lineGraphFar);
             }
-            for (int j = 0; j < BanNear.Count; j += 2)
+            for (int j = 0; j < BandNear.Count; j += 2)
             {
                 LineGraph lineGraphNear = new LineGraph()
                 {
-                    Stroke = new SolidColorBrush(Colors.Red),
+                    Stroke = new SolidColorBrush(Colors.Blue),
                 };
-                lineGraphNear.Plot(BanNear[j], BanNear[j + 1]);
+                lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
                 grid.Children.Add(lineGraphNear);
             }
             return grid;
