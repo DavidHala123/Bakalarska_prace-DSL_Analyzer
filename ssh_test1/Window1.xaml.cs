@@ -8,6 +8,7 @@ using System.Windows.Media;
 using InteractiveDataDisplay.WPF;
 using System.Linq;
 using System.Windows.Shapes;
+using System.Windows.Controls.Primitives;
 
 namespace ssh_test1
 {
@@ -16,9 +17,12 @@ namespace ssh_test1
     /// </summary>
     public partial class Window1 : Window
     {
+        string dataFarEnd = "";
+        string dataNearEnd = "";
         string selectedPort;
         public static List<bool> graphSelector;
         public static bool isOnline = false;
+        bool fromFile = false;
         public Window1()
         {
             try 
@@ -64,19 +68,22 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
-            if (PortBox.SelectedItem == null)
+            if (PortBox.SelectedItem == null && !fromFile)
             {
                 MessageBox.Show("Please select port you wish to analyze first");
             }
             try
             {
+                if (!fromFile) 
+                {
+                    dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse()
+                        ?? throw new ArgumentNullException());
+                    dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse()
+                        ?? throw new ArgumentNullException());
+                }
                 int graphIndex = 0;
                 GraphField.Items.Clear();
-                GraphLogic graphLog = await Task.Run(() => new GraphLogic(
-                    new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse()
-                    ?? throw new ArgumentNullException(),
-                    new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse()
-                    ?? throw new ArgumentNullException(), graphSelector));
+                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
                 for (int i = 0; i < graphSelector.Count(); i++)
                 {
                     if (graphSelector[i] == true)
@@ -224,6 +231,7 @@ namespace ssh_test1
 
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            fromFile = false;
             var selected = (PortData)PortBox.SelectedItem;
             if (selected.portState.Contains("down.png"))
             {
@@ -305,6 +313,22 @@ namespace ssh_test1
         {
             OptionsWindow opt = new OptionsWindow(graphSelector);
             opt.Show();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFile svfl = new SaveFile(dataFarEnd, dataNearEnd);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            LoadFile lofl = new LoadFile();
+            string[] dataFile = lofl.getFarNearData();
+            dataFarEnd = dataFile[0];
+            dataNearEnd = dataFile[1];
+            fromFile = true;
+            send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            PortBox.Text = "From File";
         }
     }
 }
