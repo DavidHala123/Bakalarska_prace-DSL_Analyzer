@@ -50,8 +50,8 @@
             <Button x:Name="OptionsButton" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,100,0" Width="20" Height="20" Click="OptionsButton_Click">
                 <Image Source="Images/options-icon.png" Width="15" Opacity="0.5"/>
             </Button>
-            <Button Content="Save" HorizontalAlignment="Left" Margin="186,19,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-            <Button Content="Load" HorizontalAlignment="Left" Margin="54,0,0,0" VerticalAlignment="Center" Click="Button_Click_1"/>
+            <Button x:Name="Save" Content="Save" HorizontalAlignment="Left" Margin="186,19,0,0" VerticalAlignment="Top" Click="Save_Click"/>
+            <Button x:Name="LoadButton" Content="Load" HorizontalAlignment="Left" Margin="54,0,0,0" VerticalAlignment="Center" Click="Load_Click"/>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <TreeView x:Name="InfoTree">

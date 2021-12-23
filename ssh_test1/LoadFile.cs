@@ -13,6 +13,7 @@ namespace ssh_test1
         private string farEnd = "";
         private string nearEnd = "";
         private string textOfFile = "";
+        private string fileName = "";
         public LoadFile() 
         {
             OpenFileDialog opf = new OpenFileDialog()
@@ -22,6 +23,7 @@ namespace ssh_test1
             };
             if(opf.ShowDialog() == true) 
             {
+                fileName = opf.SafeFileName;
                 textOfFile = File.ReadAllText(opf.FileName);
                 farEnd = textOfFile.Substring(textOfFile.IndexOf("---FAR END---"), textOfFile.IndexOf("---NEAR END---") - textOfFile.IndexOf("---FAR END---"));
                 nearEnd = textOfFile.Substring(textOfFile.IndexOf("---NEAR END---"), textOfFile.IndexOf("---END OF FILE---") - textOfFile.IndexOf("---NEAR END---"));
@@ -34,6 +36,10 @@ namespace ssh_test1
             output[0] = farEnd;
             output[1] = nearEnd;
             return output;
+        }
+        public string getFileName() 
+        {
+            return fileName;
         }
     }
 }

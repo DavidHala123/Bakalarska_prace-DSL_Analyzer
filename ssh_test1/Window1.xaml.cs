@@ -23,6 +23,7 @@ namespace ssh_test1
         public static List<bool> graphSelector;
         public static bool isOnline = false;
         bool fromFile = false;
+        bool itemInserted = false;
         public Window1()
         {
             try 
@@ -231,14 +232,24 @@ namespace ssh_test1
 
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            fromFile = false;
+            if(fromFile && PortBox.SelectedIndex == 0) 
+            {
+                return;
+            }
             var selected = (PortData)PortBox.SelectedItem;
             if (selected.portState.Contains("down.png"))
             {
                 MessageBox.Show("Port you are trying to access is currently offline");
+                return;
             }
             else
             {
+                GraphField.Items.Clear();
+                if (fromFile) 
+                {
+                    PortBox.Items.RemoveAt(0);
+                }
+                fromFile = false;
                 selectedPort = selected.portName.ToString();
                 basinfo.Items.Clear();
                 advinfo.Items.Clear();
@@ -315,20 +326,24 @@ namespace ssh_test1
             opt.Show();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
             SaveFile svfl = new SaveFile(dataFarEnd, dataNearEnd);
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Load_Click(object sender, RoutedEventArgs e)
         {
             LoadFile lofl = new LoadFile();
             string[] dataFile = lofl.getFarNearData();
             dataFarEnd = dataFile[0];
             dataNearEnd = dataFile[1];
+            if (!fromFile) 
+            {
+                PortBox.Items.Insert(0, new PortData { portName = $"FROM FILE ({lofl.getFileName()})", portState = @"Images\up.png" });
+            }
             fromFile = true;
+            PortBox.SelectedIndex = 0;
             send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-            PortBox.Text = "From File";
         }
     }
 }
