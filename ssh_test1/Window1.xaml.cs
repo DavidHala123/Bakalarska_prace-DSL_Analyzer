@@ -232,7 +232,8 @@ namespace ssh_test1
 
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(fromFile && PortBox.SelectedIndex == 0) 
+            GraphField.Items.Clear();
+            if (fromFile && PortBox.SelectedIndex == 0) 
             {
                 return;
             }
@@ -244,7 +245,6 @@ namespace ssh_test1
             }
             else
             {
-                GraphField.Items.Clear();
                 if (fromFile) 
                 {
                     PortBox.Items.RemoveAt(0);
@@ -292,6 +292,8 @@ namespace ssh_test1
                     gif.Visibility = Visibility.Visible;
                     XDSLStandart.Margin = new Thickness(77, 0, 0, 0);
                     send.IsEnabled = false;
+                    LoadButton.IsEnabled = false;
+                    SaveButton.IsEnabled = false;
                     PortBox.IsEnabled = false;
                     send.Content = "Processing";
                 }
@@ -300,6 +302,8 @@ namespace ssh_test1
                     gif.Visibility = Visibility.Collapsed;
                     XDSLStandart.Margin = new Thickness(15, 0, 0, 0);
                     PortBox.IsEnabled = true;
+                    LoadButton.IsEnabled = true;
+                    SaveButton.IsEnabled = true;
                     send.Content = "Analyze";
                     send.IsEnabled = true;
                 }
@@ -334,16 +338,21 @@ namespace ssh_test1
         private void Load_Click(object sender, RoutedEventArgs e)
         {
             LoadFile lofl = new LoadFile();
-            string[] dataFile = lofl.getFarNearData();
-            dataFarEnd = dataFile[0];
-            dataNearEnd = dataFile[1];
-            if (!fromFile) 
+            if (lofl.getState()) 
             {
-                PortBox.Items.Insert(0, new PortData { portName = $"FROM FILE ({lofl.getFileName()})", portState = @"Images\up.png" });
+                string[] dataFile = lofl.getFarNearData();
+                dataFarEnd = dataFile[0];
+                dataNearEnd = dataFile[1];
+                PortBox.Items.Insert(0, new PortData { portName = lofl.getFileName(), portState = @"Images\txt_file.png" });
+                PortBox.SelectedIndex = 0;
+                var itemAtOne = (PortData)PortBox.Items[1];
+                if (itemAtOne.portName.Contains(".txt")) 
+                {
+                    PortBox.Items.RemoveAt(1);
+                }
+                fromFile = true;
+                send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
-            fromFile = true;
-            PortBox.SelectedIndex = 0;
-            send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
     }
 }

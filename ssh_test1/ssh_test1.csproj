@@ -11,6 +11,7 @@
     <None Remove="ajax-loader.gif" />
     <None Remove="down.png" />
     <None Remove="Images\options-icon.png" />
+    <None Remove="Images\txt_file.png" />
     <None Remove="up.png" />
   </ItemGroup>
 
@@ -31,6 +32,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\options-icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\txt_file.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\up.png">
