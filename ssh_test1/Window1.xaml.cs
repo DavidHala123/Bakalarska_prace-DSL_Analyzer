@@ -37,7 +37,8 @@ namespace ssh_test1
                     {
                         PortBox.Items.Add(obj);
                     }
-                    string xdslStandartStr = await Task.Run(() => new SendData("show xdsl operational-data line | match match exact:gfast").getResponse());
+                    string xdslStandartStr = await sendToDSLAM("show xdsl operational-data line | match match exact:gfast");
+                    //string xdslStandartStr = await Task.Run(() => new SendData("show xdsl operational-data line | match match exact:gfast").getResponse());
                     if (!xdslStandartStr.Contains("up"))
                     {
                         XDSLStandart.Text = "ADSL/VDSL";
@@ -77,10 +78,12 @@ namespace ssh_test1
             {
                 if (!fromFile) 
                 {
-                    dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse()
-                        ?? throw new ArgumentNullException());
-                    dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse()
-                        ?? throw new ArgumentNullException());
+                    dataFarEnd = await sendToDSLAM("show xdsl carrier-data far-end " + selectedPort + " detail");
+                    dataNearEnd = await sendToDSLAM("show xdsl carrier-data near-end " + selectedPort + " detail");
+                    //dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse()
+                    //    ?? throw new ArgumentNullException());
+                    //dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse()
+                    //    ?? throw new ArgumentNullException());
                 }
                 int graphIndex = 0;
                 GraphField.Items.Clear();
@@ -111,6 +114,11 @@ namespace ssh_test1
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleLogic.ConsoleText = "0";
+        }
+
+        private static async Task<string> sendToDSLAM(string input) 
+        {
+            return await Task.Run(() => new SendData(input).getResponse() ?? throw new ArgumentNullException());
         }
 
         private Grid getChart(int i, List<List<int>> graphValuesY, List<List<int>> graphValuesX, string name)
@@ -335,10 +343,10 @@ namespace ssh_test1
             SaveFile svfl = new SaveFile(dataFarEnd, dataNearEnd);
         }
 
-        private void Load_Click(object sender, RoutedEventArgs e)
+        private void Open_Click(object sender, RoutedEventArgs e)
         {
             LoadFile lofl = new LoadFile();
-            if (lofl.getState()) 
+            if (lofl.getState())
             {
                 string[] dataFile = lofl.getFarNearData();
                 dataFarEnd = dataFile[0];
@@ -346,13 +354,23 @@ namespace ssh_test1
                 PortBox.Items.Insert(0, new PortData { portName = lofl.getFileName(), portState = @"Images\txt_file.png" });
                 PortBox.SelectedIndex = 0;
                 var itemAtOne = (PortData)PortBox.Items[1];
-                if (itemAtOne.portName.Contains(".txt")) 
+                if (itemAtOne.portName.Contains(".txt"))
                 {
                     PortBox.Items.RemoveAt(1);
                 }
                 fromFile = true;
                 send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
+        }
+
+        private void ExportExcel_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExportMatlab_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

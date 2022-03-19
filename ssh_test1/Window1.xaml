@@ -21,9 +21,11 @@
         </DataTemplate>
     </Window.Resources>
     <Grid>
-
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.1*">
+            <RowDefinition Height="20">
+                
+            </RowDefinition>
+            <RowDefinition Height="55">
 
             </RowDefinition>
             <RowDefinition Height="*">
@@ -41,17 +43,39 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0">
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <DockPanel>
+                <Menu VerticalAlignment="Center">
+                    <MenuItem Header="File">
+                        <MenuItem Header="Open" Click="Open_Click" x:Name="LoadButton"/>
+                        <MenuItem Header="Save" Click="Save_Click" x:Name="SaveButton"/>
+                        <MenuItem Header="Export to...">
+                            <MenuItem Header="Excel" Click="ExportExcel_Click"/>
+                            <MenuItem Header="Matlab" Click="ExportMatlab_Click"/>
+                        </MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Edit">
+                        <MenuItem Header="Select Charts" Click="OptionsButton_Click" x:Name="OptionsButton"/>
+                        <MenuItem Header="Chart appearance"/>
+                    </MenuItem>
+                    <MenuItem Header="Window">
+                        <MenuItem Header="Window appearance"/>
+                    </MenuItem>
+                    <MenuItem Header="Connection">
+                        <MenuItem Header="Connection details"/>
+                        <MenuItem Header="Change connection"/>
+                    </MenuItem>
+                </Menu>
+            </DockPanel>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
             <ComboBox x:Name="PortBox" ItemTemplate="{StaticResource cmbTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35" Width="180" SelectionChanged="PortBox_SelectionChanged"/>
 
         </Grid>
-        <Grid Grid.Row="0" Grid.Column="1">
+        <Grid Grid.Row="1" Grid.Column="1">
             <Button x:Name="send" Content="Analyze" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0" Height="25" Width="70" Click="send_Click"/>
-            <Button x:Name="OptionsButton" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,100,0" Width="20" Height="20" Click="OptionsButton_Click">
-                <Image Source="Images/options-icon.png" Width="15" Opacity="0.5"/>
-            </Button>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="0">
+        <Grid Grid.Row="2" Grid.Column="0">
             <TreeView x:Name="InfoTree" Margin="0,0,0,40">
                 <TreeViewItem Header="Basic information" x:Name="basinfo" IsExpanded="True">
                     <TreeViewItem.ItemTemplate>
@@ -73,22 +97,19 @@
                 </TreeViewItem>
             </TreeView>
             <Border BorderBrush="Gray" BorderThickness="1">
-                <Grid>
-                <Button x:Name="SaveButton" Content="Save" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10" Width="80" Click="Save_Click"/>
-                <Button x:Name="LoadButton" Content="Load" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,10" Width="80" Click="Load_Click"/>
-            </Grid>
+
             </Border>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="1">
+        <Grid Grid.Row="2" Grid.Column="1">
             <TabControl x:Name="GraphField" SelectionChanged="GraphField_SelectionChanged" Margin="0,0,5,0">
             </TabControl>
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="0" Background="GhostWhite">
+        <Grid Grid.Row="3" Grid.Column="0" Background="GhostWhite">
             <Image gif:ImageBehavior.RepeatBehavior="Forever"
                 gif:ImageBehavior.AnimatedSource="Images/ajax-loader.gif" Margin="15,4" x:Name="gif" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <TextBlock x:Name="XDSLStandart"/>
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="1" Background="GhostWhite">
+        <Grid Grid.Row="3" Grid.Column="1" Background="GhostWhite">
             <TextBlock x:Name="AppConsole" Padding="10,0" Background="#FFE7E7F0"/>
         </Grid>
     </Grid>
