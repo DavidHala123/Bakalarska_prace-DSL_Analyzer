@@ -17,6 +17,9 @@ namespace ssh_test1
     /// </summary>
     public partial class Window1 : Window
     {
+        List<List<int>> GraphYvalues;
+        List<List<int>> GraphXvalues;
+        List<string> GraphListOfNames;
         string dataFarEnd = "";
         string dataNearEnd = "";
         string selectedPort;
@@ -98,9 +101,10 @@ namespace ssh_test1
                         {
                             LegendVisibility = Visibility.Hidden,
                         };
-                        chart.Content =
-                        getChart(graphIndex, graphLog.getYValues() ?? throw new ArgumentNullException(),
-                        graphLog.getXValues() ?? throw new ArgumentNullException(), graphLog.getListOfNames()[graphIndex]);
+                        GraphYvalues = graphLog.getYValues() ?? throw new ArgumentNullException();
+                        GraphXvalues = graphLog.getXValues() ?? throw new ArgumentNullException();
+                        GraphListOfNames = graphLog.getListOfNames();
+                        chart.Content = getChart(graphIndex, GraphYvalues, GraphXvalues, GraphListOfNames[graphIndex]);
                         chartView.Children.Add(chart);
                         chartView.Children.Add(setLegend());
                         GraphField.Items.Add(new TabItem
@@ -363,9 +367,9 @@ namespace ssh_test1
             }
         }
 
-        private void ExportExcel_Click(object sender, RoutedEventArgs e)
+        private async void ExportExcel_Click(object sender, RoutedEventArgs e)
         {
-
+            ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames));
         }
 
         private void ExportMatlab_Click(object sender, RoutedEventArgs e)
