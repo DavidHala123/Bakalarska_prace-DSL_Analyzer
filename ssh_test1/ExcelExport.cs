@@ -14,7 +14,6 @@ namespace ssh_test1
     {
         public ExcelExport(List<List<int>> valuesY, List<List<int>> valuesX, List<string> names) 
         {
-            MessageBox.Show(valuesY.Count.ToString() + ", " + names.Count.ToString());
             var _excel = new Excel.Application();
             try 
             {
@@ -29,30 +28,49 @@ namespace ssh_test1
                     var collection = new Excel.Worksheet[valuesY.Count / 2];
                     for (int x = valuesY.Count - 1; x >= 1; x-=2)
                     {
-                        int i = 1;
+                        int PositionUpload = 3;
                         collection[x/2] = (Excel.Worksheet)wb.Worksheets.Add();
                         collection[x/2].Name = names[x];
-                        foreach (int y in valuesY[x])
+                        collection[x / 2].Cells[1, 1] = "UPSTREAM";
+                        collection[x / 2].Cells[2, 2] = "X values";
+                        collection[x / 2].Cells[2, 1] = "Y values";
+                        for (int y = 0; y <= valuesX[x].Count - 1; y++)
                         {
-                            collection[x/2].Cells[i, 1] = y;
-                            i++;
+                            try
+                            {
+                                collection[x / 2].Cells[PositionUpload, 2] = valuesX[x][y];
+                                collection[x / 2].Cells[PositionUpload, 1] = valuesY[x][y];
+                                PositionUpload++;
+                                if (valuesX[x][y] + 1 != valuesX[x][y + 1])
+                                    PositionUpload++;
+                            }
+                            catch 
+                            {
+                                collection[x / 2].Cells[PositionUpload, 2] = valuesX[x][y];
+                                collection[x / 2].Cells[PositionUpload, 1] = valuesY[x][y];
+                            }
                         }
-                        foreach (int y in valuesY[x-1])
+                        int PositionDownload = 3;
+                        collection[x / 2].Cells[1, 5] = "DOWNSTREAM";
+                        collection[x / 2].Cells[2, 6] = "X values";
+                        collection[x / 2].Cells[2, 5] = "Y values";
+                        for (int y = 0; y <= valuesX[x-1].Count - 1; y++)
                         {
-                            collection[x/2].Cells[i, 1] = y;
-                            i++;
+                            try
+                            {
+                                collection[x / 2].Cells[PositionDownload, 6] = valuesX[x-1][y];
+                                collection[x / 2].Cells[PositionDownload, 5] = valuesY[x-1][y];
+                                PositionDownload++;
+                                if (valuesX[x - 1][y] + 1 != valuesX[x - 1][y + 1])
+                                    PositionDownload++;
+                            }
+                            catch
+                            {
+                                collection[x / 2].Cells[PositionDownload, 6] = valuesX[x-1][y];
+                                collection[x / 2].Cells[PositionDownload, 5] = valuesY[x-1][y];
+                            }
                         }
-                        i = 1;
-                        foreach (int y in valuesX[x])
-                        {
-                            collection[x / 2].Cells[i, 2] = y;
-                            i++;
-                        }
-                        foreach (int y in valuesX[x - 1])
-                        {
-                            collection[x / 2].Cells[i, 2] = y;
-                            i++;
-                        }
+
                     }
                     wb.SaveAs(sf.FileName);
                     wb.Close();

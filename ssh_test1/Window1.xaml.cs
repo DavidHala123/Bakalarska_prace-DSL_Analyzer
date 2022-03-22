@@ -369,7 +369,9 @@ namespace ssh_test1
 
         private async void ExportExcel_Click(object sender, RoutedEventArgs e)
         {
+            ConsoleLogic.ConsoleText = "1";
             ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames));
+            ConsoleLogic.ConsoleText = "0";
         }
 
         private void ExportMatlab_Click(object sender, RoutedEventArgs e)
