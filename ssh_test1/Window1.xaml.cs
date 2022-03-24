@@ -17,6 +17,7 @@ namespace ssh_test1
     /// </summary>
     public partial class Window1 : Window
     {
+        public static bool OptionsChanged = false;
         List<List<int>> GraphYvalues;
         List<List<int>> GraphXvalues;
         List<string> GraphListOfNames;
@@ -41,7 +42,6 @@ namespace ssh_test1
                         PortBox.Items.Add(obj);
                     }
                     string xdslStandartStr = await sendToDSLAM("show xdsl operational-data line | match match exact:gfast");
-                    //string xdslStandartStr = await Task.Run(() => new SendData("show xdsl operational-data line | match match exact:gfast").getResponse());
                     if (!xdslStandartStr.Contains("up"))
                     {
                         XDSLStandart.Text = "ADSL/VDSL";
@@ -73,20 +73,21 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
+            ChartGraph();
+        }
+        private async void ChartGraph() 
+        {
             if (PortBox.SelectedItem == null && !fromFile)
             {
                 MessageBox.Show("Please select port you wish to analyze first");
             }
             try
             {
-                if (!fromFile) 
+                //if(!fromFile)
+                if (dataFarEnd == "" && dataNearEnd == "" && !fromFile)
                 {
                     dataFarEnd = await sendToDSLAM("show xdsl carrier-data far-end " + selectedPort + " detail");
                     dataNearEnd = await sendToDSLAM("show xdsl carrier-data near-end " + selectedPort + " detail");
-                    //dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + selectedPort + " detail").getResponse()
-                    //    ?? throw new ArgumentNullException());
-                    //dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + selectedPort + " detail").getResponse()
-                    //    ?? throw new ArgumentNullException());
                 }
                 int graphIndex = 0;
                 GraphField.Items.Clear();
@@ -97,7 +98,7 @@ namespace ssh_test1
                     {
                         graphLog.SelectGraphNeeeded(i);
                         Grid chartView = new Grid();
-                        Chart chart = new Chart() 
+                        Chart chart = new Chart()
                         {
                             LegendVisibility = Visibility.Hidden,
                         };
@@ -245,6 +246,11 @@ namespace ssh_test1
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             GraphField.Items.Clear();
+            if (!fromFile)
+            {
+                dataFarEnd = "";
+                dataNearEnd = "";
+            }
             if (fromFile && PortBox.SelectedIndex == 0) 
             {
                 return;
@@ -299,6 +305,11 @@ namespace ssh_test1
             string outputbefore = "";
             while (true)
             {
+                if (OptionsChanged)
+                {
+                    ChartGraph();
+                    OptionsChanged = false;
+                }
                 if (ConsoleLogic.ConsoleText != "")
                 {
                     gif.Visibility = Visibility.Visible;
@@ -352,6 +363,7 @@ namespace ssh_test1
             LoadFile lofl = new LoadFile();
             if (lofl.getState())
             {
+                fromFile = true;
                 string[] dataFile = lofl.getFarNearData();
                 dataFarEnd = dataFile[0];
                 dataNearEnd = dataFile[1];
@@ -362,15 +374,13 @@ namespace ssh_test1
                 {
                     PortBox.Items.RemoveAt(1);
                 }
-                fromFile = true;
                 send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
         }
 
         private async void ExportExcel_Click(object sender, RoutedEventArgs e)
         {
-            ConsoleLogic.ConsoleText = "1";
-            ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames));
+            ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames, graphSelector));
             ConsoleLogic.ConsoleText = "0";
         }
 

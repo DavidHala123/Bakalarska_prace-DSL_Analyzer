@@ -43,6 +43,9 @@ namespace ssh_test1
                     case "3":
                         output = "Processing data";
                         break;
+                    case "4":
+                        output = "Exporting data";
+                        break;
 
                 }
                 consoleText = output;
