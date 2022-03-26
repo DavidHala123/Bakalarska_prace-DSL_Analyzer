@@ -12,10 +12,10 @@ namespace ssh_test1
 {
     internal class ExcelExport
     {
-        public ExcelExport(List<List<int>> valuesY, List<List<int>> valuesX, List<string> names, List<bool> graphs) 
+        public ExcelExport(List<List<int>> valuesY, List<List<int>> valuesX, List<string> names, List<bool> graphs)
         {
             var _excel = new Excel.Application();
-            try 
+            try
             {
                 SaveFileDialog sf = new SaveFileDialog()
                 {
@@ -26,54 +26,57 @@ namespace ssh_test1
                 {
                     ConsoleLogic.ConsoleText = "4";
                     var wb = _excel.Workbooks.Add();
-                    var collection = new Excel.Worksheet[valuesY.Count / 2];
-                    for (int x = valuesY.Count - 1; x >= 1; x-=2)
+                    double numberOfColD = valuesY.Count / 2;
+                    int numOfColI = (int)Math.Ceiling(numberOfColD);
+                    var collection = new Excel.Worksheet[numOfColI];
+                    int nameIndex = names.Count - 1;
+                    int valuesCount = valuesY.Count() - 1;
+                    for (int chart = graphs.Count - 1; chart >= 0; chart--)
                     {
-                        if(graphs[x/2] == true) 
+                        if (graphs[chart])
                         {
+                            int indexOfCol = numOfColI - 1;
                             int PositionUpload = 3;
-                            collection[x / 2] = (Excel.Worksheet)wb.Worksheets.Add();
-                            collection[x / 2].Name = names[x];
-                            collection[x / 2].Cells[1, 1] = "UPSTREAM";
-                            collection[x / 2].Cells[2, 2] = "X values";
-                            collection[x / 2].Cells[2, 1] = "Y values";
-                            for (int y = 0; y <= valuesX[x].Count - 1; y++)
+                            collection[indexOfCol] = (Excel.Worksheet)wb.Worksheets.Add();
+                            collection[indexOfCol].Name = names[nameIndex];
+                            collection[indexOfCol].Cells[1, 1] = "UPSTREAM";
+                            collection[indexOfCol].Cells[2, 2] = "X values";
+                            collection[indexOfCol].Cells[2, 1] = "Y values";
+                            for (int y = 0; y <= valuesX[valuesCount].Count - 1; y++)
                             {
                                 try
                                 {
-                                    collection[x / 2].Cells[PositionUpload, 2] = valuesX[x][y];
-                                    collection[x / 2].Cells[PositionUpload, 1] = valuesY[x][y];
+                                    collection[indexOfCol].Cells[PositionUpload, 2] = valuesX[valuesCount][y];
+                                    collection[indexOfCol].Cells[PositionUpload, 1] = valuesY[valuesCount][y];
                                     PositionUpload++;
-                                    if (valuesX[x][y] + 1 != valuesX[x][y + 1])
+                                    if (valuesX[valuesCount][y] + 1 != valuesX[valuesCount][y + 1])
                                         PositionUpload++;
                                 }
                                 catch
                                 {
-                                    collection[x / 2].Cells[PositionUpload, 2] = valuesX[x][y];
-                                    collection[x / 2].Cells[PositionUpload, 1] = valuesY[x][y];
+                                    PositionUpload++;
                                 }
                             }
                             int PositionDownload = 3;
-                            collection[x / 2].Cells[1, 5] = "DOWNSTREAM";
-                            collection[x / 2].Cells[2, 6] = "X values";
-                            collection[x / 2].Cells[2, 5] = "Y values";
-                            for (int y = 0; y <= valuesX[x - 1].Count - 1; y++)
+                            collection[indexOfCol].Cells[1, 5] = "DOWNSTREAM";
+                            collection[indexOfCol].Cells[2, 6] = "X values";
+                            collection[indexOfCol].Cells[2, 5] = "Y values";
+                            for (int xparam = 0; xparam <= valuesX[valuesCount - 1].Count - 1; xparam++)
                             {
                                 try
                                 {
-                                    collection[x / 2].Cells[PositionDownload, 6] = valuesX[x - 1][y];
-                                    collection[x / 2].Cells[PositionDownload, 5] = valuesY[x - 1][y];
+                                    collection[indexOfCol].Cells[PositionDownload, 6] = valuesX[valuesCount - 1][xparam];
+                                    collection[indexOfCol].Cells[PositionDownload, 5] = valuesY[valuesCount - 1][xparam];
                                     PositionDownload++;
-                                    if (valuesX[x - 1][y] + 1 != valuesX[x - 1][y + 1])
+                                    if (valuesX[valuesCount - 1][xparam] + 1 != valuesX[valuesCount - 1][xparam + 1])
                                         PositionDownload++;
                                 }
                                 catch
                                 {
-                                    collection[x / 2].Cells[PositionDownload, 6] = valuesX[x - 1][y];
-                                    collection[x / 2].Cells[PositionDownload, 5] = valuesY[x - 1][y];
+                                    PositionDownload++;
                                 }
                             }
-                            Excel.ChartObjects xlCharts = (Excel.ChartObjects)collection[x / 2].ChartObjects(Type.Missing);
+                            Excel.ChartObjects xlCharts = (Excel.ChartObjects)collection[indexOfCol].ChartObjects(Type.Missing);
                             Excel.ChartObject myChart = (Excel.ChartObject)xlCharts.Add(500, 80, 400, 200);
                             Excel.Chart chartPage = myChart.Chart;
                             chartPage.ChartType = Excel.XlChartType.xlXYScatterSmoothNoMarkers;
@@ -81,19 +84,23 @@ namespace ssh_test1
                             Excel.SeriesCollection seriesCollection = (Excel.SeriesCollection)chartPage.SeriesCollection();
                             Excel.Series os1 = seriesCollection.NewSeries();
                             os1.Name = "UPLOAD";
-                            os1.Values = collection[x / 2].get_Range("A3", $"A{PositionUpload}");
-                            os1.XValues = collection[x / 2].get_Range("B3", $"B{PositionUpload}");
+                            os1.Values = collection[indexOfCol].get_Range("A3", $"A{PositionUpload}");
+                            os1.XValues = collection[indexOfCol].get_Range("B3", $"B{PositionUpload}");
                             Excel.Series os2 = seriesCollection.NewSeries();
                             os2.Name = "DOWNLOAD";
-                            os2.Values = collection[x / 2].get_Range("E3", $"E{PositionDownload}");
-                            os2.XValues = collection[x / 2].get_Range("F3", $"F{PositionDownload}");
+                            os2.Values = collection[indexOfCol].get_Range("E3", $"E{PositionDownload}");
+                            os2.XValues = collection[indexOfCol].get_Range("F3", $"F{PositionDownload}");
+                            indexOfCol--;
+                            nameIndex -= 2;
+                            valuesCount -= 2;
                         }
                     }
                     wb.SaveAs(sf.FileName);
                     wb.Close();
+
                 }
             }
-            finally 
+            finally
             {
                 Marshal.ReleaseComObject(_excel);
             }

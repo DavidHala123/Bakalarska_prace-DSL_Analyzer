@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -89,5 +90,11 @@ namespace ssh_test1
                 Name.Text = "Name of User";
             }
         }
+
+        //protected override void OnClosed(EventArgs e)
+        //{
+        //    base.OnClosed(e);
+        //    Application.Current.Shutdown();
+        //}
     }
 }

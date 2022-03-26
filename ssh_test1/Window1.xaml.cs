@@ -27,7 +27,7 @@ namespace ssh_test1
         public static List<bool> graphSelector;
         public static bool isOnline = false;
         bool fromFile = false;
-        bool itemInserted = false;
+        List<string> YaxisName = new List<string>() { "number of bits [bits]", "gain [Hz]", "snr [Hz]", "qln [Hz]", "idk", "idk", "idk" };
         public Window1()
         {
             try 
@@ -101,6 +101,9 @@ namespace ssh_test1
                         Chart chart = new Chart()
                         {
                             LegendVisibility = Visibility.Hidden,
+                            LeftTitle = YaxisName[i],
+                            BottomTitle = "Carrier i [-]",
+
                         };
                         GraphYvalues = graphLog.getYValues() ?? throw new ArgumentNullException();
                         GraphXvalues = graphLog.getXValues() ?? throw new ArgumentNullException();
@@ -136,10 +139,6 @@ namespace ssh_test1
                 Content = legendItemsPanel
             };
             Grid grid = new Grid();
-            Chart chart = new Chart()
-            {
-                LegendVisibility = Visibility.Hidden,
-            };
             if (name.Contains("down") || name.Contains("char-func-real")) 
             {
                 BandFar = splitListForBands(graphValuesX[i + 1], graphValuesY[i + 1]);
@@ -155,6 +154,8 @@ namespace ssh_test1
                 LineGraph lineGraphFar = new LineGraph()
                 {
                     Stroke = new SolidColorBrush(Colors.Red),
+                    Padding = new System.Windows.Thickness(0, 30, 0, 0)
+
                 };
                 lineGraphFar.Plot(BandFar[j], BandFar[j+1]);
                 grid.Children.Add(lineGraphFar);
@@ -164,6 +165,7 @@ namespace ssh_test1
                 LineGraph lineGraphNear = new LineGraph()
                 {
                     Stroke = new SolidColorBrush(Colors.Blue),
+                    Padding = new System.Windows.Thickness(0, 30, 0, 0)
                 };
                 lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
                 grid.Children.Add(lineGraphNear);
@@ -246,10 +248,12 @@ namespace ssh_test1
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             GraphField.Items.Clear();
-            if (!fromFile)
+            dataFarEnd = "";
+            dataNearEnd = "";
+            if(GraphYvalues != null && GraphXvalues != null) 
             {
-                dataFarEnd = "";
-                dataNearEnd = "";
+                GraphYvalues.Clear();
+                GraphXvalues.Clear();
             }
             if (fromFile && PortBox.SelectedIndex == 0) 
             {
@@ -307,7 +311,8 @@ namespace ssh_test1
             {
                 if (OptionsChanged)
                 {
-                    ChartGraph();
+                    if(dataFarEnd != "" && dataNearEnd != "")
+                        ChartGraph();
                     OptionsChanged = false;
                 }
                 if (ConsoleLogic.ConsoleText != "")
@@ -365,10 +370,10 @@ namespace ssh_test1
             {
                 fromFile = true;
                 string[] dataFile = lofl.getFarNearData();
-                dataFarEnd = dataFile[0];
-                dataNearEnd = dataFile[1];
                 PortBox.Items.Insert(0, new PortData { portName = lofl.getFileName(), portState = @"Images\txt_file.png" });
                 PortBox.SelectedIndex = 0;
+                dataFarEnd = dataFile[0];
+                dataNearEnd = dataFile[1];
                 var itemAtOne = (PortData)PortBox.Items[1];
                 if (itemAtOne.portName.Contains(".txt"))
                 {
