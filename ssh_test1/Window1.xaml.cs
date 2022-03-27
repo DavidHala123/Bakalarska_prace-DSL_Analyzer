@@ -354,8 +354,10 @@ namespace ssh_test1
 
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            OptionsWindow opt = new OptionsWindow(graphSelector);
+            SelectChartsUC selc = new SelectChartsUC(graphSelector);
+            OptionsBase opt = new OptionsBase(selc);
             opt.Show();
+            if(selc.f)
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)

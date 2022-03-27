@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
   <ItemGroup>
