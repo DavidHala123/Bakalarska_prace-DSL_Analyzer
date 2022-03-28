@@ -46,7 +46,7 @@ namespace ssh_test1
                 ConData.password = password.Password.ToString();
                 Window1 wind = new Window1();
                 wind.Show();
-                this.Close();
+                this.Hide();
             }
         }
 
@@ -91,10 +91,10 @@ namespace ssh_test1
             }
         }
 
-        //protected override void OnClosed(EventArgs e)
-        //{
-        //    base.OnClosed(e);
-        //    Application.Current.Shutdown();
-        //}
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            Application.Current.Shutdown();
+        }
     }
 }

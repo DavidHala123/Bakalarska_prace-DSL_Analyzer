@@ -17,22 +17,80 @@ namespace ssh_test1
     /// </summary>
     public partial class Window1 : Window
     {
-        public static bool OptionsChanged = false;
         List<List<int>> GraphYvalues;
         List<List<int>> GraphXvalues;
         List<string> GraphListOfNames;
         string dataFarEnd = "";
         string dataNearEnd = "";
         string selectedPort;
-        public static List<bool> graphSelector;
-        public static bool isOnline = false;
+        private static bool _OptionsChanged = false;
+        public static bool OptionsChanged 
+        { 
+            get { return _OptionsChanged; }
+            set 
+            {
+                if(_OptionsChanged != value) 
+                {
+                    _OptionsChanged = value;
+                }
+            }
+        }
+        private static SolidColorBrush _BrushUpload = new SolidColorBrush(Colors.Red);
+        public static SolidColorBrush BrushUpload
+        {
+            get { return _BrushUpload; }
+            set 
+            {
+                if(_BrushUpload != value) 
+                {
+                    _BrushUpload = value;
+                }
+            }
+        }
+        private static SolidColorBrush _BrushDownload = new SolidColorBrush(Colors.Blue);
+        public static SolidColorBrush BrushDownload
+        {
+            get { return _BrushDownload; }
+            set
+            {
+                if (_BrushDownload != value) 
+                {
+                    _BrushDownload = value;
+                }
+            }
+        }
+        private static List<bool> _graphSelector;
+        public static List<bool> graphSelector 
+        {
+            get { return _graphSelector; }
+            set 
+            {
+                if(_graphSelector != value) 
+                {
+                    _graphSelector = value;
+                }
+            }
+        }
+        //private static bool _isOnline = false;
+        //public static bool isOnline 
+        //{
+        //    get { return _isOnline;}
+        //    set 
+        //    {
+        //        if(_isOnline != value) 
+        //        {
+        //            _isOnline = value;
+        //        }
+        //    }
+        //}
         bool fromFile = false;
         List<string> YaxisName = new List<string>() { "number of bits [bits]", "gain [Hz]", "snr [Hz]", "qln [Hz]", "idk", "idk", "idk" };
         public Window1()
         {
+
             try 
             {
-                graphSelector = new List<bool>() { true, true, true, true, true, true, true };
+                _graphSelector = new List<bool>() { true, true, true, true, true, true, true };
                 async Task Initialize() 
                 {
                     List<PortData> listofobj = await Task.Run(() => new PortBoxLogic(new SendData
@@ -55,7 +113,6 @@ namespace ssh_test1
             }
             catch { }
         }
-
         public void ErrorMessage(string errorText)
         {
             MessageBox.Show(errorText);
@@ -91,10 +148,10 @@ namespace ssh_test1
                 }
                 int graphIndex = 0;
                 GraphField.Items.Clear();
-                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
-                for (int i = 0; i < graphSelector.Count(); i++)
+                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, _graphSelector));
+                for (int i = 0; i < _graphSelector.Count(); i++)
                 {
-                    if (graphSelector[i] == true)
+                    if (_graphSelector[i] == true)
                     {
                         graphLog.SelectGraphNeeeded(i);
                         Grid chartView = new Grid();
@@ -153,7 +210,7 @@ namespace ssh_test1
             {
                 LineGraph lineGraphFar = new LineGraph()
                 {
-                    Stroke = new SolidColorBrush(Colors.Red),
+                    Stroke = BrushDownload,
                     Padding = new System.Windows.Thickness(0, 30, 0, 0)
 
                 };
@@ -164,7 +221,7 @@ namespace ssh_test1
             {
                 LineGraph lineGraphNear = new LineGraph()
                 {
-                    Stroke = new SolidColorBrush(Colors.Blue),
+                    Stroke = BrushUpload,
                     Padding = new System.Windows.Thickness(0, 30, 0, 0)
                 };
                 lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
@@ -183,16 +240,16 @@ namespace ssh_test1
             {
                 Width = 10,
                 Height = 10,
-                Fill = new SolidColorBrush(Colors.Red),
-                Stroke = new SolidColorBrush(Colors.Red),
+                Fill = BrushUpload,
+                Stroke = BrushUpload,
             };
 
             Rectangle rectDOWN = new Rectangle()
             {
                 Width = 10,
                 Height = 10,
-                Fill = new SolidColorBrush(Colors.Blue),
-                Stroke = new SolidColorBrush(Colors.Blue),
+                Fill = BrushDownload,
+                Stroke = BrushDownload,
             };
             TextBox textBoxUP = new TextBox()
             {
@@ -309,11 +366,11 @@ namespace ssh_test1
             string outputbefore = "";
             while (true)
             {
-                if (OptionsChanged)
+                if (_OptionsChanged)
                 {
                     if(dataFarEnd != "" && dataNearEnd != "")
                         ChartGraph();
-                    OptionsChanged = false;
+                    _OptionsChanged = false;
                 }
                 if (ConsoleLogic.ConsoleText != "")
                 {
@@ -352,12 +409,11 @@ namespace ssh_test1
             Application.Current.Shutdown();
         }
 
-        private void OptionsButton_Click(object sender, RoutedEventArgs e)
+        private async void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            SelectChartsUC selc = new SelectChartsUC(graphSelector);
+            SelectChartsUC selc = new SelectChartsUC(_graphSelector);
             OptionsBase opt = new OptionsBase(selc);
             opt.Show();
-            if(selc.f)
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -387,8 +443,15 @@ namespace ssh_test1
 
         private async void ExportExcel_Click(object sender, RoutedEventArgs e)
         {
-            ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames, graphSelector));
+            ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames, _graphSelector));
             ConsoleLogic.ConsoleText = "0";
+        }
+
+        private void ChartAppearence_Click(object sender, RoutedEventArgs e)
+        {
+            ChartAppearenceUC chaUC = new ChartAppearenceUC();
+            OptionsBase opt = new OptionsBase(chaUC);
+            opt.Show();
         }
 
         private void ExportMatlab_Click(object sender, RoutedEventArgs e)

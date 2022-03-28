@@ -21,18 +21,6 @@ namespace ssh_test1
     public partial class SelectChartsUC : UserControl
     {
         String[] outputString = new String[7];
-        private bool _OptionsChanged = false;
-        public bool OptionsChanged
-        {
-            get { return _OptionsChanged; }
-            set 
-            {
-                if(_OptionsChanged != value)
-                {
-                    _OptionsChanged = value;
-                }
-            }
-        }
         public SelectChartsUC(List<bool> listOfChecks)
         {
             InitializeComponent();
@@ -122,8 +110,6 @@ namespace ssh_test1
                 else
                     output.Add(true);
             }
-            OptionsChanged = true;
-
             Window1.graphSelector = output;
             Window1.OptionsChanged = true;
         }

@@ -40,7 +40,7 @@
         </Grid>
         <Grid Grid.Row="2">
             <TextBlock Width="60" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Color:"/>
-            <Rectangle Stroke="DarkGray" x:Name="colorRect" Width="160" Height="20" Margin="80,0,0,0" RadiusX="0" RadiusY="0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <Rectangle Stroke="DarkGray" x:Name="colorRect" Width="160" Height="20" Margin="80,0,0,0" RadiusX="0" RadiusY="0" VerticalAlignment="Top" HorizontalAlignment="Left" Fill="Black"/>
         </Grid>
         <Grid Grid.Row="3">
             <Button x:Name="setUpload" Content="Set for upload" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="100" Margin="10,0,0,10" VerticalAlignment="Bottom" Click="setUpload_Click"/>

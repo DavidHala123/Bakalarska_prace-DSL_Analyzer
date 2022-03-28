@@ -94,11 +94,14 @@ namespace ssh_test1
 
         private void setUpload_Click(object sender, RoutedEventArgs e)
         {
+            Window1.BrushUpload = new SolidColorBrush(Color.FromArgb(255, Rval, Gval, Bval));
+            Window1.OptionsChanged = true;
         }
 
         private void setDownload_Click(object sender, RoutedEventArgs e)
         {
-
+            Window1.BrushDownload = new SolidColorBrush(Color.FromArgb(255, Rval, Gval, Bval));
+            Window1.OptionsChanged = true;
         }
     }
 }
