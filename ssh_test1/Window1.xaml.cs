@@ -207,7 +207,7 @@ namespace ssh_test1
             {
                 LineGraph lineGraphFar = new LineGraph()
                 {
-                    Stroke = new SolidColorBrush(Colors.Red),
+                    Stroke = BrushUpload,
                     Padding = new System.Windows.Thickness(0,30,0,0),
                 };
                 lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
@@ -217,7 +217,7 @@ namespace ssh_test1
             {
                 LineGraph lineGraphNear = new LineGraph()
                 {
-                    Stroke = new SolidColorBrush(Colors.Blue),
+                    Stroke = BrushDownload,
                     Padding = new System.Windows.Thickness(0, 30, 0, 0),
                 };
                 lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
@@ -408,7 +408,7 @@ namespace ssh_test1
         private async void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
             SelectChartsUC selc = new SelectChartsUC(_graphSelector);
-            OptionsBase opt = new OptionsBase(selc);
+            OptionsBase opt = new OptionsBase(selc, _graphSelector);
             opt.Show();
         }
 
@@ -446,7 +446,7 @@ namespace ssh_test1
         private void ChartAppearence_Click(object sender, RoutedEventArgs e)
         {
             ChartAppearenceUC chaUC = new ChartAppearenceUC();
-            OptionsBase opt = new OptionsBase(chaUC);
+            OptionsBase opt = new OptionsBase(chaUC, _graphSelector);
             opt.Show();
         }
 

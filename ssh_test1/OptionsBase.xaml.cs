@@ -20,17 +20,11 @@ namespace ssh_test1
     public partial class OptionsBase : Window
     {
         private List<bool> charts;
-        public OptionsBase(UIElement UC)
+        public OptionsBase(UIElement UC, List<bool> listofCharts)
         {
             InitializeComponent();
-            try 
-            {
-                openUC(UC);
-            }
-            catch 
-            {
-            
-            }
+            this.charts = listofCharts;
+            openUC(UC);
         }
         private UIElement UC;
         private void SelChart_Click(object sender, RoutedEventArgs e)
