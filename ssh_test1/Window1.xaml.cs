@@ -71,18 +71,7 @@ namespace ssh_test1
                 }
             }
         }
-        //private static bool _isOnline = false;
-        //public static bool isOnline 
-        //{
-        //    get { return _isOnline;}
-        //    set 
-        //    {
-        //        if(_isOnline != value) 
-        //        {
-        //            _isOnline = value;
-        //        }
-        //    }
-        //}
+
         bool fromFile = false;
         List<string> YaxisName = new List<string>() { "number of bits [bits]", "gain [Hz]", "snr [Hz]", "qln [Hz]", "idk", "idk", "idk" };
         public Window1()

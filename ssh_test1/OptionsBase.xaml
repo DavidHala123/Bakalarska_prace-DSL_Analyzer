@@ -12,10 +12,15 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Margin="0,5" Background="WhiteSmoke">
-            <Button x:Name="WinAppe" Content="Window Appearence" BorderThickness="0" Background="WhiteSmoke" Margin="0,0,0,3"/>
-            <Button x:Name="CharAppe" Content="Chart Appearence" Click="CharAppe_Click" BorderThickness="0" Background="WhiteSmoke" Margin="0,0,0,3"/>
-            <Button x:Name="SelChart" Content="Select Charts" Click="SelChart_Click" BorderThickness="0" Background="WhiteSmoke" Margin="0,0,0,3"/>
-            <Button x:Name="Con" Content="Connection" BorderThickness="0" Background="WhiteSmoke" Margin="0,0,0,3"/>
+            <Button x:Name="CharAppe" Click="CharAppe_Click" BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
+                <TextBlock Text="Chart Appearence" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
+            </Button>
+            <Button x:Name="SelChart" Click="SelChart_Click" BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
+                <TextBlock Text="Select Charts" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
+            </Button>
+            <Button x:Name="Con"  BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
+                <TextBlock Text="Connection" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
+            </Button>
         </StackPanel>
         <Grid Grid.Column="1" x:Name="optCont"/>
     </Grid>
