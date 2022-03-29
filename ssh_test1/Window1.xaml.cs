@@ -87,7 +87,6 @@ namespace ssh_test1
         List<string> YaxisName = new List<string>() { "number of bits [bits]", "gain [Hz]", "snr [Hz]", "qln [Hz]", "idk", "idk", "idk" };
         public Window1()
         {
-
             try 
             {
                 _graphSelector = new List<bool>() { true, true, true, true, true, true, true };
@@ -132,7 +131,7 @@ namespace ssh_test1
         {
             ChartGraph();
         }
-        private async void ChartGraph() 
+        private async void ChartGraph()
         {
             if (PortBox.SelectedItem == null && !fromFile)
             {
@@ -140,37 +139,30 @@ namespace ssh_test1
             }
             try
             {
-                //if(!fromFile)
-                if (dataFarEnd == "" && dataNearEnd == "" && !fromFile)
+                if (!fromFile)
                 {
                     dataFarEnd = await sendToDSLAM("show xdsl carrier-data far-end " + selectedPort + " detail");
                     dataNearEnd = await sendToDSLAM("show xdsl carrier-data near-end " + selectedPort + " detail");
                 }
                 int graphIndex = 0;
                 GraphField.Items.Clear();
-                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, _graphSelector));
-                for (int i = 0; i < _graphSelector.Count(); i++)
+                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
+                for (int i = 0; i < graphSelector.Count(); i++)
                 {
-                    if (_graphSelector[i] == true)
+                    if (graphSelector[i] == true)
                     {
                         graphLog.SelectGraphNeeeded(i);
                         Grid chartView = new Grid();
                         Chart chart = new Chart()
                         {
                             LegendVisibility = Visibility.Hidden,
-                            LeftTitle = YaxisName[i],
-                            BottomTitle = "Carrier i [-]",
-
                         };
-                        GraphYvalues = graphLog.getYValues() ?? throw new ArgumentNullException();
-                        GraphXvalues = graphLog.getXValues() ?? throw new ArgumentNullException();
-                        GraphListOfNames = graphLog.getListOfNames();
-                        chart.Content = getChart(graphIndex, GraphYvalues, GraphXvalues, GraphListOfNames[graphIndex]);
+                        chart.Content = getChart(graphIndex, graphLog.chartV[graphIndex], graphLog.chartV[graphIndex + 1]);
                         chartView.Children.Add(chart);
                         chartView.Children.Add(setLegend());
                         GraphField.Items.Add(new TabItem
                         {
-                            Header = graphLog.getListOfNames()[graphIndex].Replace("-up", "").Replace("-down", ""),
+                            Header = graphLog.chartV[graphIndex].name.Replace("-up", "").Replace("-down", ""),
                             Content = chartView,
                         });
                         graphIndex += 2;
@@ -181,12 +173,13 @@ namespace ssh_test1
             ConsoleLogic.ConsoleText = "0";
         }
 
+
         private static async Task<string> sendToDSLAM(string input) 
         {
             return await Task.Run(() => new SendData(input).getResponse() ?? throw new ArgumentNullException());
         }
 
-        private Grid getChart(int i, List<List<int>> graphValuesY, List<List<int>> graphValuesX, string name)
+        private Grid getChart(int i, ChartValues chartVnear, ChartValues chartVfar)
         {
             List<List<int>> BandFar = new List<List<int>>();
             List<List<int>> BandNear = new List<List<int>>();
@@ -196,33 +189,36 @@ namespace ssh_test1
                 Content = legendItemsPanel
             };
             Grid grid = new Grid();
-            if (name.Contains("down") || name.Contains("char-func-real")) 
+            Chart chart = new Chart()
             {
-                BandFar = splitListForBands(graphValuesX[i + 1], graphValuesY[i + 1]);
-                BandNear = splitListForBands(graphValuesX[i], graphValuesY[i]);
-            }
-            else 
+                LegendVisibility = Visibility.Hidden,
+            };
+            if (chartVnear.name.Contains("down") || chartVnear.name.Contains("char-func-real"))
             {
-                BandFar = splitListForBands(graphValuesX[i], graphValuesY[i]);
-                BandNear = splitListForBands(graphValuesX[i + 1], graphValuesY[i + 1]);
+                BandFar = splitListForBands(chartVnear.Xvals, chartVnear.Yvals);
+                BandNear = splitListForBands(chartVfar.Xvals, chartVfar.Yvals);
             }
-            for (int j = 0; j < BandFar.Count; j+=2)
+            else
+            {
+                BandFar = splitListForBands(chartVfar.Xvals, chartVfar.Yvals);
+                BandNear = splitListForBands(chartVnear.Xvals, chartVnear.Yvals);
+            }
+            for (int j = 0; j < BandFar.Count; j += 2)
             {
                 LineGraph lineGraphFar = new LineGraph()
                 {
-                    Stroke = BrushDownload,
-                    Padding = new System.Windows.Thickness(0, 30, 0, 0)
-
+                    Stroke = new SolidColorBrush(Colors.Red),
+                    Padding = new System.Windows.Thickness(0,30,0,0),
                 };
-                lineGraphFar.Plot(BandFar[j], BandFar[j+1]);
+                lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
                 grid.Children.Add(lineGraphFar);
             }
             for (int j = 0; j < BandNear.Count; j += 2)
             {
                 LineGraph lineGraphNear = new LineGraph()
                 {
-                    Stroke = BrushUpload,
-                    Padding = new System.Windows.Thickness(0, 30, 0, 0)
+                    Stroke = new SolidColorBrush(Colors.Blue),
+                    Padding = new System.Windows.Thickness(0, 30, 0, 0),
                 };
                 lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
                 grid.Children.Add(lineGraphNear);
