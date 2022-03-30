@@ -81,5 +81,19 @@ namespace ssh_test1
         {
             IsOn = !IsOn;
         }
+
+        private void checkConn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void changeConn_Click(object sender, RoutedEventArgs e)
+        {
+            ConData.ipv4 = "192.168.10.18";
+            ConData.name = "isuser";
+            ConData.password = "USER#10";
+            MessageBox.Show(window);
+            Connect con = new Connect();
+        }
     }
 }

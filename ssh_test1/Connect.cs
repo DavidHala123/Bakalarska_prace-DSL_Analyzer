@@ -1,25 +1,17 @@
 ﻿using Renci.SshNet;
+using System.Windows;
 
 namespace ssh_test1
 {
     class Connect
     {
-        private string ipv4;
-        private string name;
-        private string password;
-        MainWindow main;
-        public bool connected = false;
-        public Connect(string ipv4, string name, string password)
+        public Connect()
         {
-            this.ipv4 = ipv4;
-            this.name = name;
-            this.password = password;
-            main = new MainWindow();
         }
         public bool con()
         {
-            AuthenticationMethod method = new PasswordAuthenticationMethod(name, password);
-            ConnectionInfo connection = new ConnectionInfo(ipv4, name, method);
+            AuthenticationMethod method = new PasswordAuthenticationMethod(ConData.name, ConData.password);
+            ConnectionInfo connection = new ConnectionInfo(ConData.ipv4, ConData.name, method);
             var client = new SshClient(connection);
             try
             {
@@ -27,12 +19,12 @@ namespace ssh_test1
             }
             catch
             {
-                main.ErrorMessage("An error has occured please check your connection data");
+                MessageBox.Show("An error has occured please check your connection data");
                 return false;
             }
             if (client.IsConnected)
             {
-                main.ErrorMessage("Connection has been successful");
+                MessageBox.Show("Connection has been successful");
                 client.Disconnect();
                 return true;
             }

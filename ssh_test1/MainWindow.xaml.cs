@@ -37,13 +37,12 @@ namespace ssh_test1
 
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
-
-            Connect connect = new Connect(ipv4.Text.ToString(), Name.Text.ToString(), password.Password.ToString());
+            ConData.ipv4 = ipv4.Text.ToString();
+            ConData.name = Name.Text.ToString();
+            ConData.password = password.Password.ToString();
+            Connect connect = new Connect();
             if (connect.con() == true)
             {
-                ConData.ipv4 = ipv4.Text.ToString();
-                ConData.name = Name.Text.ToString();
-                ConData.password = password.Password.ToString();
                 Window1 wind = new Window1();
                 wind.Show();
                 this.Hide();
