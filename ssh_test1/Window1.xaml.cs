@@ -443,5 +443,11 @@ namespace ssh_test1
         {
 
         }
+        private void ConDetails_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectionUC conUC = new ConnectionUC();
+            OptionsBase opt = new OptionsBase(conUC, _graphSelector);
+            opt.Show();
+        }
     }
 }

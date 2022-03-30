@@ -62,7 +62,7 @@
                         <MenuItem Header="Window appearance"/>
                     </MenuItem>
                     <MenuItem Header="Connection">
-                        <MenuItem Header="Connection details"/>
+                        <MenuItem Header="Connection details" Click="ConDetails_Click"/>
                         <MenuItem Header="Change connection"/>
                     </MenuItem>
                 </Menu>
