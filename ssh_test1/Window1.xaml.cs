@@ -73,7 +73,6 @@ namespace ssh_test1
         }
 
         bool fromFile = false;
-        List<string> YaxisName = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]" };
         public Window1()
         {
             try 
@@ -118,175 +117,27 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
-            ChartGraph();
-        }
-        private async void ChartGraph()
-        {
-            if (PortBox.SelectedItem == null && !fromFile)
+            ChartViewUC cv;
+            if (!fromFile)
             {
-                MessageBox.Show("Please select port you wish to analyze first");
+                dataFarEnd = await sendToDSLAM("show xdsl carrier-data far-end " + infoTable.portIndex + " detail");
+                dataNearEnd = await sendToDSLAM("show xdsl carrier-data near-end " + infoTable.portIndex + " detail");
             }
-            try
+            for (int i = 0; i < graphSelector.Count(); i++)
             {
-                if (!fromFile)
+                cv = new ChartViewUC(dataFarEnd, dataNearEnd, i);
+                GraphField.Items.Add(new TabItem
                 {
-                    dataFarEnd = await sendToDSLAM("show xdsl carrier-data far-end " + selectedPort + " detail");
-                    dataNearEnd = await sendToDSLAM("show xdsl carrier-data near-end " + selectedPort + " detail");
-                }
-                int graphIndex = 0;
-                GraphField.Items.Clear();
-                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
-                for (int i = 0; i < graphSelector.Count(); i++)
-                {
-                    if (graphSelector[i] == true)
-                    {
-                        graphLog.SelectGraphNeeeded(i);
-                        Grid chartView = new Grid();
-                        Chart chart = new Chart()
-                        {
-                            LegendVisibility = Visibility.Hidden,
-                            LeftTitle = YaxisName[i],
-                            BottomTitle = "carrier [i]"
-                        };
-                        chart.Content = getChart(graphIndex, graphLog.chartV[graphIndex], graphLog.chartV[graphIndex + 1]);
-                        chartView.Children.Add(chart);
-                        chartView.Children.Add(setLegend());
-                        GraphField.Items.Add(new TabItem
-                        {
-                            Header = graphLog.chartV[graphIndex].name.Replace("-up", "").Replace("-down", ""),
-                            Content = chartView,
-                        });
-                        graphIndex += 2;
-                    }
-                }
-            }
-            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
-            ConsoleLogic.ConsoleText = "0";
-        }
+                    Header = "test",
+                    Content = cv,
+                });
 
+            }
+        }
 
         private static async Task<string> sendToDSLAM(string input) 
         {
             return await Task.Run(() => new SendData(input).getResponse() ?? throw new ArgumentNullException());
-        }
-
-        private Grid getChart(int i, ChartValues chartVnear, ChartValues chartVfar)
-        {
-            List<List<int>> BandFar = new List<List<int>>();
-            List<List<int>> BandNear = new List<List<int>>();
-            LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
-            Legend legend = new Legend()
-            {
-                Content = legendItemsPanel
-            };
-            Grid grid = new Grid();
-            Chart chart = new Chart()
-            {
-                LegendVisibility = Visibility.Hidden,
-            };
-            if (chartVnear.name.Contains("down") || chartVnear.name.Contains("char-func-real"))
-            {
-                BandFar = splitListForBands(chartVnear.Xvals, chartVnear.Yvals);
-                BandNear = splitListForBands(chartVfar.Xvals, chartVfar.Yvals);
-            }
-            else
-            {
-                BandFar = splitListForBands(chartVfar.Xvals, chartVfar.Yvals);
-                BandNear = splitListForBands(chartVnear.Xvals, chartVnear.Yvals);
-            }
-            for (int j = 0; j < BandFar.Count; j += 2)
-            {
-                LineGraph lineGraphFar = new LineGraph()
-                {
-                    Stroke = BrushUpload,
-                    Padding = new System.Windows.Thickness(0,30,0,0),
-                };
-                lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
-                grid.Children.Add(lineGraphFar);
-            }
-            for (int j = 0; j < BandNear.Count; j += 2)
-            {
-                LineGraph lineGraphNear = new LineGraph()
-                {
-                    Stroke = BrushDownload,
-                    Padding = new System.Windows.Thickness(0, 30, 0, 0),
-                };
-                lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
-                grid.Children.Add(lineGraphNear);
-            }
-            return grid;
-        }
-        private Legend setLegend() 
-        {
-            LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
-            Legend output = new Legend() 
-            {
-                Content = legendItemsPanel
-            };
-            Rectangle rectUP = new Rectangle()
-            {
-                Width = 10,
-                Height = 10,
-                Fill = BrushUpload,
-                Stroke = BrushUpload,
-            };
-
-            Rectangle rectDOWN = new Rectangle()
-            {
-                Width = 10,
-                Height = 10,
-                Fill = BrushDownload,
-                Stroke = BrushDownload,
-            };
-            TextBox textBoxUP = new TextBox()
-            {
-                BorderThickness = new Thickness(0, 0, 0, 0),
-                Background = new SolidColorBrush(Colors.Transparent),
-                Text = " Upstream"
-            };
-            TextBox textBoxDOWN = new TextBox()
-            {
-                BorderThickness = new Thickness(0, 0, 0, 0),
-                Background = new SolidColorBrush(Colors.Transparent),
-                Text = " Downstream"
-            };
-            DockPanel dockUP = new DockPanel();
-            DockPanel dockDOWN = new DockPanel();
-            dockUP.Children.Add(rectUP);
-            dockUP.Children.Add(textBoxUP);
-            dockDOWN.Children.Add(rectDOWN);
-            dockDOWN.Children.Add(textBoxDOWN);
-            legendItemsPanel.Children.Add(dockUP);
-            legendItemsPanel.Children.Add(dockDOWN);
-            return output;
-        }
-
-
-        private List<List<int>> splitListForBands(List<int> graphValuesX, List<int> graphValuesY) 
-        {
-            List<int> valsX = new List<int>();
-            List<int> valsY = new List<int>();
-            List<List<int>> output = new List<List<int>>();
-            int xInd = 0;
-            for (int j = 0; j < graphValuesX.Count; j++)
-            {
-                try
-                {
-                    if (graphValuesX[j + 1] != graphValuesX[j] + 1)
-                    {
-                        output.Add(graphValuesX.GetRange(xInd, j + 1 - xInd));
-                        output.Add(graphValuesY.GetRange(xInd, j + 1 - xInd));
-                        xInd = j + 1;
-                    }
-                }
-                catch
-                {
-                    output.Add(graphValuesX.GetRange(xInd, j + 1 - xInd));
-                    output.Add(graphValuesY.GetRange(xInd, j + 1 - xInd));
-                    break;
-                }
-            }
-            return output;
         }
 
         private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -316,27 +167,32 @@ namespace ssh_test1
                     PortBox.Items.RemoveAt(0);
                 }
                 fromFile = false;
-                selectedPort = selected.portName.ToString();
-                basinfo.Items.Clear();
-                advinfo.Items.Clear();
-                try 
-                {
-                    List<PortData> infoListData = await Task.Run(() => new InfoTableLogic(selectedPort,
-                    new SendData("show xdsl operational-data far-end line " + selectedPort + " detail").getResponse()
-                    ?? throw new ArgumentNullException(),
-                        new SendData("show xdsl operational-data near-end line " + selectedPort + " detail").getResponse()
-                        ?? throw new ArgumentNullException(),
-                        new SendData("show xdsl operational-data line " + selectedPort + " detail").getResponse()
-                        ?? throw new ArgumentNullException()).getPortData());
-                    foreach (PortData data in infoListData)
-                    {
-                        if (data.portInfo != null)
-                            basinfo.Items.Add(data);
-                        else
-                            advinfo.Items.Add(data);
-                    }
-                }
-                catch { }
+                //selectedPort = selected.portName.ToString();
+                MessageBox.Show(selected.portName.ToString());
+                infoTable.portIndex = selected.portName.ToString();
+                //InfoTableUC inftUC = new InfoTableUC();
+                //infoGrid.Children.Add(inftUC);
+                
+                //basinfo.Items.Clear();
+                //advinfo.Items.Clear();
+                //try 
+                //{
+                //    List<PortData> infoListData = await Task.Run(() => new InfoTableLogic(selectedPort,
+                //    new SendData("show xdsl operational-data far-end line " + selectedPort + " detail").getResponse()
+                //    ?? throw new ArgumentNullException(),
+                //        new SendData("show xdsl operational-data near-end line " + selectedPort + " detail").getResponse()
+                //        ?? throw new ArgumentNullException(),
+                //        new SendData("show xdsl operational-data line " + selectedPort + " detail").getResponse()
+                //        ?? throw new ArgumentNullException()).getPortData());
+                //    foreach (PortData data in infoListData)
+                //    {
+                //        if (data.portInfo != null)
+                //            basinfo.Items.Add(data);
+                //        else
+                //            advinfo.Items.Add(data);
+                //    }
+                //}
+                //catch { }
             }
         }
 
@@ -356,7 +212,7 @@ namespace ssh_test1
                 if (_OptionsChanged)
                 {
                     if(dataFarEnd != "" && dataNearEnd != "")
-                        ChartGraph();
+                        send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                     _OptionsChanged = false;
                 }
                 if (ConsoleLogic.ConsoleText != "")

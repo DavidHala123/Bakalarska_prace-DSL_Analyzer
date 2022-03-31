@@ -72,27 +72,8 @@
         <Grid Grid.Row="1" Grid.Column="1">
             <Button x:Name="send" Content="Analyze" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0" Height="25" Width="70" Click="send_Click"/>
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="0">
-            <TreeView x:Name="InfoTree" Margin="0,0,0,40">
-                <TreeViewItem Header="Basic information" x:Name="basinfo" IsExpanded="True">
-                    <TreeViewItem.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text="{Binding portInfo}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </TreeViewItem.ItemTemplate>
-                </TreeViewItem>
-                <TreeViewItem Header="Advanced information" x:Name="advinfo">
-                    <TreeViewItem.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text="{Binding advancedPortInfo}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </TreeViewItem.ItemTemplate>
-                </TreeViewItem>
-            </TreeView>
+        <Grid x:Name="infoGrid" Grid.Row="2" Grid.Column="0">
+            <local:InfoTableUC x:Name="infoTable"/>
             <Border BorderBrush="Gray" BorderThickness="1">
 
             </Border>
