@@ -73,7 +73,7 @@ namespace ssh_test1
         }
 
         bool fromFile = false;
-        List<string> YaxisName = new List<string>() { "number of bits [bits]", "gain [Hz]", "snr [Hz]", "qln [Hz]", "idk", "idk", "idk" };
+        List<string> YaxisName = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]" };
         public Window1()
         {
             try 
@@ -145,6 +145,8 @@ namespace ssh_test1
                         Chart chart = new Chart()
                         {
                             LegendVisibility = Visibility.Hidden,
+                            LeftTitle = YaxisName[i],
+                            BottomTitle = "carrier [i]"
                         };
                         chart.Content = getChart(graphIndex, graphLog.chartV[graphIndex], graphLog.chartV[graphIndex + 1]);
                         chartView.Children.Add(chart);

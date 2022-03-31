@@ -58,9 +58,6 @@
                         <MenuItem Header="Select Charts" Click="OptionsButton_Click" x:Name="OptionsButton"/>
                         <MenuItem Header="Chart appearance" Click="ChartAppearence_Click" x:Name="ChartApp"/>
                     </MenuItem>
-                    <MenuItem Header="Window">
-                        <MenuItem Header="Window appearance"/>
-                    </MenuItem>
                     <MenuItem Header="Connection">
                         <MenuItem Header="Connection details" Click="ConDetails_Click"/>
                         <MenuItem Header="Change connection"/>

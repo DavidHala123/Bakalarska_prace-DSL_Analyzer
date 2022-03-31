@@ -92,7 +92,7 @@ namespace ssh_test1
             ConData.ipv4 = "192.168.10.18";
             ConData.name = "isuser";
             ConData.password = "USER#10";
-            MessageBox.Show(window);
+            //MessageBox.Show(window);
             Connect con = new Connect();
         }
     }

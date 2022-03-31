@@ -143,7 +143,6 @@ namespace ssh_test1
                     }
                     break;
                 case string name when inputSplit[0].Contains("char-func-complex"):
-                    MessageBox.Show("fuck off");
                     break;
                 case string name when inputSplit[0].Contains("char-func-real"):
                     adder = 4;
