@@ -121,6 +121,7 @@ namespace ssh_test1
             ConsoleLogic.ConsoleText = "3";
             GraphField.Items.Clear();
             ChartViewUC cv;
+            int charVindex = 0;
             if (!fromFile)
             {
                 dataFarEnd = await sendToDSLAM("show xdsl carrier-data far-end " + infoTable.portIndex + " detail");
@@ -130,7 +131,7 @@ namespace ssh_test1
             for (int i = 0; i < graphSelector.Count(); i++)
             {
                 graphLog.SelectGraphNeeeded(i);
-                cv = new ChartViewUC(graphLog.chartV[0], graphLog.chartV[1], i);
+                cv = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i);
                 GraphField.Items.Add(new TabItem
                 {
                     Header = graphLog.name,
@@ -141,6 +142,7 @@ namespace ssh_test1
                     infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[0].Xvals.Count() } );
                     infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() });
                 }
+                charVindex += 2;
             }
             ConsoleLogic.ConsoleText = "0";
         }

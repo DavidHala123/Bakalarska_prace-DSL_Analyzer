@@ -53,6 +53,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Carrier count: " Padding="10,0,0,0"/>
+                <TextBlock Grid.Column="1" Text="Bitrate: " Padding="10,0,0,0"/>
             </Grid>
             <Grid Grid.Row="1" x:Name="realtimeGrid">
                 <Grid.ColumnDefinitions>
@@ -60,7 +61,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <lvc:PieChart LegendLocation="Bottom" Hoverable="False" Margin="1,1">
+                    <lvc:PieChart Hoverable="False" Margin="1,1">
                         <lvc:PieChart.Series>
                             <lvc:PieSeries Values="{Binding Path=chartValuesUP}" Title="Upstream"/>
                             <lvc:PieSeries Values="{Binding Path=chartValuesDOWN}" Title="Downstream"/>
@@ -72,9 +73,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <ProgressBar Grid.Column="0" Value="50">
-                    </ProgressBar>
-                    <StatusBar Grid.Column="1"/>
+                    <ProgressBar Grid.Column="0" Value="50" Orientation="Vertical" Margin="10,0,10,0" Foreground="Red"/>
+                    <ProgressBar Grid.Column="1" Value="20" Orientation="Vertical" Margin="10,0,10,0" Foreground="Blue"/>
                 </Grid>
             </Grid>
             <Grid Grid.Row="2">
