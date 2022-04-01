@@ -9,6 +9,7 @@ using InteractiveDataDisplay.WPF;
 using System.Linq;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
+using LiveCharts;
 
 namespace ssh_test1
 {
@@ -117,21 +118,28 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
+            GraphField.Items.Clear();
             ChartViewUC cv;
             if (!fromFile)
             {
                 dataFarEnd = await sendToDSLAM("show xdsl carrier-data far-end " + infoTable.portIndex + " detail");
                 dataNearEnd = await sendToDSLAM("show xdsl carrier-data near-end " + infoTable.portIndex + " detail");
             }
+            GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, Window1.graphSelector));
             for (int i = 0; i < graphSelector.Count(); i++)
             {
-                cv = new ChartViewUC(dataFarEnd, dataNearEnd, i);
+                graphLog.SelectGraphNeeeded(i);
+                cv = new ChartViewUC(graphLog.chartV[0], graphLog.chartV[1], i);
                 GraphField.Items.Add(new TabItem
                 {
-                    Header = "test",
+                    Header = graphLog.name,
                     Content = cv,
                 });
-
+                if(i == 0) 
+                {
+                    infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[0].Xvals.Count() } );
+                    infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() });
+                }
             }
         }
 
@@ -167,32 +175,7 @@ namespace ssh_test1
                     PortBox.Items.RemoveAt(0);
                 }
                 fromFile = false;
-                //selectedPort = selected.portName.ToString();
-                MessageBox.Show(selected.portName.ToString());
                 infoTable.portIndex = selected.portName.ToString();
-                //InfoTableUC inftUC = new InfoTableUC();
-                //infoGrid.Children.Add(inftUC);
-                
-                //basinfo.Items.Clear();
-                //advinfo.Items.Clear();
-                //try 
-                //{
-                //    List<PortData> infoListData = await Task.Run(() => new InfoTableLogic(selectedPort,
-                //    new SendData("show xdsl operational-data far-end line " + selectedPort + " detail").getResponse()
-                //    ?? throw new ArgumentNullException(),
-                //        new SendData("show xdsl operational-data near-end line " + selectedPort + " detail").getResponse()
-                //        ?? throw new ArgumentNullException(),
-                //        new SendData("show xdsl operational-data line " + selectedPort + " detail").getResponse()
-                //        ?? throw new ArgumentNullException()).getPortData());
-                //    foreach (PortData data in infoListData)
-                //    {
-                //        if (data.portInfo != null)
-                //            basinfo.Items.Add(data);
-                //        else
-                //            advinfo.Items.Add(data);
-                //    }
-                //}
-                //catch { }
             }
         }
 

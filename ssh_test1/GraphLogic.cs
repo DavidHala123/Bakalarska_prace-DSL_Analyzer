@@ -28,6 +28,7 @@ namespace ssh_test1
                     _chartV = value;
             }
         }
+        public string name = "";
 
         public GraphLogic(string outputOfDSLAFar, string outputOfDSLAMNear, List<bool> graphSelector)
         {
@@ -178,6 +179,7 @@ namespace ssh_test1
                     }
                     break;
             }
+            name = inputSplit[0];
             _chartV.Add(new ChartValues { name = inputSplit[0], Xvals = xVals, Yvals = yVals });
         }
 

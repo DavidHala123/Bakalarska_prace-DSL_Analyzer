@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiveCharts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace ssh_test1
     {
         public InfoTableUC()
         {
+            chartValuesDOWN = new ChartValues<int>(new[] { 0 });
+            chartValuesUP = new ChartValues<int>(new[] { 0 });
             DataContext = this;
             InitializeComponent();
         }
@@ -110,6 +113,34 @@ namespace ssh_test1
             }
         }
 
+        private ChartValues<int> _chartValuesUP;
+        public ChartValues<int> chartValuesUP 
+        {
+            get { return _chartValuesUP; }
+            set 
+            {
+                if (_chartValuesUP != value)
+                {
+                    _chartValuesUP = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private ChartValues<int> _chartValuesDOWN;
+        public ChartValues<int> chartValuesDOWN
+        {
+            get { return _chartValuesDOWN; }
+            set
+            {
+                if (_chartValuesDOWN != value)
+                {
+                    _chartValuesDOWN = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private void populateGeneralInfo()
         {
             string supmodes = "";
@@ -142,7 +173,6 @@ namespace ssh_test1
                         //    break;
                 }
             }
-            MessageBox.Show(supmodes);
             supported_mode = supmodes;
         }
 

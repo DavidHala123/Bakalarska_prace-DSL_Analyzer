@@ -21,23 +21,50 @@ namespace ssh_test1
     /// </summary>
     public partial class ChartViewUC : UserControl
     {
-        List<string> YaxisName = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]" };
-        public ChartViewUC(string dataFarEnd, string dataNearEnd, int i)
+        public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
         {
             InitializeComponent();
             ChartGraph(dataFarEnd, dataNearEnd, i);
         }
-
-        private async void ChartGraph(string dataFarEnd, string dataNearEnd, int i)
+        private int _numCarrUP;
+        public int numCarrUP
         {
-
+            get { return _numCarrUP; }
+            set
+            {
+                if (_numCarrUP != value)
+                    _numCarrUP = value;
+            }
+        }
+        private int _numCarrDOWN;
+        public int numCarrDOWN
+        {
+            get { return _numCarrDOWN; }
+            set
+            {
+                if (_numCarrDOWN != value)
+                    _numCarrDOWN = value;
+            }
+        }
+        private string _name = "";
+        public string name
+        {
+            get { return _name; }
+            set
+            {
+                if (_name != value)
+                    _name = value;
+            }
+        }
+        List<string> YaxisName = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]" };
+        private async void ChartGraph(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
+        {
+            List<int> outputList = new List<int>();
             try
             {
-                int graphIndex = 0;
-                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, Window1.graphSelector));
+
                 if (Window1.graphSelector[i] == true)
                 {
-                    graphLog.SelectGraphNeeeded(i);
 
                     Chart chart = new Chart()
                     {
@@ -45,17 +72,16 @@ namespace ssh_test1
                         LeftTitle = YaxisName[i],
                         BottomTitle = "carrier [i]"
                     };
-                    chart.Content = getChart(graphIndex, graphLog.chartV[graphIndex], graphLog.chartV[graphIndex + 1]);
+                    chart.Content = getChart(dataFarEnd, dataNearEnd);
                     chartViewGrid.Children.Add(chart);
                     chartViewGrid.Children.Add(setLegend());
-                    graphIndex += 2;
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleLogic.ConsoleText = "0";
         }
 
-        private Grid getChart(int i, ChartValues chartVnear, ChartValues chartVfar)
+        private Grid getChart(ChartValues chartVnear, ChartValues chartVfar)
         {
             List<List<int>> BandFar = new List<List<int>>();
             List<List<int>> BandNear = new List<List<int>>();
