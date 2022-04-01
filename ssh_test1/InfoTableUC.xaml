@@ -52,7 +52,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Text="Carrier count: " Padding="10,0,0,0"/>
+                <TextBlock Grid.Column="0" Text="Carrier count: " Padding="10,0,0,0"/>
             </Grid>
             <Grid Grid.Row="1" x:Name="realtimeGrid">
                 <Grid.ColumnDefinitions>
@@ -68,27 +68,18 @@
                     </lvc:PieChart>
                 </Grid>
                 <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <lvc:CartesianChart x:Name="bitUPch">
-                                <lvc:CartesianChart.Series>
-                                <lvc:LineSeries x:Name="BitrateUP" Values="{Binding Path=realtimeBUP}"/>
-                                </lvc:CartesianChart.Series>
-                            </lvc:CartesianChart>
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <lvc:CartesianChart x:Name="bitDOWNch">
-                            <lvc:CartesianChart.Series>
-                                <lvc:LineSeries x:Name="BitrateDOWN" Values="{Binding Path=realtimeBDOWN}"/>
-                            </lvc:CartesianChart.Series>
-                        </lvc:CartesianChart>
-                    </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <ProgressBar Grid.Column="0" Value="50">
+                    </ProgressBar>
+                    <StatusBar Grid.Column="1"/>
                 </Grid>
             </Grid>
+            <Grid Grid.Row="2">
 
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

@@ -32,7 +32,6 @@ namespace ssh_test1
 
         public GraphLogic(string outputOfDSLAFar, string outputOfDSLAMNear, List<bool> graphSelector)
         {
-            ConsoleLogic.ConsoleText = "3";
             this.outputOfDSLAMFar = outputOfDSLAFar;
             this.outputOfDSLAMNear = outputOfDSLAMNear;
             this.graphSelector = graphSelector;

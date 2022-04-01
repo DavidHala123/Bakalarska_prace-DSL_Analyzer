@@ -24,20 +24,6 @@ namespace ssh_test1
     /// </summary>
     public partial class InfoTableUC : UserControl, INotifyPropertyChanged
     {
-
-        private bool _realTime;
-        public bool realTime
-        {
-            get { return _realTime; }
-            set
-            {
-                if (_realTime != value)
-                {
-                    _realTime = value;
-                    realTimeInfo();
-                }
-            }    
-        }
         public InfoTableUC()
         {
             chartValuesDOWN = new ChartValues<int>(new[] { 0 });
@@ -45,6 +31,14 @@ namespace ssh_test1
             DataContext = this;
             InitializeComponent();
         }
+
+        private string attaBitrateUP;
+
+        private string actBitrateUP;
+
+        private string attaBitrateDOWN;
+
+        private string actBitrateDOWN;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -58,6 +52,7 @@ namespace ssh_test1
                 {
                     _portIndex = value;
                     populateGeneralInfo();
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -134,11 +129,11 @@ namespace ssh_test1
             get { return _chartValuesUP; }
             set 
             {
-                //if (_chartValuesUP != value)
-                //{
+                if (_chartValuesUP != value)
+                {
                     _chartValuesUP = value;
                     NotifyPropertyChanged();
-                //}
+                }
             }
         }
 
@@ -148,52 +143,18 @@ namespace ssh_test1
             get { return _chartValuesDOWN; }
             set
             {
-                //if (_chartValuesDOWN != value)
-                //{
+                if (_chartValuesDOWN != value)
+                {
                     _chartValuesDOWN = value;
                     NotifyPropertyChanged();
-                //}
-            }
-        }
-        private string attaBitrateUP;
-
-        private string actBitrateUP;
-
-        private string attaBitrateDOWN;
-
-        private string actBitrateDOWN;
-
-        private ChartValues<int> _realtimeBUP;
-        public ChartValues<int> realtimeBUP 
-        {
-            get { return _realtimeBUP; }
-            set 
-            {
-                if(_realtimeBUP != value) 
-                {
-                    _realtimeBUP = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private ChartValues<int> _realtimeBDOWN;
-        public ChartValues<int> realtimeBDOWN
-        {
-            get { return _realtimeBDOWN; }
-            set
-            {
-                if (_realtimeBDOWN != value)
-                {
-                    _realtimeBDOWN = value;
-                    NotifyPropertyChanged();
                 }
             }
         }
 
-        private void populateGeneralInfo()
+        private async Task populateGeneralInfo()
         {
             string supmodes = "";
-            string generalInfo1 = new SendData("show xdsl operational-data line " + portIndex + " detail").getResponse();
+            string generalInfo1 = await Task.Run(() => (new SendData("show xdsl operational-data line " + portIndex + " detail").getResponse()));
             string[] output = generalInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < output.Length; i++)
             {
@@ -225,51 +186,40 @@ namespace ssh_test1
             supported_mode = supmodes;
         }
 
-        private async Task realTimeInfo() 
+
+        private async Task realTimeInfo()
         {
-            while (realTime) 
+            string generalInfo1 = new SendData("show xdsl operational-data near-end channel " + portIndex + " detail").getResponse();
+            string generalInfo2 = new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse();
+            string[] output1 = generalInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] output2 = generalInfo2.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] outputCombined = output1.Concat(output2).ToArray();
+            for (int i = 0; i < outputCombined.Length; i++)
             {
-                string generalInfo1 = new SendData("show xdsl operational-data near-end channel " + portIndex + " detail").getResponse();
-                string generalInfo2 = new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse();
-                string[] output1 = generalInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-                string[] output2 = generalInfo2.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-                string[] outputCombined = output1.Concat(output2).ToArray();
-                for (int i = 0; i < outputCombined.Length; i++)
+                switch (outputCombined[i])
                 {
-                    switch (outputCombined[i])
-                    {
-                        case string generaldata when generaldata.Contains("attain-bitrate-up"):
-                            string[] attBUP = generaldata.Split(':');
-                            attaBitrateUP = attBUP[1];
-                            break;
-                        case string generaldata when generaldata.Contains("actual-bitrate-up"):
-                            string[] actBUP = generaldata.Split(':');
-                            actBitrateUP = actBUP[1];
-                            break;
-                        case string generaldata when generaldata.Contains("attain-bitrate-down"):
-                            string[] attBDOWN = generaldata.Split(':');
-                            attaBitrateDOWN = attBDOWN[1];
-                            break;
-                        case string generaldata when generaldata.Contains("actual-bitrate-dow"):
-                            string[] actBDOWN = generaldata.Split(':');
-                            actBitrateUP = actBDOWN[1];
-                            break;
-                    }
+                    case string generaldata when generaldata.Contains("attain-bitrate-up"):
+                        string[] attBUP = generaldata.Split(':');
+                        attaBitrateUP = attBUP[1];
+                        break;
+                    case string generaldata when generaldata.Contains("actual-bitrate-up"):
+                        string[] actBUP = generaldata.Split(':');
+                        actBitrateUP = actBUP[1];
+                        break;
+                    case string generaldata when generaldata.Contains("attain-bitrate-down"):
+                        string[] attBDOWN = generaldata.Split(':');
+                        attaBitrateDOWN = attBDOWN[1];
+                        break;
+                    case string generaldata when generaldata.Contains("actual-bitrate-dow"):
+                        string[] actBDOWN = generaldata.Split(':');
+                        actBitrateUP = actBDOWN[1];
+                        break;
                 }
-                string test = "";
-                foreach(string p in outputCombined) 
-                {
-                    test = p + ", ";
-                }
-                MessageBox.Show(test);
-                MessageBox.Show(actBitrateUP);
-                MessageBox.Show(actBitrateDOWN);
-                //int actBUPi = Int32.Parse(actBitrateUP.Trim());
-                //int actBDOWNi = Int32.Parse(actBitrateDOWN.Trim());
-                //realtimeBUP.Add(actBUPi);
-                //realtimeBDOWN.Add(actBDOWNi);
-                await Task.Delay(2000);
             }
+            //int actBUPi = Int32.Parse(actBitrateUP.Trim());
+            //int actBDOWNi = Int32.Parse(actBitrateDOWN.Trim());
+            //realtimeBUP.Add(actBUPi);
+            //realtimeBDOWN.Add(actBDOWNi);
         }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
