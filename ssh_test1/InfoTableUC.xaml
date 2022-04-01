@@ -43,6 +43,7 @@
         </Grid>
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -51,13 +52,40 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="Carrier count: " Padding="10,0,0,0"/>
+            </Grid>
+            <Grid Grid.Row="1" x:Name="realtimeGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <lvc:PieChart LegendLocation="Bottom" Hoverable="False">
+                    <lvc:PieChart LegendLocation="Bottom" Hoverable="False" Margin="1,1">
                         <lvc:PieChart.Series>
                             <lvc:PieSeries Values="{Binding Path=chartValuesUP}" Title="Upstream"/>
                             <lvc:PieSeries Values="{Binding Path=chartValuesDOWN}" Title="Downstream"/>
                         </lvc:PieChart.Series>
                     </lvc:PieChart>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <lvc:CartesianChart x:Name="bitUPch">
+                                <lvc:CartesianChart.Series>
+                                <lvc:LineSeries x:Name="BitrateUP" Values="{Binding Path=realtimeBUP}"/>
+                                </lvc:CartesianChart.Series>
+                            </lvc:CartesianChart>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <lvc:CartesianChart x:Name="bitDOWNch">
+                            <lvc:CartesianChart.Series>
+                                <lvc:LineSeries x:Name="BitrateDOWN" Values="{Binding Path=realtimeBDOWN}"/>
+                            </lvc:CartesianChart.Series>
+                        </lvc:CartesianChart>
+                    </Grid>
                 </Grid>
             </Grid>
 

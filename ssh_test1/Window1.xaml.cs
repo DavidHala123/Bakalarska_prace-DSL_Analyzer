@@ -118,6 +118,7 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
+            infoTable.realTime = true;
             GraphField.Items.Clear();
             ChartViewUC cv;
             if (!fromFile)
@@ -141,6 +142,7 @@ namespace ssh_test1
                     infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() });
                 }
             }
+            infoTable.realTime = false;
         }
 
         private static async Task<string> sendToDSLAM(string input) 
