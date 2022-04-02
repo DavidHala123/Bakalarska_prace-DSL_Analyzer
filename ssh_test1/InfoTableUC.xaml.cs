@@ -207,6 +207,118 @@ namespace ssh_test1
             }
         }
 
+        private string _noiseMUP;
+        public string noiseMUP 
+        {
+            get { return _noiseMUP; }
+            set 
+            {
+                if(_noiseMUP != value) 
+                {
+                    _noiseMUP = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string _noiseMDOWN;
+        public string noiseMDOWN
+        {
+            get { return _noiseMDOWN; }
+            set
+            {
+                if (_noiseMDOWN != value)
+                {
+                    _noiseMDOWN = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string _outputPUP;
+        public string outputPUP
+        {
+            get { return _outputPUP; }
+            set
+            {
+                if (_outputPUP != value)
+                {
+                    _outputPUP = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string _outputPDOWN;
+        public string outputPDOWN
+        {
+            get { return _outputPDOWN; }
+            set
+            {
+                if (_outputPDOWN != value)
+                {
+                    _outputPDOWN = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string _signalAtUP;
+        public string signalAtUP
+        {
+            get { return _signalAtUP; }
+            set
+            {
+                if (_signalAtUP != value)
+                {
+                    _signalAtUP = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string _signalAtDOWN;
+        public string signalAtDOWN
+        {
+            get { return _signalAtDOWN; }
+            set
+            {
+                if (_signalAtDOWN != value)
+                {
+                    _signalAtDOWN = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string _txPsdUP;
+        public string txPsdUP
+        {
+            get { return _txPsdUP; }
+            set
+            {
+                if (_txPsdUP != value)
+                {
+                    _txPsdUP = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string _txPsdDOWN;
+        public string txPsdDOWN
+        {
+            get { return _txPsdDOWN; }
+            set
+            {
+                if (_txPsdDOWN != value)
+                {
+                    _txPsdDOWN = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private async Task populateGeneralInfo()
         {
             string supmodes = "";
@@ -249,11 +361,17 @@ namespace ssh_test1
             string attbrUP = "";
             string actbrDOWN = "";
             string attbrDOWN = "";
-            string generalInfo1 = await Task.Run(() => new SendData("show xdsl operational-data near-end channel " + portIndex + " detail").getResponse());
-            string generalInfo2 = await Task.Run(() => new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse());
-            string[] output1 = generalInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-            string[] output2 = generalInfo2.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-            string[] outputCombined = output1.Concat(output2).ToArray();
+            string rtInfo1 = await Task.Run(() => new SendData("show xdsl operational-data near-end channel " + portIndex + " detail").getResponse());
+            string rtInfo2 = await Task.Run(() => new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse());
+            string rtInfo3 = await Task.Run(() => new SendData("show xdsl operational-data near-end line " + portIndex + " detail").getResponse());
+            string rtInfo4 = await Task.Run(() => new SendData("show xdsl operational-data far-end line " + portIndex + " detail").getResponse());
+            string[] output1 = rtInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] output2 = rtInfo2.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] output3 = rtInfo3.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] output4 = rtInfo4.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] outputCombined1 = output1.Concat(output2).ToArray();
+            string[] outputCombined2 = output3.Concat(output4).ToArray();
+            string[] outputCombined = outputCombined1.Concat(outputCombined2).ToArray();
             for (int i = 0; i < outputCombined.Length; i++)
             {
                 switch (outputCombined[i])
@@ -273,6 +391,22 @@ namespace ssh_test1
                     case string generaldata when generaldata.Contains("actual-bitrate-down"):
                         string[] actBDOWN = generaldata.Split(':');
                         actbrDOWN = actBDOWN[1];
+                        break;
+                    case string generaldata when generaldata.Contains("noise-margin-up"):
+                        string[] nmUP = generaldata.Split(':');
+                        noiseMUP = nmUP[1];
+                        break;
+                    case string generaldata when generaldata.Contains("noise-margin-down"):
+                        string[] nmDOWN = generaldata.Split(':');
+                        noiseMDOWN = nmDOWN[1];
+                        break;
+                    case string generaldata when generaldata.Contains("output-power-up"):
+                        string[] opUP = generaldata.Split(':');
+                        outputPUP = opUP[1];
+                        break;
+                    case string generaldata when generaldata.Contains("output-power-down"):
+                        string[] opDOWN = generaldata.Split(':');
+                        outputPDOWN = opDOWN[1];
                         break;
                 }
             }

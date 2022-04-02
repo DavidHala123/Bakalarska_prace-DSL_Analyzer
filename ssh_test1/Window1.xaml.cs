@@ -139,8 +139,8 @@ namespace ssh_test1
                 });
                 if(i == 0) 
                 {
-                    infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[0].Xvals.Count() } );
-                    infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() });
+                    infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[0].Xvals.Count() });
+                    infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() } );
                     infoTable.realtime = true;
                 }
                 charVindex += 2;
