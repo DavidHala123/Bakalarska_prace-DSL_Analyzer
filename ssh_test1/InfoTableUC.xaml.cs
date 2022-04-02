@@ -31,14 +31,70 @@ namespace ssh_test1
             DataContext = this;
             InitializeComponent();
         }
+        public bool realtime 
+        {
+            set 
+            {
+                populateRealTimeInfo();
+                NotifyPropertyChanged();
+            }
+        }
 
-        private string attaBitrateUP;
+        private int _attaBitrateUP;
+        public int attaBitrateUP 
+        {
+            get { return _attaBitrateUP; }
+            set 
+            {
+                if(_attaBitrateUP != value) 
+                {
+                    _attaBitrateUP = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
-        private string actBitrateUP;
+        private int _actBitrateUP;
+        public int actBitrateUP 
+        {
+            get { return _actBitrateUP; }
+            set
+            {
+                if (_actBitrateUP != value)
+                {
+                    _actBitrateUP = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
-        private string attaBitrateDOWN;
+        private int _attaBitrateDOWN;
+        public int attaBitrateDOWN
+        {
+            get { return _attaBitrateDOWN; }
+            set 
+            {
+                if(_attaBitrateDOWN != value) 
+                {
+                    _attaBitrateDOWN = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
-        private string actBitrateDOWN;
+        private int _actBitrateDOWN;
+        public int actBitrateDOWN
+        {
+            get { return _actBitrateDOWN; }
+            set
+            {
+                if (_actBitrateDOWN != value)
+                {
+                    _actBitrateDOWN = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -187,10 +243,14 @@ namespace ssh_test1
         }
 
 
-        private async Task realTimeInfo()
+        private async Task populateRealTimeInfo()
         {
-            string generalInfo1 = new SendData("show xdsl operational-data near-end channel " + portIndex + " detail").getResponse();
-            string generalInfo2 = new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse();
+            string actbrUP = "";
+            string attbrUP = "";
+            string actbrDOWN = "";
+            string attbrDOWN = "";
+            string generalInfo1 = await Task.Run(() => new SendData("show xdsl operational-data near-end channel " + portIndex + " detail").getResponse());
+            string generalInfo2 = await Task.Run(() => new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse());
             string[] output1 = generalInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
             string[] output2 = generalInfo2.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
             string[] outputCombined = output1.Concat(output2).ToArray();
@@ -200,26 +260,26 @@ namespace ssh_test1
                 {
                     case string generaldata when generaldata.Contains("attain-bitrate-up"):
                         string[] attBUP = generaldata.Split(':');
-                        attaBitrateUP = attBUP[1];
+                        attbrUP = attBUP[1];
                         break;
                     case string generaldata when generaldata.Contains("actual-bitrate-up"):
                         string[] actBUP = generaldata.Split(':');
-                        actBitrateUP = actBUP[1];
+                        actbrUP = actBUP[1];
                         break;
                     case string generaldata when generaldata.Contains("attain-bitrate-down"):
                         string[] attBDOWN = generaldata.Split(':');
-                        attaBitrateDOWN = attBDOWN[1];
+                        attbrDOWN = attBDOWN[1];
                         break;
-                    case string generaldata when generaldata.Contains("actual-bitrate-dow"):
+                    case string generaldata when generaldata.Contains("actual-bitrate-down"):
                         string[] actBDOWN = generaldata.Split(':');
-                        actBitrateUP = actBDOWN[1];
+                        actbrDOWN = actBDOWN[1];
                         break;
                 }
             }
-            //int actBUPi = Int32.Parse(actBitrateUP.Trim());
-            //int actBDOWNi = Int32.Parse(actBitrateDOWN.Trim());
-            //realtimeBUP.Add(actBUPi);
-            //realtimeBDOWN.Add(actBDOWNi);
+            attaBitrateUP = Int32.Parse(attbrUP.Trim());
+            attaBitrateDOWN = Int32.Parse(attbrDOWN.Trim());
+            actBitrateUP = Int32.Parse(actbrUP.Trim());
+            actBitrateDOWN = Int32.Parse(actbrDOWN.Trim());
         }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
