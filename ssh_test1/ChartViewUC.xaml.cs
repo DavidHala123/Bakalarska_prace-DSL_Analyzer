@@ -46,55 +46,61 @@ namespace ssh_test1
                     _numCarrDOWN = value;
             }
         }
-        private string _name = "";
-        public string name
+        private string _YaxisName;
+        public string YaxisName
         {
-            get { return _name; }
+            get { return _YaxisName; }
             set
             {
-                if (_name != value)
-                    _name = value;
+                if (_YaxisName != value)
+                    _YaxisName = value;
             }
         }
-        List<string> YaxisName = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]" };
+
+        //private LineGraph GraphUP = new LineGraph();
+
+        //private LineGraph GraphDOWN = new LineGraph();
+
+
+        List<string> YaxisNames = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]" };
         private async void ChartGraph(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
         {
-            List<int> outputList = new List<int>();
+            //List<int> outputList = new List<int>();
             try
             {
-
                 if (Window1.graphSelector[i] == true)
                 {
 
-                    Chart chart = new Chart()
-                    {
-                        LegendVisibility = Visibility.Hidden,
-                        LeftTitle = YaxisName[i],
-                        BottomTitle = "carrier [i]"
-                    };
-                    chart.Content = getChart(dataFarEnd, dataNearEnd);
-                    chartViewGrid.Children.Add(chart);
-                    chartViewGrid.Children.Add(setLegend());
+                    //Chart chart = new Chart()
+                    //{
+                    //    LegendVisibility = Visibility.Hidden,
+                    //    LeftTitle = YaxisNames[i],
+                    //    BottomTitle = "carrier [i]"
+                    //};
+                    //chart.Content = getChart(dataFarEnd, dataNearEnd);
+                    //chartViewGrid.Children.Add(chart);
+                    //chartViewGrid.Children.Add(setLegend());
+                    getChart(dataFarEnd, dataNearEnd);
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             ConsoleUC.ConsoleText = "0";
         }
 
-        private Grid getChart(ChartValues chartVnear, ChartValues chartVfar)
+        private void getChart(ChartValues chartVnear, ChartValues chartVfar)
         {
             List<List<int>> BandFar = new List<List<int>>();
             List<List<int>> BandNear = new List<List<int>>();
-            LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
-            Legend legend = new Legend()
-            {
-                Content = legendItemsPanel
-            };
-            Grid grid = new Grid();
-            Chart chart = new Chart()
-            {
-                LegendVisibility = Visibility.Hidden,
-            };
+            //LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
+            //Legend legend = new Legend()
+            //{
+            //    Content = legendItemsPanel
+            //};
+            //Grid grid = new Grid();
+            //Chart chart = new Chart()
+            //{
+            //    LegendVisibility = Visibility.Hidden,
+            //};
             if (chartVnear.name.Contains("down") || chartVnear.name.Contains("char-func-real"))
             {
                 BandFar = splitListForBands(chartVnear.Xvals, chartVnear.Yvals);
@@ -105,72 +111,74 @@ namespace ssh_test1
                 BandFar = splitListForBands(chartVfar.Xvals, chartVfar.Yvals);
                 BandNear = splitListForBands(chartVnear.Xvals, chartVnear.Yvals);
             }
-            for (int j = 0; j < BandFar.Count; j += 2)
+            for (int j = 0; j < BandFar.Count - 1; j += 2)
             {
-                LineGraph lineGraphFar = new LineGraph()
-                {
-                    Stroke = Window1.BrushUpload,
-                    Padding = new System.Windows.Thickness(0, 30, 0, 0),
-                };
-                lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
-                grid.Children.Add(lineGraphFar);
+                //LineGraph lineGraphFar = new LineGraph()
+                //{
+                //    Stroke = Window1.BrushUpload,
+                //    Padding = new System.Windows.Thickness(0, 30, 0, 0),
+                //};
+                //lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
+                //grid.Children.Add(lineGraphFar);
+                linegraphUP.Plot(BandFar[j], BandFar[j + 1]);
             }
-            for (int j = 0; j < BandNear.Count; j += 2)
+            for (int j = 0; j < BandNear.Count - 1; j += 2)
             {
-                LineGraph lineGraphNear = new LineGraph()
-                {
-                    Stroke = Window1.BrushDownload,
-                    Padding = new System.Windows.Thickness(0, 30, 0, 0),
-                };
-                lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
-                grid.Children.Add(lineGraphNear);
+                //LineGraph lineGraphNear = new LineGraph()
+                //{
+                //    Stroke = Window1.BrushDownload,
+                //    Padding = new System.Windows.Thickness(0, 30, 0, 0),
+                //};
+                //lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
+                //grid.Children.Add(lineGraphNear);
+                linegraphDOWN.Plot(BandNear[j], BandNear[j + 1]);
             }
-            return grid;
+            //return grid;
         }
-        private Legend setLegend()
-        {
-            LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
-            Legend output = new Legend()
-            {
-                Content = legendItemsPanel
-            };
-            Rectangle rectUP = new Rectangle()
-            {
-                Width = 10,
-                Height = 10,
-                Fill = Window1.BrushUpload,
-                Stroke = Window1.BrushUpload,
-            };
+        //private Legend setLegend()
+        //{
+        //    LegendItemsPanel legendItemsPanel = new LegendItemsPanel();
+        //    Legend output = new Legend()
+        //    {
+        //        Content = legendItemsPanel
+        //    };
+        //    Rectangle rectUP = new Rectangle()
+        //    {
+        //        Width = 10,
+        //        Height = 10,
+        //        Fill = Window1.BrushUpload,
+        //        Stroke = Window1.BrushUpload,
+        //    };
 
-            Rectangle rectDOWN = new Rectangle()
-            {
-                Width = 10,
-                Height = 10,
-                Fill = Window1.BrushDownload,
-                Stroke = Window1.BrushDownload,
-            };
-            TextBox textBoxUP = new TextBox()
-            {
-                BorderThickness = new Thickness(0, 0, 0, 0),
-                Background = new SolidColorBrush(Colors.Transparent),
-                Text = " Upstream"
-            };
-            TextBox textBoxDOWN = new TextBox()
-            {
-                BorderThickness = new Thickness(0, 0, 0, 0),
-                Background = new SolidColorBrush(Colors.Transparent),
-                Text = " Downstream"
-            };
-            DockPanel dockUP = new DockPanel();
-            DockPanel dockDOWN = new DockPanel();
-            dockUP.Children.Add(rectUP);
-            dockUP.Children.Add(textBoxUP);
-            dockDOWN.Children.Add(rectDOWN);
-            dockDOWN.Children.Add(textBoxDOWN);
-            legendItemsPanel.Children.Add(dockUP);
-            legendItemsPanel.Children.Add(dockDOWN);
-            return output;
-        }
+        //    Rectangle rectDOWN = new Rectangle()
+        //    {
+        //        Width = 10,
+        //        Height = 10,
+        //        Fill = Window1.BrushDownload,
+        //        Stroke = Window1.BrushDownload,
+        //    };
+        //    TextBox textBoxUP = new TextBox()
+        //    {
+        //        BorderThickness = new Thickness(0, 0, 0, 0),
+        //        Background = new SolidColorBrush(Colors.Transparent),
+        //        Text = " Upstream"
+        //    };
+        //    TextBox textBoxDOWN = new TextBox()
+        //    {
+        //        BorderThickness = new Thickness(0, 0, 0, 0),
+        //        Background = new SolidColorBrush(Colors.Transparent),
+        //        Text = " Downstream"
+        //    };
+        //    DockPanel dockUP = new DockPanel();
+        //    DockPanel dockDOWN = new DockPanel();
+        //    dockUP.Children.Add(rectUP);
+        //    dockUP.Children.Add(textBoxUP);
+        //    dockDOWN.Children.Add(rectDOWN);
+        //    dockDOWN.Children.Add(textBoxDOWN);
+        //    legendItemsPanel.Children.Add(dockUP);
+        //    legendItemsPanel.Children.Add(dockDOWN);
+        //    return output;
+        //}
 
 
         private List<List<int>> splitListForBands(List<int> graphValuesX, List<int> graphValuesY)

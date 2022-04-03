@@ -3,10 +3,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
              xmlns:local="clr-namespace:ssh_test1"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid x:Name="chartViewGrid">
-            
+        <d3:Chart x:Name="chart1" BottomTitle="carrier [-]" LeftTitle="{Binding Path=YaxisName}" LegendVisibility="Collapsed">
+            <d3:Plot x:Name="plot" Padding="0,30,0,0">
+                <d3:LineGraph x:Name="linegraphUP" Description="Upstream" Stroke="Red" StrokeThickness="1"/>
+                <d3:LineGraph x:Name="linegraphDOWN" Description="Downstream" Stroke="Blue" StrokeThickness="1"/>
+            </d3:Plot>
+        </d3:Chart>
+        <d3:LegendItemsPanel HorizontalAlignment="Right" VerticalAlignment="Top">
+            <d3:Legend>
+                <StackPanel>
+                    <DockPanel>
+                        <Rectangle Height="10" Width="10" Fill="Red"/>
+                        <TextBlock Text="Upstream" Margin="10,0,0,0"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <Rectangle Height="10" Width="10" Fill="Blue"/>
+                        <TextBlock Text="Downstream" Margin="10,0,0,0"/>
+                    </DockPanel>
+                </StackPanel>
+            </d3:Legend>
+        </d3:LegendItemsPanel>
     </Grid>
 </UserControl>
