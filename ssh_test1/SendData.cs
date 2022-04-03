@@ -13,7 +13,6 @@ namespace ssh_test1
     {
         public int lengthNow = 0;
         private string output;
-
         public SendData(string dslamInput)
         {
             sendCommandGetResponse(dslamInput);

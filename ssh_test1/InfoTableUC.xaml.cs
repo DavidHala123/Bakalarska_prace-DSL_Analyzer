@@ -365,6 +365,7 @@ namespace ssh_test1
             string rtInfo2 = await Task.Run(() => new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse());
             string rtInfo3 = await Task.Run(() => new SendData("show xdsl operational-data near-end line " + portIndex + " detail").getResponse());
             string rtInfo4 = await Task.Run(() => new SendData("show xdsl operational-data far-end line " + portIndex + " detail").getResponse());
+            MessageBox.Show("got it");
             string[] output1 = rtInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
             string[] output2 = rtInfo2.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
             string[] output3 = rtInfo3.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
@@ -407,6 +408,22 @@ namespace ssh_test1
                     case string generaldata when generaldata.Contains("output-power-down"):
                         string[] opDOWN = generaldata.Split(':');
                         outputPDOWN = opDOWN[1];
+                        break;
+                    case string generaldata when generaldata.Contains("sig-attenuation-up"):
+                        string[] saUP = generaldata.Split(':');
+                        signalAtUP = saUP[1];
+                        break;
+                    case string generaldata when generaldata.Contains("sig-attenuation-down"):
+                        string[] saDOWN = generaldata.Split(':');
+                        signalAtDOWN = saDOWN[1];
+                        break;
+                    case string generaldata when generaldata.Contains("actual-psd-up"):
+                        string[] txpUP = generaldata.Split(':');
+                        txPsdUP = txpUP[1];
+                        break;
+                    case string generaldata when generaldata.Contains("actual-psd-down"):
+                        string[] txpDOWN = generaldata.Split(':');
+                        txPsdDOWN = txpDOWN[1];
                         break;
                 }
             }

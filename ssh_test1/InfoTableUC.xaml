@@ -17,12 +17,12 @@
         <Grid Grid.Row="0" Background="WhiteSmoke">
             <TextBlock Text="General Information:" Padding="10,10,0,0" Margin="0,0,0,0" FontSize="18" Grid.ColumnSpan="2"/>
         </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.6*"/>
                 <ColumnDefinition Width="0.4*"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
+            <Grid>
                 <TextBlock/>
                 <TextBlock Height="20" Margin="10,5,0,0" VerticalAlignment="Top" Text="Interface index:"/>
                 <TextBlock Height="20" Margin="10,25,0,0" VerticalAlignment="Top" Text="Admin. state:"/>
@@ -37,11 +37,25 @@
                 <TextBlock x:Name="currm_value" Height="20" Margin="0,65,10,0" VerticalAlignment="Top" Text="{Binding Path=current_mode}"/>
                 <TextBlock x:Name="suppm_value" Height="20" Margin="0,85,10,0" VerticalAlignment="Top" Text="{Binding Path=supported_mode}"/>
             </Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=currm_value, Path=Text }"
+                             Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=currm_value, Path=Text}" 
+                                 Value="{x:Static sys:String.Empty}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
         </Grid>
         <Grid Grid.Row="2" Background="WhiteSmoke">
             <TextBlock Text="Runtime Information:" Padding="10,10,0,0" Margin="0,0,0,0" FontSize="18" Grid.ColumnSpan="2"/>
         </Grid>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="3" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
                 <RowDefinition MaxHeight="150"/>
@@ -138,19 +152,33 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <TextBlock x:Name="noiseMUPt" Height="20" Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="55"/>
-                        <TextBlock x:Name="outPUPt" Height="20" Margin="0,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="12"/>
-                        <TextBlock x:Name="signAUPt" Height="20" Margin="0,45,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="64"/>
-                        <TextBlock x:Name="tspxdUPt" Height="20" Margin="0,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="13"/>
+                        <TextBlock x:Name="noiseMUPt" Height="20" Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=noiseMUP}"/>
+                        <TextBlock x:Name="outPUPt" Height="20" Margin="0,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=outputPUP}"/>
+                        <TextBlock x:Name="signAUPt" Height="20" Margin="0,45,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=signalAtUP}"/>
+                        <TextBlock x:Name="tspxdUPt" Height="20" Margin="0,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=txPsdUP}"/>
                     </Grid>
                     <Grid Grid.Column="1">
-                        <TextBlock x:Name="noiseMDOWNt" Height="20" Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="55"/>
-                        <TextBlock x:Name="outPDOWNt" Height="20" Margin="0,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="12"/>
-                        <TextBlock x:Name="signADOWNt" Height="20" Margin="0,45,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="64"/>
-                        <TextBlock x:Name="tspxdDOWNt" Height="20" Margin="0,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="13"/>
+                        <TextBlock x:Name="noiseMDOWNt" Height="20" Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=noiseMDOWN}"/>
+                        <TextBlock x:Name="outPDOWNt" Height="20" Margin="0,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=outputPDOWN}"/>
+                        <TextBlock x:Name="signADOWNt" Height="20" Margin="0,45,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=signalAtDOWN}"/>
+                        <TextBlock x:Name="tspxdDOWNt" Height="20" Margin="0,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=txPsdDOWN}"/>
                     </Grid>
                 </Grid>
             </Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=tspxdDOWNt, Path=Text }"
+                             Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=tspxdDOWNt, Path=Text}" 
+                                 Value="{x:Static sys:String.Empty}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
         </Grid>
     </Grid>
 </UserControl>
