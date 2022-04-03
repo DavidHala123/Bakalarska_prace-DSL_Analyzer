@@ -20,6 +20,18 @@ namespace ssh_test1
     public partial class OptionsBase : Window
     {
         private List<bool> charts;
+        private static bool _OptionsChanged;
+        public static bool OptionsChanged
+        {
+            get { return _OptionsChanged; }
+            set
+            {
+                if (_OptionsChanged != value)
+                {
+                    _OptionsChanged = value;
+                }
+            }
+        }
         public OptionsBase(UIElement UC, List<bool> listofCharts)
         {
             InitializeComponent();

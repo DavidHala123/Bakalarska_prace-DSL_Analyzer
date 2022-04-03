@@ -23,7 +23,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20">
-                
+
             </RowDefinition>
             <RowDefinition Height="55">
 
@@ -78,16 +78,10 @@
             </Border>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="1">
-            <TabControl x:Name="GraphField" SelectionChanged="GraphField_SelectionChanged" Margin="0,0,5,0">
-            </TabControl>
+            <TabControl x:Name="GraphField" SelectionChanged="GraphField_SelectionChanged" Margin="0,0,5,0"/>
         </Grid>
-        <Grid Grid.Row="3" Grid.Column="0" Background="GhostWhite">
-            <Image gif:ImageBehavior.RepeatBehavior="Forever"
-                gif:ImageBehavior.AnimatedSource="Images/ajax-loader.gif" Margin="15,4" x:Name="gif" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBlock x:Name="XDSLStandart"/>
-        </Grid>
-        <Grid Grid.Row="3" Grid.Column="1" Background="GhostWhite">
-            <TextBlock x:Name="AppConsole" Padding="10,0" Background="#FFE7E7F0"/>
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Background="GhostWhite">
+            <local:ConsoleUC x:Name="Console"/>
         </Grid>
     </Grid>
 </Window>

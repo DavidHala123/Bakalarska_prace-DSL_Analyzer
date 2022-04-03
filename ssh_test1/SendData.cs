@@ -27,7 +27,7 @@ namespace ssh_test1
         {
             try
             {
-                ConsoleLogic.ConsoleText = "1";
+                ConsoleUC.ConsoleText = "1";
                 using (var vclient = new SshClient(ConData.ipv4, ConData.name, ConData.password))
                 {
                     string dslamResponse = "";
@@ -45,21 +45,21 @@ namespace ssh_test1
                         shell.Close();
                     }
                     vclient.Disconnect();
-                    ConsoleLogic.ConsoleText = "0";
+                    ConsoleUC.ConsoleText = "0";
                     output = dslamResponse;
                 }
             }
             catch
             {
                 MessageBox.Show("An Error has occured, please check your connection");
-                ConsoleLogic.ConsoleText = "0";
+                ConsoleUC.ConsoleText = "0";
                 output = null;
             }
         }
 
         private void GetFullResponse(ref string output, ShellStream shell)
         {
-            ConsoleLogic.ConsoleText = "2";
+            ConsoleUC.ConsoleText = "2";
             StreamReader reader = new StreamReader(shell);
             int lengthBefore = -1;
             while (true)

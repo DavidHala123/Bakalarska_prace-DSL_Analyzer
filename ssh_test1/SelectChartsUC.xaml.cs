@@ -21,6 +21,7 @@ namespace ssh_test1
     public partial class SelectChartsUC : UserControl
     {
         String[] outputString = new String[7];
+        object window;
         public SelectChartsUC(List<bool> listOfChecks)
         {
             InitializeComponent();
@@ -31,6 +32,7 @@ namespace ssh_test1
             FuncComplex.IsChecked = listOfChecks[4];
             FuncReal.IsChecked = listOfChecks[5];
             TxPsd.IsChecked = listOfChecks[6];
+            this.window = window;
         }
 
         private void LoadDistribution_Checked(object sender, RoutedEventArgs e)
@@ -111,7 +113,7 @@ namespace ssh_test1
                     output.Add(true);
             }
             Window1.graphSelector = output;
-            Window1.OptionsChanged = true;
+            OptionsBase.OptionsChanged = true;
         }
     }
 }

@@ -108,7 +108,7 @@ namespace ssh_test1
                     output.Add(true);
             }
             Window1.graphSelector = output;
-            Window1.OptionsChanged = true;
+            OptionsBase.OptionsChanged = true;
             this.Close();
         }
     }

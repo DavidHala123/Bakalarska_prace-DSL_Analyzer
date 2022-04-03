@@ -24,7 +24,7 @@ namespace ssh_test1
                 };
                 if (sf.ShowDialog() == true)
                 {
-                    ConsoleLogic.ConsoleText = "4";
+                    ConsoleUC.ConsoleText = "4";
                     var wb = _excel.Workbooks.Add();
                     double numberOfColD = valuesY.Count / 2;
                     int numOfColI = (int)Math.Ceiling(numberOfColD);

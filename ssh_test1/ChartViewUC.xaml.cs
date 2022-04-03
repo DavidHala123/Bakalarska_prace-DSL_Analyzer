@@ -78,7 +78,7 @@ namespace ssh_test1
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
-            ConsoleLogic.ConsoleText = "0";
+            ConsoleUC.ConsoleText = "0";
         }
 
         private Grid getChart(ChartValues chartVnear, ChartValues chartVfar)
