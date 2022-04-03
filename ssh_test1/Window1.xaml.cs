@@ -50,23 +50,7 @@ namespace ssh_test1
         string dataFarEnd = "";
         string dataNearEnd = "";
         string selectedPort;
-        //private static bool _OptionsChanged = false;
-        //public static bool OptionsChanged
-        //{
-        //    get { return _OptionsChanged; }
-        //    set
-        //    {
-        //        if (_OptionsChanged != value)
-        //        {
-        //            if (_OptionsChanged)
-        //            {
-        //                if (dataFarEnd != "" && dataNearEnd != "")
-        //                    send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-        //                _OptionsChanged = false;
-        //            }
-        //        }
-        //    }
-        //}
+
         private static SolidColorBrush _BrushUpload = new SolidColorBrush(Colors.Red);
         public static SolidColorBrush BrushUpload
         {
@@ -146,7 +130,6 @@ namespace ssh_test1
                 {
                     infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[0].Xvals.Count() });
                     infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() } );
-                    infoTable.realtime = true;
                 }
                 charVindex += 2;
             }
@@ -194,12 +177,6 @@ namespace ssh_test1
 
         }
 
-        protected override void OnClosed(EventArgs e) 
-        {
-            base.OnClosed(e);
-            Application.Current.Shutdown();
-        }
-
         private async void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
             object window = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
@@ -245,7 +222,6 @@ namespace ssh_test1
             ChartAppearenceUC chaUC = new ChartAppearenceUC();
             OptionsBase opt = new OptionsBase(chaUC, _graphSelector);
             opt.Show();
-
         }
 
         private void ExportMatlab_Click(object sender, RoutedEventArgs e)
@@ -257,7 +233,12 @@ namespace ssh_test1
             ConnectionUC conUC = new ConnectionUC();
             OptionsBase opt = new OptionsBase(conUC, _graphSelector);
             opt.Show();
+        }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            Application.Current.Shutdown();
         }
     }
 }
