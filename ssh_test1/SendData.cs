@@ -36,7 +36,7 @@ namespace ssh_test1
                     {
                         StreamWriter writer = new StreamWriter(shell);
                         writer.AutoFlush = true;
-                        writer.WriteLine(command + " | no-more");
+                        writer.WriteLine(command + " | count words | no-more");
                         while (shell.Length == 0)
                         {
                             Thread.Sleep(500);
@@ -65,18 +65,14 @@ namespace ssh_test1
             while (true)
             {
                 string line = reader.ReadLine();
-                if (line != null)
+                if (!string.IsNullOrEmpty(line))
                 {
+                    if (line.Contains("words") && !line.Contains("|"))
+                    {
+                        break;
+                    }
                     output = output + line + '\n';
-                    Thread.Sleep(10);
                 }
-                lengthNow = output.Length;
-                if (lengthNow == lengthBefore && line == null)
-                {
-                    break;
-                }
-                lengthBefore = lengthNow;
-
             }
         }
     }

@@ -57,10 +57,6 @@ namespace ssh_test1
             }
         }
 
-        //private LineGraph GraphUP = new LineGraph();
-
-        //private LineGraph GraphDOWN = new LineGraph();
-
 
         List<string> YaxisNames = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]" };
         private async void ChartGraph(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
@@ -69,18 +65,17 @@ namespace ssh_test1
             {
                 if (Window1.graphSelector[i] == true)
                 {
-                    chart.Content = await Task.Run(()=> getChart(dataFarEnd, dataNearEnd));
+                    getChart(dataFarEnd, dataNearEnd);
                     chart.LeftTitle = YaxisNames[i];
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
         }
 
-        private Grid getChart(ChartValues chartVnear, ChartValues chartVfar)
+        private void getChart(ChartValues chartVnear, ChartValues chartVfar)
         {
             List<List<int>> BandFar = new List<List<int>>();
             List<List<int>> BandNear = new List<List<int>>();
-            Grid grid = new Grid();
             if (chartVnear.name.Contains("down") || chartVnear.name.Contains("char-func-real"))
             {
                 BandFar = splitListForBands(chartVnear.Xvals, chartVnear.Yvals);
@@ -93,15 +88,13 @@ namespace ssh_test1
             }
             for (int j = 0; j < BandFar.Count - 1; j += 2)
             {
-                MessageBox.Show((BandFar.Capacity - 1).ToString());
-                MessageBox.Show(j.ToString());
                 LineGraph lineGraphFar = new LineGraph()
                 {
                     Stroke = Window1.BrushUpload,
                     Padding = new System.Windows.Thickness(0, 30, 0, 0),
                 };
                 lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
-                grid.Children.Add(lineGraphFar);
+                chartGrid.Children.Add(lineGraphFar);
             }
             for (int j = 0; j < BandNear.Count - 1; j += 2)
             {
@@ -111,9 +104,8 @@ namespace ssh_test1
                     Padding = new System.Windows.Thickness(0, 30, 0, 0),
                 };
                 lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);
-                grid.Children.Add(lineGraphNear);
+                chartGrid.Children.Add(lineGraphNear);
             }
-            return grid;
         }
 
 

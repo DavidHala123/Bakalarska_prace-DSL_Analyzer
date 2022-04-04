@@ -32,7 +32,7 @@ namespace ssh_test1
                     {
                         PortBox.Items.Add(obj);
                     }
-                    string xdslStandartStr = await sendToDSLAM("show xdsl operational-data line | match match exact:gfast");
+                    string xdslStandartStr = await Task.Run(() => new SendData("show xdsl operational-data line | match match exact:gfast").getResponse());
                     if (!xdslStandartStr.Contains("up"))
                         Console.XDSLStandartS = "ADSL/VDSL";
                     else
@@ -109,39 +109,33 @@ namespace ssh_test1
         {
             ConsoleUC.ConsoleText = "3";
             GraphField.Items.Clear();
-            ChartViewUC cv;
             int charVindex = 0;
             if (!fromFile)
             {
-                dataFarEnd = await sendToDSLAM("show xdsl carrier-data far-end " + infoTable.portIndex + " detail");
-                dataNearEnd = await sendToDSLAM("show xdsl carrier-data near-end " + infoTable.portIndex + " detail");
+                dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
+                dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
             }
             GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, Window1.graphSelector));
             for (int i = 0; i < graphSelector.Count(); i++)
             {
                 graphLog.SelectGraphNeeeded(i);
-                cv = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i);
                 GraphField.Items.Add(new TabItem
                 {
                     Header = graphLog.name,
-                    Content = cv,
+                    Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i),
                 });
-                if(i == 0 && !fromFile) 
+                charVindex += 2;
+                if (i==0 && !fromFile)
                 {
                     infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[0].Xvals.Count() });
-                    infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() } );
+                    infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() });
+                    infoTable.realtime = true;
                 }
-                charVindex += 2;
             }
             ConsoleUC.ConsoleText = "0";
         }
 
-        private static async Task<string> sendToDSLAM(string input) 
-        {
-            return await Task.Run(() => new SendData(input).getResponse() ?? throw new ArgumentNullException());
-        }
-
-        private async void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             GraphField.Items.Clear();
             dataFarEnd = "";
