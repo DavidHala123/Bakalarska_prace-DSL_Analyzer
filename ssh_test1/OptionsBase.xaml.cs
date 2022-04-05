@@ -63,7 +63,6 @@ namespace ssh_test1
         {
             this.wind = wind;
             InitializeComponent();
-            MessageBox.Show(choice.ToString());
             switch (choice) 
             {
                 case 0:
