@@ -25,7 +25,7 @@
             <TextBlock Text="Select charts:" Padding="10,10,0,0" Margin="0,0,0,0" FontSize="18" Grid.ColumnSpan="2"/>
         </Grid>
         <Grid Grid.Row="1">
-            <CheckBox x:Name="LoadDistribution" Content="load-distribution" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="LoadDistribution_Checked" Unchecked="LoadDistribution_Unchecked"/>
+            <CheckBox  x:Name="LoadDistribution" Content="load-distribution" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="LoadDistribution_Checked" Unchecked="LoadDistribution_Unchecked"/>
             <CheckBox x:Name="GainAllocation" Content="gain-allocation" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="GainAllocation_Checked" Unchecked="GainAllocation_Unchecked"/>
             <CheckBox x:Name="Snr" Content="snr" HorizontalAlignment="Left" Margin="20,40,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="Snr_Checked" Unchecked="Snr_Unchecked"/>
             <CheckBox x:Name="Qln" Content="qln" HorizontalAlignment="Left" Margin="20,60,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="Qln_Checked" Unchecked="Qln_Unchecked"/>

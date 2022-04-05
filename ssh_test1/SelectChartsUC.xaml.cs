@@ -20,10 +20,16 @@ namespace ssh_test1
     /// </summary>
     public partial class SelectChartsUC : UserControl
     {
-        String[] outputString = new String[7];
-        object window;
-        public SelectChartsUC(List<bool> listOfChecks)
+        Window1 wind;
+        OptionsBase optb;
+        private List<bool> output = new List<bool>();
+        private String[] outputString = new String[7];
+        private List<bool> listOfChecks;
+        public SelectChartsUC(Window1 wind, OptionsBase optb)
         {
+            this.optb = optb;
+            this.wind = wind;
+            listOfChecks = wind.graphSelector;
             InitializeComponent();
             LoadDistribution.IsChecked = listOfChecks[0];
             GainAllocation.IsChecked = listOfChecks[1];
@@ -32,7 +38,6 @@ namespace ssh_test1
             FuncComplex.IsChecked = listOfChecks[4];
             FuncReal.IsChecked = listOfChecks[5];
             TxPsd.IsChecked = listOfChecks[6];
-            this.window = window;
         }
 
         private void LoadDistribution_Checked(object sender, RoutedEventArgs e)
@@ -104,7 +109,6 @@ namespace ssh_test1
         }
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            List<bool> output = new List<bool>();
             for (int i = 0; i <= 6; i++)
             {
                 if (outputString[i] != "1")
@@ -112,8 +116,8 @@ namespace ssh_test1
                 else
                     output.Add(true);
             }
-            Window1.graphSelector = output;
-            OptionsBase.OptionsChanged = true;
+            wind.graphSelector = output;
+            optb.Close();
         }
     }
 }

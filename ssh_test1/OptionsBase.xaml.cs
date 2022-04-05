@@ -19,42 +19,77 @@ namespace ssh_test1
     /// </summary>
     public partial class OptionsBase : Window
     {
-        private List<bool> charts;
-        private static bool _OptionsChanged;
-        public static bool OptionsChanged
+        SelectChartsUC selc;
+        private List<bool> _charts;
+        public  List<bool> charts 
         {
-            get { return _OptionsChanged; }
-            set
+            get { return _charts; }
+            set 
             {
-                if (_OptionsChanged != value)
+                if(charts != value) 
                 {
-                    _OptionsChanged = value;
+                    charts = value;
                 }
             }
         }
-        public OptionsBase(UIElement UC, List<bool> listofCharts)
+        private SolidColorBrush _brushUP;
+        public SolidColorBrush brushUP 
         {
-            InitializeComponent();
-            this.charts = listofCharts;
-            openUC(UC);
-        }
-        private UIElement UC;
-        private void SelChart_Click(object sender, RoutedEventArgs e)
-        {
-            UC = new SelectChartsUC(charts);
-            openUC(UC);
+            get { return _brushUP; }
+            set 
+            {
+                if(brushUP != value) 
+                {
+                    brushUP = value;
+                }
+            }
         }
 
-        private void openUC(UIElement inputUC) 
+        private SolidColorBrush _brushDOWN;
+        public SolidColorBrush brushDOWN 
+        {
+            get { return _brushDOWN; }
+            set 
+            {
+                if( brushDOWN != value) 
+                {
+                    brushDOWN = value;
+                }
+            }
+        }
+        Window1 wind;
+
+        public OptionsBase(int choice, Window1 wind)
+        {
+            this.wind = wind;
+            InitializeComponent();
+            MessageBox.Show(choice.ToString());
+            switch (choice) 
+            {
+                case 0:
+                    SelChart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    break;
+                case 1:
+                    CharAppe.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    break;
+                case 2:
+                    break;
+            }
+        }
+        private void SelChart_Click(object sender, RoutedEventArgs e)
         {
             optCont.Children.Clear();
-            optCont.Children.Add(inputUC);
+            SelectChartsUC selc = new SelectChartsUC(wind, this);
+            optCont.Children.Add(selc);
         }
+
+
 
         private void CharAppe_Click(object sender, RoutedEventArgs e)
         {
-            UC = new ChartAppearenceUC();
-            openUC(UC);
+            optCont.Children.Clear();
+            ChartAppearenceUC selc = new ChartAppearenceUC(wind, this);
+            optCont.Children.Add(selc);
         }
     }
 }

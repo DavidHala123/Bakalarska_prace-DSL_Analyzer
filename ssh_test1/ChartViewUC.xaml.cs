@@ -21,11 +21,16 @@ namespace ssh_test1
     /// </summary>
     public partial class ChartViewUC : UserControl
     {
-        public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
+        public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i, SolidColorBrush up, SolidColorBrush down)
         {
             InitializeComponent();
+            this.up = up;
+            this.down = down;
             ChartGraph(dataFarEnd, dataNearEnd, i);
         }
+        SolidColorBrush up;
+        SolidColorBrush down;
+        private List<bool> graphSelector = new List<bool>();
         private int _numCarrUP;
         public int numCarrUP
         {
@@ -63,11 +68,8 @@ namespace ssh_test1
         {
             try
             {
-                if (Window1.graphSelector[i] == true)
-                {
-                    getChart(dataFarEnd, dataNearEnd);
-                    chart.LeftTitle = YaxisNames[i];
-                }
+                getChart(dataFarEnd, dataNearEnd);
+                chart.LeftTitle = YaxisNames[i];
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
         }
@@ -90,7 +92,7 @@ namespace ssh_test1
             {
                 LineGraph lineGraphFar = new LineGraph()
                 {
-                    Stroke = Window1.BrushUpload,
+                    Stroke = up,
                     Padding = new System.Windows.Thickness(0, 30, 0, 0),
                 };
                 lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
@@ -100,7 +102,7 @@ namespace ssh_test1
             {
                 LineGraph lineGraphNear = new LineGraph()
                 {
-                    Stroke = Window1.BrushDownload,
+                    Stroke = down,
                     Padding = new System.Windows.Thickness(0, 30, 0, 0),
                 };
                 lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);

@@ -11,17 +11,19 @@
             <ColumnDefinition Width="0.4*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Margin="0,5" Background="WhiteSmoke">
-            <Button x:Name="CharAppe" Click="CharAppe_Click" BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
-                <TextBlock Text="Chart Appearence" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
-            </Button>
-            <Button x:Name="SelChart" Click="SelChart_Click" BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
-                <TextBlock Text="Select Charts" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
-            </Button>
-            <Button x:Name="Con"  BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
-                <TextBlock Text="Connection" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
-            </Button>
-        </StackPanel>
+        <Grid Grid.Column="0">
+            <StackPanel Grid.Row="0" Margin="0,5" Background="WhiteSmoke">
+                <Button x:Name="CharAppe" Click="CharAppe_Click" BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
+                    <TextBlock Text="Chart Appearence" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
+                </Button>
+                <Button x:Name="SelChart" Click="SelChart_Click" BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
+                    <TextBlock Text="Select Charts" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
+                </Button>
+                <Button x:Name="Con"  BorderThickness="0" Background="WhiteSmoke" HorizontalContentAlignment="Stretch">
+                    <TextBlock Text="Connection" HorizontalAlignment="Left"  Margin="5,3,0,3"/>
+                </Button>
+            </StackPanel>
+        </Grid>
         <Grid Grid.Column="1" x:Name="optCont"/>
     </Grid>
 </Window>

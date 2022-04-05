@@ -23,7 +23,6 @@ namespace ssh_test1
         {
             try 
             {
-                _graphSelector = new List<bool>() { true, true, true, true, true, true, true };
                 async Task Initialize() 
                 {
                     List<PortData> listofobj = await Task.Run(() => new PortBoxLogic(new SendData
@@ -51,8 +50,8 @@ namespace ssh_test1
         string dataNearEnd = "";
         string selectedPort;
 
-        private static SolidColorBrush _BrushUpload = new SolidColorBrush(Colors.Red);
-        public static SolidColorBrush BrushUpload
+        private SolidColorBrush _BrushUpload = new SolidColorBrush(Colors.Red);
+        public SolidColorBrush BrushUpload
         {
             get { return _BrushUpload; }
             set
@@ -60,11 +59,13 @@ namespace ssh_test1
                 if (_BrushUpload != value)
                 {
                     _BrushUpload = value;
+                    if (!String.IsNullOrEmpty(infoTable.portIndex))
+                        send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                 }
             }
         }
-        private static SolidColorBrush _BrushDownload = new SolidColorBrush(Colors.Blue);
-        public static SolidColorBrush BrushDownload
+        private SolidColorBrush _BrushDownload = new SolidColorBrush(Colors.Blue);
+        public SolidColorBrush BrushDownload
         {
             get { return _BrushDownload; }
             set
@@ -72,11 +73,13 @@ namespace ssh_test1
                 if (_BrushDownload != value)
                 {
                     _BrushDownload = value;
+                    if (!String.IsNullOrEmpty(infoTable.portIndex))
+                        send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                 }
             }
         }
-        private static List<bool> _graphSelector;
-        public static List<bool> graphSelector
+        private List<bool> _graphSelector = new List<bool>() { true, true, true, true, true, true, true };
+        public List<bool> graphSelector
         {
             get { return _graphSelector; }
             set
@@ -84,6 +87,8 @@ namespace ssh_test1
                 if (_graphSelector != value)
                 {
                     _graphSelector = value;
+                    if(!String.IsNullOrEmpty(infoTable.portIndex))
+                        send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                 }
             }
         }
@@ -107,29 +112,35 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
+            bool realtimeInfo = false;
             ConsoleUC.ConsoleText = "3";
             GraphField.Items.Clear();
             int charVindex = 0;
-            if (!fromFile)
+            if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd) && !String.IsNullOrEmpty(infoTable.portIndex))
             {
                 dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
                 dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
+                realtimeInfo = true;
             }
-            GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, Window1.graphSelector));
+            GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
             for (int i = 0; i < graphSelector.Count(); i++)
             {
-                graphLog.SelectGraphNeeeded(i);
-                GraphField.Items.Add(new TabItem
+                if (graphSelector[i]) 
                 {
-                    Header = graphLog.name,
-                    Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i),
-                });
-                charVindex += 2;
-                if (i==0 && !fromFile)
+                    graphLog.SelectGraphNeeeded(i);
+                    GraphField.Items.Add(new TabItem
+                    {
+                        Header = graphLog.name,
+                        Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload),
+                    });
+                    charVindex += 2;
+                }
+                if (realtimeInfo)
                 {
                     infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[0].Xvals.Count() });
                     infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() });
                     infoTable.realtime = true;
+                    realtimeInfo = false;
                 }
             }
             ConsoleUC.ConsoleText = "0";
@@ -171,15 +182,6 @@ namespace ssh_test1
 
         }
 
-        private async void OptionsButton_Click(object sender, RoutedEventArgs e)
-        {
-            object window = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
-            SelectChartsUC selc = new SelectChartsUC(_graphSelector);
-            OptionsBase opt = new OptionsBase(selc, _graphSelector);
-            opt.Show();
-
-        }
-
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             SaveFile svfl = new SaveFile(dataFarEnd, dataNearEnd);
@@ -211,10 +213,15 @@ namespace ssh_test1
             ConsoleUC.ConsoleText = "0";
         }
 
+        private async void OptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            OptionsBase opt = new OptionsBase(0, this);
+            opt.Show();
+        }
+
         private void ChartAppearence_Click(object sender, RoutedEventArgs e)
         {
-            ChartAppearenceUC chaUC = new ChartAppearenceUC();
-            OptionsBase opt = new OptionsBase(chaUC, _graphSelector);
+            OptionsBase opt = new OptionsBase(1, this);
             opt.Show();
         }
 
@@ -222,11 +229,14 @@ namespace ssh_test1
         {
 
         }
+
         private void ConDetails_Click(object sender, RoutedEventArgs e)
         {
-            ConnectionUC conUC = new ConnectionUC();
-            OptionsBase opt = new OptionsBase(conUC, _graphSelector);
-            opt.Show();
+            //OptionsBase opt = new OptionsBase(2, graphSelector, BrushUpload, BrushDownload);
+            //opt.ShowDialog();
+            //BrushUpload = opt.brushUP;
+            //BrushDownload = opt.brushDOWN;
+            //graphSelector = opt.charts;
         }
 
         protected override void OnClosed(EventArgs e)

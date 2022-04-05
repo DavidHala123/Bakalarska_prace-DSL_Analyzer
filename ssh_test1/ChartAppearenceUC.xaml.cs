@@ -22,12 +22,17 @@ namespace ssh_test1
     /// </summary>
     public partial class ChartAppearenceUC : INotifyPropertyChanged
     {
-
-        public ChartAppearenceUC()
+        public ChartAppearenceUC(Window1 wind, OptionsBase optb)
         {
+            this.optb = optb;
+            this.wind = wind;
             DataContext = this;
             InitializeComponent();
         }
+        OptionsBase optb;
+        Window1 wind;
+        private bool setUpb = false;
+        private bool setDownb = false;
         private int _Rval;
         public byte Rval 
         {
@@ -94,14 +99,22 @@ namespace ssh_test1
 
         private void setUpload_Click(object sender, RoutedEventArgs e)
         {
-            Window1.BrushUpload = new SolidColorBrush(Color.FromArgb(255, Rval, Gval, Bval));
-            OptionsBase.OptionsChanged = true;
+            wind.BrushUpload = new SolidColorBrush(Color.FromArgb(255, Rval, Gval, Bval));
+            setUpb = true;
+            close();
         }
 
         private void setDownload_Click(object sender, RoutedEventArgs e)
         {
-            Window1.BrushDownload = new SolidColorBrush(Color.FromArgb(255, Rval, Gval, Bval));
-            OptionsBase.OptionsChanged = true;
+            wind.BrushDownload = new SolidColorBrush(Color.FromArgb(255, Rval, Gval, Bval));
+            setDownb = true;
+            close();
+        }
+
+        private void close() 
+        {
+            if(setUpb && setDownb)
+                optb.Close();
         }
     }
 }
