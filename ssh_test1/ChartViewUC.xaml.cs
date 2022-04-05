@@ -23,13 +23,32 @@ namespace ssh_test1
     {
         public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i, SolidColorBrush up, SolidColorBrush down)
         {
-            InitializeComponent();
+            DataContext = this;
             this.up = up;
             this.down = down;
+            InitializeComponent();
             ChartGraph(dataFarEnd, dataNearEnd, i);
         }
-        SolidColorBrush up;
-        SolidColorBrush down;
+        private SolidColorBrush _up;
+        public SolidColorBrush up 
+        {
+            get { return _up; }
+            set 
+            {
+                if(_up != value)
+                    _up = value;
+            }
+        }
+        private SolidColorBrush _down;
+        public SolidColorBrush down
+        {
+            get { return _down; }
+            set
+            {
+                if (_down != value)
+                    _down = value;
+            }
+        }
         private List<bool> graphSelector = new List<bool>();
         private int _numCarrUP;
         public int numCarrUP
