@@ -59,7 +59,8 @@ namespace ssh_test1
                 if (_BrushUpload != value)
                 {
                     _BrushUpload = value;
-                    if (!String.IsNullOrEmpty(infoTable.portIndex))
+                    //infoTable.up = value;
+                    if (GraphField.HasItems)
                         send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                 }
             }
@@ -73,7 +74,7 @@ namespace ssh_test1
                 if (_BrushDownload != value)
                 {
                     _BrushDownload = value;
-                    if (!String.IsNullOrEmpty(infoTable.portIndex))
+                    if (GraphField.HasItems)
                         send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                 }
             }
@@ -87,7 +88,7 @@ namespace ssh_test1
                 if (_graphSelector != value)
                 {
                     _graphSelector = value;
-                    if(!String.IsNullOrEmpty(infoTable.portIndex))
+                    if(GraphField.HasItems)
                         send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                 }
             }
@@ -133,7 +134,7 @@ namespace ssh_test1
                     graphLog.SelectGraphNeeeded(i);
                     GraphField.Items.Add(new TabItem
                     {
-                        Header = graphLog.name,
+                        Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
                         Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload),
                     });
                     GraphXvalues.Add(graphLog.chartV[charVindex].Xvals);

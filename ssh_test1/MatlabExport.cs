@@ -49,7 +49,6 @@ namespace ssh_test1
                         }
                     }
                 }
-                MessageBox.Show(valuesIndex.ToString());
                 MatlabWriter.Store(sf.FileName, matrices);
             }
         }

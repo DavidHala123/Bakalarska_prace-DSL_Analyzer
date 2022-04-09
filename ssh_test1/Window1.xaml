@@ -48,10 +48,58 @@
                 <Menu VerticalAlignment="Center">
                     <MenuItem Header="File">
                         <MenuItem Header="Open" Click="Open_Click" x:Name="LoadButton"/>
-                        <MenuItem Header="Save" Click="Save_Click" x:Name="SaveButton"/>
+                        <MenuItem Header="Save" Click="Save_Click" x:Name="SaveButton">
+                            <MenuItem.Style>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
+                                                     Value="True">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
+                                                     Value="0">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
                         <MenuItem Header="Export to...">
-                            <MenuItem Header="Excel" Click="ExportExcel_Click"/>
-                            <MenuItem Header="Matlab" Click="ExportMatlab_Click"/>
+                            <MenuItem Header="Excel" Click="ExportExcel_Click" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                <MenuItem.Style>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
+                                                     Value="True">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
+                                                     Value="0">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </MenuItem.Style>
+                            </MenuItem>
+                            <MenuItem Header="Matlab" Click="ExportMatlab_Click" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                <MenuItem.Style>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
+                                                     Value="True">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
+                                                     Value="0">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </MenuItem.Style>
+                            </MenuItem>
                         </MenuItem>
                     </MenuItem>
                     <MenuItem Header="Edit">
@@ -66,11 +114,46 @@
             </DockPanel>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
-            <ComboBox x:Name="PortBox" ItemTemplate="{StaticResource cmbTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35" Width="180" SelectionChanged="PortBox_SelectionChanged"/>
+            <ComboBox x:Name="PortBox" ItemTemplate="{StaticResource cmbTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35" Width="180" SelectionChanged="PortBox_SelectionChanged" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox">
+                        <Setter Property="IsEnabled" Value="False"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                             Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                                Value="{x:Static sys:String.Empty}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
 
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Button x:Name="send" Content="Analyze" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0" Height="25" Width="70" Click="send_Click"/>
+        <Grid Grid.Row="1" Grid.Column="1" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+            <Button x:Name="send" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0" Height="25" Width="70" Click="send_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="IsEnabled" Value="False"/>
+                        <Setter Property="Content" Value="Processing"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                             Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Setter Property="Content" Value="Analyze"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                                Value="{x:Static sys:String.Empty}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Setter Property="Content" Value="Analyze"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Grid>
         <Grid x:Name="infoGrid" Grid.Row="2" Grid.Column="0">
             <Border BorderBrush="Gray" BorderThickness="1">

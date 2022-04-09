@@ -38,6 +38,8 @@ namespace ssh_test1
             }
         }
 
+        public SolidColorBrush up;
+
         private int _attaBitrateUP;
         public int attaBitrateUP 
         {
@@ -349,7 +351,6 @@ namespace ssh_test1
                         //    break;
                 }
             }
-            MessageBox.Show(currm_value.Text);
             supported_mode = supmodes;
         }
 
