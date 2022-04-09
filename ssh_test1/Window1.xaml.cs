@@ -43,9 +43,9 @@ namespace ssh_test1
             catch { }
         }
 
-        List<List<int>> GraphYvalues;
-        List<List<int>> GraphXvalues;
-        List<string> GraphListOfNames;
+        List<List<int>> GraphYvalues = new List<List<int>>();
+        List<List<int>> GraphXvalues = new List<List<int>>();
+        List<string> GraphListOfNames = new List<string>();
         string dataFarEnd = "";
         string dataNearEnd = "";
         string selectedPort;
@@ -112,6 +112,9 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
+            GraphXvalues.Clear();
+            GraphYvalues.Clear();
+            GraphListOfNames.Clear();
             bool realtimeInfo = false;
             ConsoleUC.ConsoleText = "3";
             GraphField.Items.Clear();
@@ -133,6 +136,11 @@ namespace ssh_test1
                         Header = graphLog.name,
                         Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload),
                     });
+                    GraphXvalues.Add(graphLog.chartV[charVindex].Xvals);
+                    GraphXvalues.Add(graphLog.chartV[charVindex + 1].Xvals);
+                    GraphYvalues.Add(graphLog.chartV[charVindex].Yvals);
+                    GraphYvalues.Add(graphLog.chartV[charVindex + 1].Yvals);
+                    GraphListOfNames.Add(graphLog.name);
                     charVindex += 2;
                 }
                 if (realtimeInfo)
@@ -210,7 +218,7 @@ namespace ssh_test1
 
         private async void ExportExcel_Click(object sender, RoutedEventArgs e)
         {
-            ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames, _graphSelector));
+            ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames, graphSelector));
             ConsoleUC.ConsoleText = "0";
         }
 
@@ -228,7 +236,7 @@ namespace ssh_test1
 
         private void ExportMatlab_Click(object sender, RoutedEventArgs e)
         {
-
+            MatlabExport me = new MatlabExport(GraphXvalues, GraphYvalues, graphSelector, GraphListOfNames);
         }
 
         private void ConDetails_Click(object sender, RoutedEventArgs e)
