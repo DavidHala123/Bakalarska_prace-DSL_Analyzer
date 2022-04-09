@@ -137,8 +137,8 @@ namespace ssh_test1
                 }
                 if (realtimeInfo)
                 {
-                    infoTable.chartValuesDOWN = new ChartValues<int>(new[] { graphLog.chartV[0].Xvals.Count() });
-                    infoTable.chartValuesUP = new ChartValues<int>(new[] { graphLog.chartV[1].Xvals.Count() });
+                    infoTable.chartValuesCount = graphLog.chartV[0].Xvals.Count() + graphLog.chartV[1].Xvals.Count();
+                    infoTable.chartValuesUP = graphLog.chartV[1].Xvals.Count();
                     infoTable.realtime = true;
                     realtimeInfo = false;
                 }
@@ -148,7 +148,6 @@ namespace ssh_test1
 
         private void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GraphField.Items.Clear();
             dataFarEnd = "";
             dataNearEnd = "";
             if(GraphYvalues != null && GraphXvalues != null) 
@@ -168,6 +167,8 @@ namespace ssh_test1
             }
             else
             {
+                infoTable.current_mode = "";
+                infoTable.txPsdDOWN = "";
                 if (fromFile) 
                 {
                     PortBox.Items.RemoveAt(0);

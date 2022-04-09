@@ -26,8 +26,6 @@ namespace ssh_test1
     {
         public InfoTableUC()
         {
-            chartValuesDOWN = new ChartValues<int>(new[] { 0 });
-            chartValuesUP = new ChartValues<int>(new[] { 0 });
             DataContext = this;
             InitializeComponent();
         }
@@ -179,8 +177,8 @@ namespace ssh_test1
             }
         }
 
-        private ChartValues<int> _chartValuesUP;
-        public ChartValues<int> chartValuesUP 
+        private int _chartValuesUP;
+        public int chartValuesUP 
         {
             get { return _chartValuesUP; }
             set 
@@ -193,15 +191,15 @@ namespace ssh_test1
             }
         }
 
-        private ChartValues<int> _chartValuesDOWN;
-        public ChartValues<int> chartValuesDOWN
+        private int _chartValuesCount;
+        public int chartValuesCount
         {
-            get { return _chartValuesDOWN; }
+            get { return _chartValuesCount; }
             set
             {
-                if (_chartValuesDOWN != value)
+                if (_chartValuesCount != value)
                 {
-                    _chartValuesDOWN = value;
+                    _chartValuesCount = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -351,6 +349,7 @@ namespace ssh_test1
                         //    break;
                 }
             }
+            MessageBox.Show(currm_value.Text);
             supported_mode = supmodes;
         }
 
@@ -426,10 +425,10 @@ namespace ssh_test1
                         break;
                 }
             }
-            attaBitrateUP = Int32.Parse(attbrUP.Trim());
-            attaBitrateDOWN = Int32.Parse(attbrDOWN.Trim());
-            actBitrateUP = Int32.Parse(actbrUP.Trim());
-            actBitrateDOWN = Int32.Parse(actbrDOWN.Trim());
+            attaBitrateUP = Int32.Parse(attbrUP.Trim()) / 1000;
+            attaBitrateDOWN = Int32.Parse(attbrDOWN.Trim()) / 1000;
+            actBitrateUP = Int32.Parse(actbrUP.Trim()) / 1000;
+            actBitrateDOWN = Int32.Parse(actbrDOWN.Trim()) / 1000;
         }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

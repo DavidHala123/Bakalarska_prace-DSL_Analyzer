@@ -9,15 +9,15 @@
                          d:DesignHeight="505" d:DesignWidth="220">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="35"/>
             <RowDefinition Height="130"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="WhiteSmoke">
-            <TextBlock Text="General Information:" Padding="10,10,0,0" Margin="0,0,0,0" FontSize="18" Grid.ColumnSpan="2"/>
+            <TextBlock Text="General Information:" Margin="10,0,0,0" FontSize="16" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
         </Grid>
-        <Grid Grid.Row="1" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        <Grid Grid.Row="1" x:Name="generalGrid" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.6*"/>
                 <ColumnDefinition Width="0.4*"/>
@@ -53,12 +53,13 @@
             </Grid.Style>
         </Grid>
         <Grid Grid.Row="2" Background="WhiteSmoke">
-            <TextBlock Text="Runtime Information:" Padding="10,10,0,0" Margin="0,0,0,0" FontSize="18" Grid.ColumnSpan="2"/>
+            <TextBlock Text="Runtime Information:" Margin="10,0,0,0" FontSize="16" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
         </Grid>
         <Grid Grid.Row="3" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
-                <RowDefinition MaxHeight="150"/>
+                <RowDefinition Height="90" MaxHeight="120"/>
+                <RowDefinition Height="55"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
@@ -66,8 +67,8 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Carrier count: " Padding="10,0,0,0"/>
-                <TextBlock Grid.Column="1" Text="Bitrate: " Padding="10,0,0,0"/>
+                <TextBlock Grid.Column="0" Text="Bitrate: " Padding="10,0,0,0" VerticalAlignment="Bottom"/>
+
             </Grid>
             <Grid Grid.Row="1" x:Name="realtimeGrid">
                 <Grid.ColumnDefinitions>
@@ -75,57 +76,23 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <lvc:PieChart Hoverable="False" Margin="5,5">
-                        <lvc:PieChart.Series>
-                            <lvc:PieSeries Values="{Binding Path=chartValuesUP}" Title="Upstream" Fill="Red"/>
-                            <lvc:PieSeries Values="{Binding Path=chartValuesDOWN}" Title="Downstream" Fill="Blue"/>
-                        </lvc:PieChart.Series>
-                    </lvc:PieChart>
+                    <lvc:Gauge Grid.Row="2" Grid.Column="0" Margin="5"
+                   From="0" To="{Binding Path=attaBitrateUP}" Value="{Binding Path=actBitrateUP}" GaugeActiveFill="OrangeRed"/>
                 </Grid>
                 <Grid Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <ProgressBar x:Name="bitrateUPbar" Grid.Column="0" Value="{Binding Path=actBitrateUP}" Maximum="{Binding Path=attaBitrateUP}" Orientation="Vertical" Width="30" Margin="0,5,0,5" HorizontalAlignment="Center" Foreground="Red">
-                        <ProgressBar.ToolTip>
-                            <StackPanel Width="200" Height="70">
-                                <TextBlock Text="Upload bitrate"/>
-                                <DockPanel>
-                                    <TextBlock Text="Attainable bitrate: "/>
-                                    <TextBlock Text="{Binding Path=attaBitrateUP}"/>
-                                    <TextBlock Text=" kb/s"/>
-                                </DockPanel>
-                                <DockPanel>
-                                    <TextBlock Text="Actual bitrate: "/>
-                                    <TextBlock Text="{Binding Path=actBitrateUP}"/>
-                                    <TextBlock Text=" kb/s"/>
-                                </DockPanel>
-                            </StackPanel>
-                        </ProgressBar.ToolTip>
-                    </ProgressBar>
-                    <ProgressBar x:Name="bitrateDOWNbar" Grid.Column="1" Value="{Binding Path=actBitrateDOWN}" Maximum="{Binding Path=attaBitrateDOWN}" Orientation="Vertical" Width="30" Margin="0,5,0,5" HorizontalAlignment="Center" Foreground="Blue">
-                        <ProgressBar.ToolTip>
-                            <StackPanel Width="200" Height="70">
-                                <TextBlock Text="Download bitrate"/>
-                                <DockPanel>
-                                    <TextBlock Text="Attainable bitrate: "/>
-                                    <TextBlock Text="{Binding Path=attaBitrateDOWN}"/>
-                                    <TextBlock Text=" kb/s"/>
-                                </DockPanel>
-                                <DockPanel>
-                                    <TextBlock Text="Actual bitrate: "/>
-                                    <TextBlock Text="{Binding Path=actBitrateDOWN}"/>
-                                    <TextBlock Text=" kb/s"/>
-                                </DockPanel>
-                            </StackPanel>
-                        </ProgressBar.ToolTip>
-                    </ProgressBar>
+                    <lvc:Gauge Grid.Row="2" Grid.Column="0" Margin="5"
+                   From="0" To="{Binding Path=attaBitrateDOWN}" Value="{Binding Path=actBitrateDOWN}" GaugeActiveFill="RoyalBlue"/>
                 </Grid>
             </Grid>
             <Grid Grid.Row="2">
+                <StackPanel>
+                    <TextBlock Text="Carrier count:" Height="20" VerticalAlignment="Bottom" Margin="10,0,0,5"/>
+                    <ProgressBar Height="25" Margin="10,0,10,0" Value="{Binding Path=chartValuesUP}" Maximum="{Binding Path=chartValuesCount}" Foreground="OrangeRed" Background="RoyalBlue"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="3">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="15"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -140,6 +107,7 @@
                     <TextBlock Grid.Column="0" Text="Up" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="1" Text="Down" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
+
                 <Grid Grid.Column="0" Grid.Row="1">
                     <TextBlock Height="20" Margin="10,5,0,0" VerticalAlignment="Top" Text="Noise margin: "/>
                     <TextBlock Height="20" Margin="10,25,0,0" VerticalAlignment="Top" Text="Output power: "/>
@@ -161,18 +129,18 @@
                         <TextBlock x:Name="noiseMDOWNt" Height="20" Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=noiseMDOWN}"/>
                         <TextBlock x:Name="outPDOWNt" Height="20" Margin="0,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=outputPDOWN}"/>
                         <TextBlock x:Name="signADOWNt" Height="20" Margin="0,45,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=signalAtDOWN}"/>
-                        <TextBlock x:Name="tspxdDOWNt" Height="20" Margin="0,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=txPsdDOWN}"/>
+                        <TextBlock x:Name="txpsdDOWNt" Height="20" Margin="0,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=txPsdDOWN}"/>
                     </Grid>
                 </Grid>
             </Grid>
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=tspxdDOWNt, Path=Text }"
+                        <DataTrigger Binding="{Binding ElementName=txpsdDOWNt, Path=Text }"
                              Value="{x:Null}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding ElementName=tspxdDOWNt, Path=Text}" 
+                        <DataTrigger Binding="{Binding ElementName=txpsdDOWNt, Path=Text}" 
                                  Value="{x:Static sys:String.Empty}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                         </DataTrigger>
