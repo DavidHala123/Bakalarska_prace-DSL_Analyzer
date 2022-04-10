@@ -56,13 +56,10 @@ namespace ssh_test1
             get { return _BrushUpload; }
             set
             {
-                if (_BrushUpload != value)
-                {
-                    _BrushUpload = value;
-                    //infoTable.up = value;
-                    if (GraphField.HasItems)
-                        send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                }
+                _BrushUpload = value;
+                infoTable.up = value;
+                if (GraphField.HasItems)
+                    send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
         }
         private SolidColorBrush _BrushDownload = new SolidColorBrush(Colors.Blue);
@@ -71,12 +68,10 @@ namespace ssh_test1
             get { return _BrushDownload; }
             set
             {
-                if (_BrushDownload != value)
-                {
-                    _BrushDownload = value;
-                    if (GraphField.HasItems)
-                        send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                }
+                _BrushDownload = value;
+                infoTable.down = value;
+                if (GraphField.HasItems)
+                    send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
         }
         private List<bool> _graphSelector = new List<bool>() { true, true, true, true, true, true, true };
@@ -113,56 +108,63 @@ namespace ssh_test1
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
-            GraphXvalues.Clear();
-            GraphYvalues.Clear();
-            GraphListOfNames.Clear();
-            bool realtimeInfo = false;
-            ConsoleUC.ConsoleText = "3";
-            GraphField.Items.Clear();
-            int charVindex = 0;
-            if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd) && !String.IsNullOrEmpty(infoTable.portIndex))
+            if (PortBox.SelectedItem != null)
             {
-                dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
-                dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
-                realtimeInfo = true;
-            }
-            GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
-            for (int i = 0; i < graphSelector.Count(); i++)
-            {
-                if (graphSelector[i]) 
+                int realtimeInfo = 0;
+                ConsoleUC.ConsoleText = "3";
+                int charVindex = 0;
+                if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd) && !String.IsNullOrEmpty(infoTable.portIndex))
                 {
-                    graphLog.SelectGraphNeeeded(i);
-                    GraphField.Items.Add(new TabItem
+                    dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
+                    dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
+                    realtimeInfo = 1;
+                }
+                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
+                for (int i = 0; i < graphSelector.Count(); i++)
+                {
+                    if (graphSelector[i])
                     {
-                        Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
-                        Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload),
-                    });
-                    GraphXvalues.Add(graphLog.chartV[charVindex].Xvals);
-                    GraphXvalues.Add(graphLog.chartV[charVindex + 1].Xvals);
-                    GraphYvalues.Add(graphLog.chartV[charVindex].Yvals);
-                    GraphYvalues.Add(graphLog.chartV[charVindex + 1].Yvals);
-                    GraphListOfNames.Add(graphLog.name);
-                    charVindex += 2;
+                        graphLog.SelectGraphNeeeded(i);
+                        GraphField.Items.Add(new TabItem
+                        {
+                            Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
+                            Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload),
+                        });
+                        GraphXvalues.Add(graphLog.chartV[charVindex].Xvals);
+                        GraphXvalues.Add(graphLog.chartV[charVindex + 1].Xvals);
+                        GraphYvalues.Add(graphLog.chartV[charVindex].Yvals);
+                        GraphYvalues.Add(graphLog.chartV[charVindex + 1].Yvals);
+                        GraphListOfNames.Add(graphLog.name);
+                        if (realtimeInfo == 1)
+                        {
+                            try
+                            {
+                                infoTable.chartValuesCount = GraphXvalues[0].Count + GraphXvalues[1].Count;
+                                infoTable.chartValuesUP = GraphXvalues[1].Count;
+                                infoTable.realtime = true;
+                            }
+                            catch { }
+                            realtimeInfo += 1;
+                        }
+                        charVindex += 2;
+                    }
                 }
-                if (realtimeInfo)
-                {
-                    infoTable.chartValuesCount = graphLog.chartV[0].Xvals.Count() + graphLog.chartV[1].Xvals.Count();
-                    infoTable.chartValuesUP = graphLog.chartV[1].Xvals.Count();
-                    infoTable.realtime = true;
-                    realtimeInfo = false;
-                }
+                ConsoleUC.ConsoleText = "0";
             }
-            ConsoleUC.ConsoleText = "0";
+            else
+                MessageBox.Show("Select port to analyze first");
         }
 
         private void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            GraphField.Items.Clear();
             dataFarEnd = "";
             dataNearEnd = "";
             if(GraphYvalues != null && GraphXvalues != null) 
             {
                 GraphYvalues.Clear();
                 GraphXvalues.Clear();
+                GraphListOfNames.Clear();
             }
             if (fromFile && PortBox.SelectedIndex == 0) 
             {
@@ -171,7 +173,7 @@ namespace ssh_test1
             var selected = (PortData)PortBox.SelectedItem;
             if (selected.portState.Contains("down.png"))
             {
-                MessageBox.Show("Port you are trying to access is currently offline");
+                MessageBox.Show("Port you are trying to access is currently down. Values that are going to be displayed are values obtained by port's last showtime.");
                 return;
             }
             else

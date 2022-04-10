@@ -24,6 +24,7 @@ namespace ssh_test1
     /// </summary>
     public partial class InfoTableUC : UserControl, INotifyPropertyChanged
     {
+        public bool colorChangeBool = false;
         public InfoTableUC()
         {
             DataContext = this;
@@ -37,8 +38,40 @@ namespace ssh_test1
                 NotifyPropertyChanged();
             }
         }
+        private SolidColorBrush _up = new SolidColorBrush(Colors.OrangeRed);
+        public SolidColorBrush up 
+        {
+            get { return _up; }
+            set
+            {
+                _up = value;
+                NotifyPropertyChanged();
+                if (actBitrateUP > 0)
+                {
+                    actBitrateUP = actBitrateUP - 1;
+                    actBitrateUP = actBitrateUP + 1;
+                }
+            }
+        }
 
-        public SolidColorBrush up;
+        private SolidColorBrush _down = new SolidColorBrush(Colors.RoyalBlue);
+        public SolidColorBrush down
+        {
+            get { return _down; }
+            set
+            {
+                if (_down != value)
+                {
+                    _down = value;
+                    NotifyPropertyChanged();
+                    if (actBitrateDOWN > 0)
+                    {
+                        actBitrateDOWN = actBitrateDOWN - 1;
+                        actBitrateDOWN = actBitrateDOWN + 1;
+                    }
+                }
+            }
+        }
 
         private int _attaBitrateUP;
         public int attaBitrateUP 
@@ -46,11 +79,8 @@ namespace ssh_test1
             get { return _attaBitrateUP; }
             set 
             {
-                if(_attaBitrateUP != value) 
-                {
-                    _attaBitrateUP = value;
-                    NotifyPropertyChanged();
-                }
+                _attaBitrateUP = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -60,11 +90,8 @@ namespace ssh_test1
             get { return _actBitrateUP; }
             set
             {
-                if (_actBitrateUP != value)
-                {
-                    _actBitrateUP = value;
-                    NotifyPropertyChanged();
-                }
+                _actBitrateUP = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -74,11 +101,8 @@ namespace ssh_test1
             get { return _attaBitrateDOWN; }
             set 
             {
-                if(_attaBitrateDOWN != value) 
-                {
-                    _attaBitrateDOWN = value;
-                    NotifyPropertyChanged();
-                }
+                _attaBitrateDOWN = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -88,11 +112,8 @@ namespace ssh_test1
             get { return _actBitrateDOWN; }
             set
             {
-                if (_actBitrateDOWN != value)
-                {
-                    _actBitrateDOWN = value;
-                    NotifyPropertyChanged();
-                }
+                _actBitrateDOWN = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -104,12 +125,9 @@ namespace ssh_test1
             get { return _portIndex; }
             set 
             {
-                if (_portIndex != value)
-                {
-                    _portIndex = value;
-                    populateGeneralInfo();
-                    NotifyPropertyChanged();
-                }
+                _portIndex = value;
+                populateGeneralInfo();
+                NotifyPropertyChanged();
             }
         }
         private string _index;
@@ -118,11 +136,8 @@ namespace ssh_test1
             get { return _index; }
             set
             {
-                if (_index != value)
-                {
-                    _index = value;
-                    NotifyPropertyChanged();
-                }
+                _index = value;
+                NotifyPropertyChanged();
             }
         }
         private string _adm_state;
@@ -131,11 +146,8 @@ namespace ssh_test1
             get { return _adm_state; }
             set
             {
-                if (_adm_state != value)
-                {
-                    _adm_state = value;
-                    NotifyPropertyChanged();
-                }
+                _adm_state = value;
+                NotifyPropertyChanged();
             }
         }
         private string _current_init;
@@ -144,11 +156,8 @@ namespace ssh_test1
             get { return _current_init; }
             set
             {
-                if (_current_init != value)
-                {
-                    _current_init = value;
-                    NotifyPropertyChanged();
-                }
+                _current_init = value;
+                NotifyPropertyChanged();
             }
         }
         private string _current_mode;
@@ -157,11 +166,8 @@ namespace ssh_test1
             get { return _current_mode; }
             set
             {
-                if (_current_mode != value)
-                {
-                    _current_mode = value;
-                    NotifyPropertyChanged();
-                }
+                _current_mode = value;
+                NotifyPropertyChanged();
             }
         }
         private string _supported_mode;
@@ -171,11 +177,8 @@ namespace ssh_test1
             get { return _supported_mode; }
             set
             {
-                if (_supported_mode != value)
-                {
-                    _supported_mode = value;
-                    NotifyPropertyChanged();
-                }
+                _supported_mode = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -185,11 +188,8 @@ namespace ssh_test1
             get { return _chartValuesUP; }
             set 
             {
-                if (_chartValuesUP != value)
-                {
-                    _chartValuesUP = value;
-                    NotifyPropertyChanged();
-                }
+                _chartValuesUP = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -199,11 +199,8 @@ namespace ssh_test1
             get { return _chartValuesCount; }
             set
             {
-                if (_chartValuesCount != value)
-                {
-                    _chartValuesCount = value;
-                    NotifyPropertyChanged();
-                }
+                _chartValuesCount = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -213,11 +210,8 @@ namespace ssh_test1
             get { return _noiseMUP; }
             set 
             {
-                if(_noiseMUP != value) 
-                {
-                    _noiseMUP = value;
-                    NotifyPropertyChanged();
-                }
+                _noiseMUP = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -227,11 +221,8 @@ namespace ssh_test1
             get { return _noiseMDOWN; }
             set
             {
-                if (_noiseMDOWN != value)
-                {
-                    _noiseMDOWN = value;
-                    NotifyPropertyChanged();
-                }
+                _noiseMDOWN = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -241,11 +232,8 @@ namespace ssh_test1
             get { return _outputPUP; }
             set
             {
-                if (_outputPUP != value)
-                {
-                    _outputPUP = value;
-                    NotifyPropertyChanged();
-                }
+                _outputPUP = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -255,11 +243,8 @@ namespace ssh_test1
             get { return _outputPDOWN; }
             set
             {
-                if (_outputPDOWN != value)
-                {
-                    _outputPDOWN = value;
-                    NotifyPropertyChanged();
-                }
+                _outputPDOWN = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -269,11 +254,8 @@ namespace ssh_test1
             get { return _signalAtUP; }
             set
             {
-                if (_signalAtUP != value)
-                {
-                    _signalAtUP = value;
-                    NotifyPropertyChanged();
-                }
+                _signalAtUP = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -283,11 +265,8 @@ namespace ssh_test1
             get { return _signalAtDOWN; }
             set
             {
-                if (_signalAtDOWN != value)
-                {
-                    _signalAtDOWN = value;
-                    NotifyPropertyChanged();
-                }
+                _signalAtDOWN = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -297,11 +276,8 @@ namespace ssh_test1
             get { return _txPsdUP; }
             set
             {
-                if (_txPsdUP != value)
-                {
-                    _txPsdUP = value;
-                    NotifyPropertyChanged();
-                }
+                _txPsdUP = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -311,11 +287,8 @@ namespace ssh_test1
             get { return _txPsdDOWN; }
             set
             {
-                if (_txPsdDOWN != value)
-                {
-                    _txPsdDOWN = value;
-                    NotifyPropertyChanged();
-                }
+                _txPsdDOWN = value;
+                NotifyPropertyChanged();
             }
         }
 

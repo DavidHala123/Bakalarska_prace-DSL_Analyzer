@@ -14,11 +14,14 @@
             <RowDefinition Height="60">
 
             </RowDefinition>
-            <RowDefinition Height="*">
+            <RowDefinition Height="120">
 
             </RowDefinition>
             <RowDefinition Height="20">
-                
+
+            </RowDefinition>
+            <RowDefinition>
+
             </RowDefinition>
             <RowDefinition Height="60">
 
@@ -42,11 +45,14 @@
             <TextBlock Width="60" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Color:"/>
             <Rectangle Stroke="DarkGray" x:Name="colorRect" Width="160" Height="20" Margin="80,0,0,0" RadiusX="0" RadiusY="0" VerticalAlignment="Top" HorizontalAlignment="Left" Fill="Black"/>
         </Grid>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <Button x:Name="setUpload" Content="Set for upload" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="100" Margin="10,0,0,10" VerticalAlignment="Bottom" Click="setUpload_Click"/>
             <Button x:Name="setDownload" Content="Set for download" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="100" Margin="0,0,10,10" VerticalAlignment="Bottom" Click="setDownload_Click"/>
         </Grid>
-
+        <Grid Grid.Row="3">
+            <TextBlock Text="Stroke thickness" Margin="10,10,0,0"/>
+            <Slider HorizontalAlignment="Left" Margin="110,0,10,0" VerticalAlignment="Center" Width="120"/>
+        </Grid>
 
     </Grid>
 

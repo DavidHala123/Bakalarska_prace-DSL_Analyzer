@@ -76,18 +76,18 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <lvc:Gauge Grid.Row="2" Grid.Column="0" Margin="5"
-                   From="0" To="{Binding Path=attaBitrateUP}" Value="{Binding Path=actBitrateUP}" GaugeActiveFill="OrangeRed"/>
+                    <lvc:Gauge x:Name="gaugeUP" Grid.Row="2" Grid.Column="0" Margin="5"
+                   From="0" To="{Binding Path=attaBitrateUP}" Value="{Binding Path=actBitrateUP}" GaugeActiveFill="{Binding Path=up }"/>
                 </Grid>
                 <Grid Grid.Column="1">
                     <lvc:Gauge Grid.Row="2" Grid.Column="0" Margin="5"
-                   From="0" To="{Binding Path=attaBitrateDOWN}" Value="{Binding Path=actBitrateDOWN}" GaugeActiveFill="RoyalBlue"/>
+                   From="0" To="{Binding Path=attaBitrateDOWN}" Value="{Binding Path=actBitrateDOWN}" GaugeActiveFill="{Binding Path=down }"/>
                 </Grid>
             </Grid>
             <Grid Grid.Row="2">
                 <StackPanel>
                     <TextBlock Text="Carrier count:" Height="20" VerticalAlignment="Bottom" Margin="10,0,0,5"/>
-                    <ProgressBar Height="25" Margin="10,0,10,0" Value="{Binding Path=chartValuesUP}" Maximum="{Binding Path=chartValuesCount}" Foreground="OrangeRed" Background="RoyalBlue"/>
+                    <ProgressBar Height="25" Margin="10,0,10,0" Value="{Binding Path=chartValuesUP}" Maximum="{Binding Path=chartValuesCount}" Foreground="{Binding Path=up}" Background="{Binding Path=down}"/>
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="3">
