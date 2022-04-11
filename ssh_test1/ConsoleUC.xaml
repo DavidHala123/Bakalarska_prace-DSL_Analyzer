@@ -9,8 +9,8 @@
              d:DesignHeight="20" d:DesignWidth="800">
     <Grid xmlns:sys="clr-namespace:System;assembly=mscorlib">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.3*" MaxWidth="260"/>
+            <ColumnDefinition Width="0.7*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Background="GhostWhite">
             <Image gif:ImageBehavior.RepeatBehavior="Forever"

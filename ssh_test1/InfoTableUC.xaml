@@ -10,49 +10,66 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
-            <RowDefinition Height="130"/>
+            <RowDefinition Height="0.4*" MinHeight="130" MaxHeight="200"/>
             <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="WhiteSmoke">
+        <Grid Grid.Row="0" Background="#FFE7E7F0">
             <TextBlock Text="General Information:" Margin="10,0,0,0" FontSize="16" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
         </Grid>
         <Grid Grid.Row="1" x:Name="generalGrid" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.6*"/>
-                <ColumnDefinition Width="0.4*"/>
+                <ColumnDefinition Width="0.51*"/>
+                <ColumnDefinition Width="0.49*"/>
             </Grid.ColumnDefinitions>
             <Grid>
-                <TextBlock/>
-                <TextBlock Height="20" Margin="10,5,0,0" VerticalAlignment="Top" Text="Interface index:"/>
-                <TextBlock Height="20" Margin="10,25,0,0" VerticalAlignment="Top" Text="Admin. state:"/>
-                <TextBlock Height="20" Margin="10,45,0,0" VerticalAlignment="Top" Text="Current init. state:"/>
-                <TextBlock Height="20" Margin="10,65,0,0" VerticalAlignment="Top" Text="Current mode:"/>
-                <TextBlock Height="20" Margin="10,85,0,0" VerticalAlignment="Top" Text="Supported modes:"/>
+                <StackPanel>
+                    <TextBlock Height="20" Margin="0,5,0,0" Padding="10,0,0,0" VerticalAlignment="Top" Text="Interface index:"/>
+                    <TextBlock Height="20" Padding="10,0,0,0" VerticalAlignment="Top" Text="Admin. state:" Background="WhiteSmoke"/>
+                    <TextBlock Height="20" Padding="10,0,0,0" VerticalAlignment="Top" Text="Current init. state:"/>
+                    <TextBlock Height="20" Padding="10,0,0,0" VerticalAlignment="Top" Text="Current mode:" Background="WhiteSmoke"/>
+                    <TextBlock Height="20" Padding="10,0,0,0" VerticalAlignment="Top" Text="Supported modes:"/>
+                </StackPanel>
             </Grid>
             <Grid Grid.Column="1">
-                <TextBlock x:Name="index_val" Height="20" Margin="0,5,10,0" VerticalAlignment="Top" Text="{Binding Path=index}"/>
-                <TextBlock x:Name="amds_value" Height="20" Margin="0,25,10,0" VerticalAlignment="Top" Text="{Binding Path=adm_state}"/>
-                <TextBlock x:Name="currins_value" Height="20" Margin="0,45,10,0" VerticalAlignment="Top" Text="{Binding Path=current_init}"/>
-                <TextBlock x:Name="currm_value" Height="20" Margin="0,65,10,0" VerticalAlignment="Top" Text="{Binding Path=current_mode}"/>
-                <TextBlock x:Name="suppm_value" Height="20" Margin="0,85,10,0" VerticalAlignment="Top" Text="{Binding Path=supported_mode}"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="85"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <TextBlock x:Name="index_val" Height="20" Margin="0,5,0,0" Padding="0,0,10,0" VerticalAlignment="Top" Text="{Binding Path=index}"/>
+                    <TextBlock x:Name="amds_value" Height="20" Padding="0,0,10,0" VerticalAlignment="Top" Text="{Binding Path=adm_state}" Background="WhiteSmoke"/>
+                    <TextBlock x:Name="currins_value" Height="20" Padding="0,0,10,0" VerticalAlignment="Top" Text="{Binding Path=current_init}"/>
+                    <TextBlock x:Name="currm_value" Height="20" Padding="0,0,10,0" VerticalAlignment="Top" Text="{Binding Path=current_mode}" Background="WhiteSmoke"/>
+                </StackPanel>
+                <ListView Grid.Row="1" x:Name="suppm_value" MinHeight="45" Margin="0" Padding="0,2,10,2" VerticalAlignment="Top" BorderThickness="0" Background="Transparent">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
             </Grid>
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=currm_value, Path=Text }"
-                             Value="{x:Null}">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding ElementName=currm_value, Path=Text}" 
-                                 Value="{x:Static sys:String.Empty}">
+                        <DataTrigger Binding="{Binding ElementName=suppm_value, Path=HasItems }"
+                             Value="False">
                             <Setter Property="Visibility" Value="Collapsed"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
         </Grid>
-        <Grid Grid.Row="2" Background="WhiteSmoke">
+
+        <Grid Grid.Row="2" Background="#FFE7E7F0">
             <TextBlock Text="Runtime Information:" Margin="10,0,0,0" FontSize="16" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
         </Grid>
         <Grid Grid.Row="3" xmlns:sys="clr-namespace:System;assembly=mscorlib">
@@ -87,7 +104,20 @@
             <Grid Grid.Row="2">
                 <StackPanel>
                     <TextBlock Text="Carrier count:" Height="20" VerticalAlignment="Bottom" Margin="10,0,0,5"/>
-                    <ProgressBar Height="25" Margin="10,0,10,0" Value="{Binding Path=chartValuesUP}" Maximum="{Binding Path=chartValuesCount}" Foreground="{Binding Path=up}" Background="{Binding Path=down}"/>
+                    <ProgressBar Height="25" Margin="10,0,10,0" Value="{Binding Path=chartValuesUP}" Maximum="{Binding Path=chartValuesCount}" Foreground="{Binding Path=up}" Background="{Binding Path=down}">
+                        <ProgressBar.ToolTip>
+                            <StackPanel>
+                                <DockPanel>
+                                    <TextBlock Text="Number of upstream carriers: "/>
+                                    <TextBlock Text="{Binding Path=chartValuesUP}"/>
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock Text="Numbe rof downstream carriers: "/>
+                                    <TextBlock Text="{Binding Path=chartValuesDown}"/>
+                                </DockPanel>
+                            </StackPanel>
+                        </ProgressBar.ToolTip>
+                    </ProgressBar>
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="3">

@@ -91,7 +91,7 @@ namespace ssh_test1
                             os2.Values = collection[indexOfCol].get_Range("E3", $"E{PositionDownload}");
                             os2.XValues = collection[indexOfCol].get_Range("F3", $"F{PositionDownload}");
                             indexOfCol--;
-                            nameIndex -= 2;
+                            nameIndex -= 1;
                             valuesCount -= 2;
                         }
                     }

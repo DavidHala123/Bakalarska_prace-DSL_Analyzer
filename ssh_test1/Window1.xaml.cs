@@ -106,53 +106,53 @@ namespace ssh_test1
 
         }
 
+
         private async void send_Click(object sender, RoutedEventArgs e)
         {
-            if (PortBox.SelectedItem != null)
+            ConsoleUC.ConsoleText = "3";
+            GraphListOfNames.Clear();
+            GraphField.Items.Clear();
+            GraphYvalues.Clear();
+            GraphXvalues.Clear();
+            int realtimeInfo = 0;
+            int charVindex = 0;
+            if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd) && !String.IsNullOrEmpty(infoTable.portIndex))
             {
-                int realtimeInfo = 0;
-                ConsoleUC.ConsoleText = "3";
-                int charVindex = 0;
-                if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd) && !String.IsNullOrEmpty(infoTable.portIndex))
-                {
-                    dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
-                    dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
-                    realtimeInfo = 1;
-                }
-                GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
-                for (int i = 0; i < graphSelector.Count(); i++)
-                {
-                    if (graphSelector[i])
-                    {
-                        graphLog.SelectGraphNeeeded(i);
-                        GraphField.Items.Add(new TabItem
-                        {
-                            Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
-                            Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload),
-                        });
-                        GraphXvalues.Add(graphLog.chartV[charVindex].Xvals);
-                        GraphXvalues.Add(graphLog.chartV[charVindex + 1].Xvals);
-                        GraphYvalues.Add(graphLog.chartV[charVindex].Yvals);
-                        GraphYvalues.Add(graphLog.chartV[charVindex + 1].Yvals);
-                        GraphListOfNames.Add(graphLog.name);
-                        if (realtimeInfo == 1)
-                        {
-                            try
-                            {
-                                infoTable.chartValuesCount = GraphXvalues[0].Count + GraphXvalues[1].Count;
-                                infoTable.chartValuesUP = GraphXvalues[1].Count;
-                                infoTable.realtime = true;
-                            }
-                            catch { }
-                            realtimeInfo += 1;
-                        }
-                        charVindex += 2;
-                    }
-                }
-                ConsoleUC.ConsoleText = "0";
+                dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
+                dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
+                realtimeInfo = 1;
             }
-            else
-                MessageBox.Show("Select port to analyze first");
+            GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
+            for (int i = 0; i < graphSelector.Count(); i++)
+            {
+                if (graphSelector[i])
+                {
+                    graphLog.SelectGraphNeeeded(i);
+                    GraphField.Items.Add(new TabItem
+                    {
+                        Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
+                        Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload),
+                    });
+                    GraphXvalues.Add(graphLog.chartV[charVindex].Xvals);
+                    GraphXvalues.Add(graphLog.chartV[charVindex + 1].Xvals);
+                    GraphYvalues.Add(graphLog.chartV[charVindex].Yvals);
+                    GraphYvalues.Add(graphLog.chartV[charVindex + 1].Yvals);
+                    GraphListOfNames.Add(graphLog.name);
+                    if (realtimeInfo == 1)
+                    {
+                        try
+                        {
+                            infoTable.chartValuesCount = GraphXvalues[0].Count + GraphXvalues[1].Count;
+                            infoTable.chartValuesUP = GraphXvalues[1].Count;
+                            infoTable.realtime = true;
+                        }
+                        catch { }
+                        realtimeInfo += 1;
+                    }
+                    charVindex += 2;
+                }
+            }
+            ConsoleUC.ConsoleText = "0";
         }
 
         private void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

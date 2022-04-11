@@ -133,8 +133,9 @@
             </ComboBox>
 
         </Grid>
+
         <Grid Grid.Row="1" Grid.Column="1" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-            <Button x:Name="send" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0" Height="25" Width="70" Click="send_Click">
+            <Button x:Name="send" HorizontalAlignment="Right" BorderThickness="1" VerticalAlignment="Center" Margin="0,0,20,0" Height="25" Width="70" Click="send_Click">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="IsEnabled" Value="False"/>
@@ -142,13 +143,18 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
                              Value="{x:Null}">
-                                <Setter Property="IsEnabled" Value="True"/>
                                 <Setter Property="Content" Value="Analyze"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
                                 Value="{x:Static sys:String.Empty}">
-                                <Setter Property="IsEnabled" Value="True"/>
                                 <Setter Property="Content" Value="Analyze"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=PortBox, Path=SelectedItem}" Value="{x:Null}">
+                                <Setter Property="Content" Value="No Port"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=send, Path=Content}"
+                                Value="Analyze">
+                                <Setter Property="IsEnabled" Value="True"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

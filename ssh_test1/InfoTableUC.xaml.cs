@@ -73,8 +73,8 @@ namespace ssh_test1
             }
         }
 
-        private int _attaBitrateUP;
-        public int attaBitrateUP 
+        private double _attaBitrateUP;
+        public double attaBitrateUP 
         {
             get { return _attaBitrateUP; }
             set 
@@ -84,8 +84,8 @@ namespace ssh_test1
             }
         }
 
-        private int _actBitrateUP;
-        public int actBitrateUP 
+        private double _actBitrateUP;
+        public double actBitrateUP 
         {
             get { return _actBitrateUP; }
             set
@@ -95,8 +95,8 @@ namespace ssh_test1
             }
         }
 
-        private int _attaBitrateDOWN;
-        public int attaBitrateDOWN
+        private double _attaBitrateDOWN;
+        public double attaBitrateDOWN
         {
             get { return _attaBitrateDOWN; }
             set 
@@ -106,8 +106,8 @@ namespace ssh_test1
             }
         }
 
-        private int _actBitrateDOWN;
-        public int actBitrateDOWN
+        private double _actBitrateDOWN;
+        public double actBitrateDOWN
         {
             get { return _actBitrateDOWN; }
             set
@@ -191,6 +191,11 @@ namespace ssh_test1
                 _chartValuesUP = value;
                 NotifyPropertyChanged();
             }
+        }
+
+        public int chartValuesDown 
+        {
+            get { return _chartValuesCount - _chartValuesUP; }
         }
 
         private int _chartValuesCount;
@@ -294,8 +299,9 @@ namespace ssh_test1
 
         private async Task populateGeneralInfo()
         {
+            suppm_value.Items.Clear();
             string supmodes = "";
-            string generalInfo1 = await Task.Run(() => (new SendData("show xdsl operational-data line " + portIndex + " detail").getResponse()));
+            string generalInfo1 = await Task.Run(() => (new SendData("show xdsl operational-data line " + portIndex + " detail").getResponse()) + new SendData("show xdsl operational-data near-end line " + portIndex + " detail").getResponse());
             string[] output = generalInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < output.Length; i++)
             {
@@ -317,14 +323,15 @@ namespace ssh_test1
                         string[] curopOutput = generaldata.Split(':');
                         current_mode = curopOutput[1];
                         break;
-                        //case string generaldata when generaldata.Contains("g992") || generaldata.Contains("g993") || generaldata.Contains("ansi") || generaldata.Contains("etsi") || generaldata.Contains("802"):
-                        //    string[] suppmoOutput = generaldata.Split(':');
-                        //    if (!suppmoOutput[1].Contains("dis-"))
-                        //        supmodes += suppmoOutput[1] + ", ";
-                        //    break;
+                    case string generaldata when generaldata.Replace("-", " ").Contains("g992") || generaldata.Replace("-", " ").Contains("g993"):
+                            string[] suppmoOutput = generaldata.Split(':');;
+                        if (!suppmoOutput[1].Contains("dis") && !suppmoOutput[0].Contains("actual-opmode"))
+                            suppm_value.Items.Add(suppmoOutput[1].Replace(" ", "-"));
+                        break;
                 }
             }
             supported_mode = supmodes;
+            //getMaxBitrate();
         }
 
 
@@ -399,10 +406,70 @@ namespace ssh_test1
                         break;
                 }
             }
-            attaBitrateUP = Int32.Parse(attbrUP.Trim()) / 1000;
-            attaBitrateDOWN = Int32.Parse(attbrDOWN.Trim()) / 1000;
-            actBitrateUP = Int32.Parse(actbrUP.Trim()) / 1000;
-            actBitrateDOWN = Int32.Parse(actbrDOWN.Trim()) / 1000;
+            getMaxBitrate(current_mode);
+            actBitrateUP = Convert.ToDouble(actbrUP.Trim()) / 1000;
+            actBitrateDOWN = Convert.ToDouble(actbrDOWN.Trim()) / 1000;
+        }
+
+        private void getMaxBitrate(string currMode)
+        {
+            switch (currMode)
+            {
+                case string mode when mode.Contains("g992-1-a") || mode.Contains("g992-1-b"):
+                    attaBitrateUP = 1.5;
+                    attaBitrateDOWN = 8;
+                    break;
+                case string mode when mode.Contains("g992-2-a"):
+                    attaBitrateUP = 0.5;
+                    attaBitrateDOWN = 1.5;
+                    break;
+                case string mode when mode.Contains("g992-3-a") || mode.Contains("g922-3-b"):
+                    attaBitrateUP = 1;
+                    attaBitrateDOWN = 12;
+                    break;
+                case string mode when mode.Contains("g992-3-aj") || mode.Contains("g992-3-am"):
+                    attaBitrateUP = 3;
+                    attaBitrateDOWN = 12;
+                    break;
+                case string mode when mode.Contains("g992-3-l1") || mode.Contains("g992-3-l2"):
+                    attaBitrateUP = 0.8;
+                    attaBitrateDOWN = 5;
+                    break;
+                case string mode when mode.Contains("g992-5-a") || mode.Contains("g992-5-b"):
+                    attaBitrateUP = 1;
+                    attaBitrateDOWN = 25;
+                    break;
+                case string mode when mode.Contains("g992-5-am"):
+                    attaBitrateUP = 3;
+                    attaBitrateDOWN = 25;
+                    break;
+                case string mode when mode.Contains("g992-5-aj"):
+                    attaBitrateUP = 3;
+                    attaBitrateDOWN = 25;
+                    break;
+                case string mode when mode.Contains("g993-2-8a") || mode.Contains("g993-2-8b") || mode.Contains("g993-2-8c") || mode.Contains("g993-2-8d"):
+                    attaBitrateUP = 12;
+                    attaBitrateDOWN = 24;
+                    break;
+                case string mode when mode.Contains("g993-2-12a") || mode.Contains("g993-2-12b"):
+                    attaBitrateUP = 24;
+                    attaBitrateDOWN = 24;
+                    break;
+
+                case string mode when mode.Contains("g993-2-17a"):
+                    attaBitrateUP = 24;
+                    attaBitrateDOWN = 48;
+                    break;
+                case string mode when mode.Contains("g993-2-30a"):
+                    attaBitrateUP = 28;
+                    attaBitrateDOWN = 28;
+                    break;
+                case string mode when mode.Contains("g993-2-35b"):
+                    attaBitrateUP = 100;
+                    attaBitrateDOWN = 300;
+                    break;
+
+            }
         }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

@@ -22,6 +22,7 @@ namespace ssh_test1
             };
             if (sf.ShowDialog() == true) 
             {
+                ConsoleUC.ConsoleText = "4";
                 string appednString = "";
                 var matrices = new List<MatlabMatrix>();
                 int valuesIndex = 0;
@@ -50,6 +51,7 @@ namespace ssh_test1
                     }
                 }
                 MatlabWriter.Store(sf.FileName, matrices);
+                ConsoleUC.ConsoleText = "0";
             }
         }
     }
