@@ -10,7 +10,7 @@
     <Grid x:Name="chartViewGrid">
         <d3:Chart x:Name="chart" BottomTitle="carrier [-]" LegendVisibility="Collapsed">
             <Grid x:Name="chartGrid">
-                
+
             </Grid>
         </d3:Chart>
         <d3:LegendItemsPanel HorizontalAlignment="Right" VerticalAlignment="Top">

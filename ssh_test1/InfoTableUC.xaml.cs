@@ -406,71 +406,71 @@ namespace ssh_test1
                         break;
                 }
             }
-            getMaxBitrate(current_mode);
+            //getMaxBitrate(current_mode);
             actBitrateUP = Convert.ToDouble(actbrUP.Trim()) / 1000;
             actBitrateDOWN = Convert.ToDouble(actbrDOWN.Trim()) / 1000;
         }
 
-        private void getMaxBitrate(string currMode)
-        {
-            switch (currMode)
-            {
-                case string mode when mode.Contains("g992-1-a") || mode.Contains("g992-1-b"):
-                    attaBitrateUP = 1.5;
-                    attaBitrateDOWN = 8;
-                    break;
-                case string mode when mode.Contains("g992-2-a"):
-                    attaBitrateUP = 0.5;
-                    attaBitrateDOWN = 1.5;
-                    break;
-                case string mode when mode.Contains("g992-3-a") || mode.Contains("g922-3-b"):
-                    attaBitrateUP = 1;
-                    attaBitrateDOWN = 12;
-                    break;
-                case string mode when mode.Contains("g992-3-aj") || mode.Contains("g992-3-am"):
-                    attaBitrateUP = 3;
-                    attaBitrateDOWN = 12;
-                    break;
-                case string mode when mode.Contains("g992-3-l1") || mode.Contains("g992-3-l2"):
-                    attaBitrateUP = 0.8;
-                    attaBitrateDOWN = 5;
-                    break;
-                case string mode when mode.Contains("g992-5-a") || mode.Contains("g992-5-b"):
-                    attaBitrateUP = 1;
-                    attaBitrateDOWN = 25;
-                    break;
-                case string mode when mode.Contains("g992-5-am"):
-                    attaBitrateUP = 3;
-                    attaBitrateDOWN = 25;
-                    break;
-                case string mode when mode.Contains("g992-5-aj"):
-                    attaBitrateUP = 3;
-                    attaBitrateDOWN = 25;
-                    break;
-                case string mode when mode.Contains("g993-2-8a") || mode.Contains("g993-2-8b") || mode.Contains("g993-2-8c") || mode.Contains("g993-2-8d"):
-                    attaBitrateUP = 12;
-                    attaBitrateDOWN = 24;
-                    break;
-                case string mode when mode.Contains("g993-2-12a") || mode.Contains("g993-2-12b"):
-                    attaBitrateUP = 24;
-                    attaBitrateDOWN = 24;
-                    break;
+        //private void getMaxBitrate(string currMode)
+        //{
+        //    switch (currMode)
+        //    {
+        //        case string mode when mode.Contains("g992-1-a") || mode.Contains("g992-1-b"):
+        //            attaBitrateUP = 1.5;
+        //            attaBitrateDOWN = 8;
+        //            break;
+        //        case string mode when mode.Contains("g992-2-a"):
+        //            attaBitrateUP = 0.5;
+        //            attaBitrateDOWN = 1.5;
+        //            break;
+        //        case string mode when mode.Contains("g992-3-a") || mode.Contains("g922-3-b"):
+        //            attaBitrateUP = 1;
+        //            attaBitrateDOWN = 12;
+        //            break;
+        //        case string mode when mode.Contains("g992-3-aj") || mode.Contains("g992-3-am"):
+        //            attaBitrateUP = 3;
+        //            attaBitrateDOWN = 12;
+        //            break;
+        //        case string mode when mode.Contains("g992-3-l1") || mode.Contains("g992-3-l2"):
+        //            attaBitrateUP = 0.8;
+        //            attaBitrateDOWN = 5;
+        //            break;
+        //        case string mode when mode.Contains("g992-5-a") || mode.Contains("g992-5-b"):
+        //            attaBitrateUP = 1;
+        //            attaBitrateDOWN = 25;
+        //            break;
+        //        case string mode when mode.Contains("g992-5-am"):
+        //            attaBitrateUP = 3;
+        //            attaBitrateDOWN = 25;
+        //            break;
+        //        case string mode when mode.Contains("g992-5-aj"):
+        //            attaBitrateUP = 3;
+        //            attaBitrateDOWN = 25;
+        //            break;
+        //        case string mode when mode.Contains("g993-2-8a") || mode.Contains("g993-2-8b") || mode.Contains("g993-2-8c") || mode.Contains("g993-2-8d"):
+        //            attaBitrateUP = 12;
+        //            attaBitrateDOWN = 24;
+        //            break;
+        //        case string mode when mode.Contains("g993-2-12a") || mode.Contains("g993-2-12b"):
+        //            attaBitrateUP = 24;
+        //            attaBitrateDOWN = 24;
+        //            break;
 
-                case string mode when mode.Contains("g993-2-17a"):
-                    attaBitrateUP = 24;
-                    attaBitrateDOWN = 48;
-                    break;
-                case string mode when mode.Contains("g993-2-30a"):
-                    attaBitrateUP = 28;
-                    attaBitrateDOWN = 28;
-                    break;
-                case string mode when mode.Contains("g993-2-35b"):
-                    attaBitrateUP = 100;
-                    attaBitrateDOWN = 300;
-                    break;
+        //        case string mode when mode.Contains("g993-2-17a"):
+        //            attaBitrateUP = 24;
+        //            attaBitrateDOWN = 48;
+        //            break;
+        //        case string mode when mode.Contains("g993-2-30a"):
+        //            attaBitrateUP = 28;
+        //            attaBitrateDOWN = 28;
+        //            break;
+        //        case string mode when mode.Contains("g993-2-35b"):
+        //            attaBitrateUP = 100;
+        //            attaBitrateDOWN = 300;
+        //            break;
 
-            }
-        }
+        //    }
+        //}
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {

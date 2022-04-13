@@ -122,7 +122,7 @@ namespace ssh_test1
                 dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
                 realtimeInfo = 1;
             }
-            GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector));
+            GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector, infoTable.current_mode));
             for (int i = 0; i < graphSelector.Count(); i++)
             {
                 if (graphSelector[i])
@@ -138,19 +138,55 @@ namespace ssh_test1
                     GraphYvalues.Add(graphLog.chartV[charVindex].Yvals);
                     GraphYvalues.Add(graphLog.chartV[charVindex + 1].Yvals);
                     GraphListOfNames.Add(graphLog.name);
-                    if (realtimeInfo == 1)
-                    {
-                        try
-                        {
-                            infoTable.chartValuesCount = GraphXvalues[0].Count + GraphXvalues[1].Count;
-                            infoTable.chartValuesUP = GraphXvalues[1].Count;
-                            infoTable.realtime = true;
-                        }
-                        catch { }
-                        realtimeInfo += 1;
-                    }
                     charVindex += 2;
                 }
+            }
+            if (realtimeInfo == 1)
+            {
+                try
+                {
+                    int maxBitUP = 0;
+                    int maxBitDOWN = 0;
+                    int numCarrUP = 0;
+                    int numCarrDOWN = 0;
+                    if (!graphSelector[0]) 
+                    {
+                        graphLog.SelectGraphNeeeded(0);
+                        foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 2].Yvals)
+                        {
+                            maxBitUP += integer;
+                            numCarrUP++;
+                        }
+                        foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 1].Yvals)
+                        {
+                            maxBitDOWN += integer;
+                            numCarrDOWN++;
+                        }
+                    }
+                    else 
+                    {
+                        foreach (int integer in graphLog.chartV[0].Yvals)
+                        {
+                            maxBitUP += integer;
+                            numCarrUP++;
+                        }
+                        foreach (int integer in graphLog.chartV[1].Yvals)
+                        {
+                            maxBitDOWN += integer;
+                            numCarrDOWN++;
+                        }
+                    }
+                    infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
+                    infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
+                    infoTable.chartValuesCount = numCarrUP + numCarrDOWN;
+                    infoTable.chartValuesUP = numCarrUP;
+                    infoTable.realtime = true;
+                }
+                catch 
+                {
+                
+                }
+                realtimeInfo += 1;
             }
             ConsoleUC.ConsoleText = "0";
         }

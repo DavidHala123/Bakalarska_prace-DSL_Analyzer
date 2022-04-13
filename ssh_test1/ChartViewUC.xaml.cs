@@ -111,7 +111,7 @@ namespace ssh_test1
             {
                 LineGraph lineGraphFar = new LineGraph()
                 {
-                    Stroke = up,
+                    Stroke = down,
                     Padding = new System.Windows.Thickness(0, 30, 0, 0),
                 };
                 lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
@@ -121,7 +121,7 @@ namespace ssh_test1
             {
                 LineGraph lineGraphNear = new LineGraph()
                 {
-                    Stroke = down,
+                    Stroke = up,
                     Padding = new System.Windows.Thickness(0, 30, 0, 0),
                 };
                 lineGraphNear.Plot(BandNear[j], BandNear[j + 1]);

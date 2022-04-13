@@ -30,7 +30,7 @@ namespace ssh_test1
         }
         public string name = "";
 
-        public GraphLogic(string outputOfDSLAFar, string outputOfDSLAMNear, List<bool> graphSelector)
+        public GraphLogic(string outputOfDSLAFar, string outputOfDSLAMNear, List<bool> graphSelector, string currentMode)
         {
             this.outputOfDSLAMFar = outputOfDSLAFar;
             this.outputOfDSLAMNear = outputOfDSLAMNear;
