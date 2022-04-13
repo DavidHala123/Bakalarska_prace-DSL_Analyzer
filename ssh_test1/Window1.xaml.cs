@@ -138,47 +138,41 @@ namespace ssh_test1
                 {
                     int maxBitUP = 0;
                     int maxBitDOWN = 0;
-                    int numCarrUP = 0;
-                    int numCarrDOWN = 0;
-                    if (!graphSelector[0]) 
+                    if (infoTable.current_mode == "gfast")
                     {
-                        graphLog.SelectGraphNeeeded(0);
-                        foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 2].Yvals)
-                        {
-                            maxBitUP += integer;
-                            numCarrUP++;
-                        }
-                        foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 1].Yvals)
-                        {
-                            maxBitDOWN += integer;
-                            numCarrDOWN++;
-                        }
+                        infoTable.attaBitrateUP = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5) / 7000000);
+                        infoTable.attaBitrateDOWN = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5 * 6) / 7000000);
                     }
                     else 
                     {
-                        foreach (int integer in graphLog.chartV[0].Yvals)
+                        if (!graphSelector[0])
                         {
-                            maxBitUP += integer;
-                            numCarrUP++;
+                            graphLog.SelectGraphNeeeded(0);
+                            foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 2].Yvals)
+                            {
+                                maxBitUP += integer;
+                            }
+                            foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 1].Yvals)
+                            {
+                                maxBitDOWN += integer;
+                            }
                         }
-                        foreach (int integer in graphLog.chartV[1].Yvals)
+                        else
                         {
-                            maxBitDOWN += integer;
-                            numCarrDOWN++;
+                            foreach (int integer in graphLog.chartV[0].Yvals)
+                            {
+                                maxBitUP += integer;
+                            }
+                            foreach (int integer in graphLog.chartV[1].Yvals)
+                            {
+                                maxBitDOWN += integer;
+                            }
                         }
-                    }
-                    if(infoTable.current_mode == "gfast") 
-                    {
                         infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
                         infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
                     }
-                    else 
-                    {
-                        infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
-                        infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
-                    }
-                    infoTable.chartValuesCount = numCarrUP + numCarrDOWN;
-                    infoTable.chartValuesUP = numCarrUP;
+                    infoTable.chartValuesCount = graphLog.chartV[0].Xvals.Count() + graphLog.chartV[1].Xvals.Count;
+                    infoTable.chartValuesUP = graphLog.chartV[0].Xvals.Count;
                     infoTable.realtime = true;
                 }
                 catch 
