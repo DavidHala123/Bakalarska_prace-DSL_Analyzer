@@ -12,7 +12,7 @@ namespace ssh_test1
 {
     internal class ExcelExport
     {
-        public ExcelExport(List<List<int>> valuesY, List<List<int>> valuesX, List<string> names, List<bool> graphs)
+        public ExcelExport(List<ChartValues> values, List<bool> graphs)
         {
             var _excel = new Excel.Application();
             try
@@ -26,11 +26,10 @@ namespace ssh_test1
                 {
                     ConsoleUC.ConsoleText = "4";
                     var wb = _excel.Workbooks.Add();
-                    double numberOfColD = valuesY.Count / 2;
+                    double numberOfColD = values.Count / 2;
                     int numOfColI = (int)Math.Ceiling(numberOfColD);
                     var collection = new Excel.Worksheet[numOfColI];
-                    int nameIndex = names.Count - 1;
-                    int valuesCount = valuesY.Count() - 1;
+                    int valuesCount = values.Count() - 1;
                     for (int chart = graphs.Count - 1; chart >= 0; chart--)
                     {
                         if (graphs[chart])
@@ -38,18 +37,18 @@ namespace ssh_test1
                             int indexOfCol = numOfColI - 1;
                             int PositionUpload = 3;
                             collection[indexOfCol] = (Excel.Worksheet)wb.Worksheets.Add();
-                            collection[indexOfCol].Name = names[nameIndex];
+                            collection[indexOfCol].Name = values[valuesCount].name.Replace("-up", "").Replace("-down", "").Replace("-dn", "").Trim();
                             collection[indexOfCol].Cells[1, 1] = "UPSTREAM";
                             collection[indexOfCol].Cells[2, 2] = "X values";
                             collection[indexOfCol].Cells[2, 1] = "Y values";
-                            for (int y = 0; y <= valuesX[valuesCount].Count - 1; y++)
+                            for (int y = 0; y <= values[valuesCount].Xvals.Count(); y++)
                             {
                                 try
                                 {
-                                    collection[indexOfCol].Cells[PositionUpload, 2] = valuesX[valuesCount][y];
-                                    collection[indexOfCol].Cells[PositionUpload, 1] = valuesY[valuesCount][y];
+                                    collection[indexOfCol].Cells[PositionUpload, 2] = values[valuesCount].Xvals[y];
+                                    collection[indexOfCol].Cells[PositionUpload, 1] = values[valuesCount].Yvals[y];
                                     PositionUpload++;
-                                    if (valuesX[valuesCount][y] + 1 != valuesX[valuesCount][y + 1])
+                                    if (values[valuesCount].Xvals[y] + 1 != values[valuesCount].Xvals[y + 1])
                                         PositionUpload++;
                                 }
                                 catch
@@ -61,14 +60,14 @@ namespace ssh_test1
                             collection[indexOfCol].Cells[1, 5] = "DOWNSTREAM";
                             collection[indexOfCol].Cells[2, 6] = "X values";
                             collection[indexOfCol].Cells[2, 5] = "Y values";
-                            for (int xparam = 0; xparam <= valuesX[valuesCount - 1].Count - 1; xparam++)
+                            for (int xparam = 0; xparam <= values[valuesCount - 1].Xvals.Count - 1; xparam++)
                             {
                                 try
                                 {
-                                    collection[indexOfCol].Cells[PositionDownload, 6] = valuesX[valuesCount - 1][xparam];
-                                    collection[indexOfCol].Cells[PositionDownload, 5] = valuesY[valuesCount - 1][xparam];
+                                    collection[indexOfCol].Cells[PositionDownload, 6] = values[valuesCount - 1].Xvals[xparam];
+                                    collection[indexOfCol].Cells[PositionDownload, 5] = values[valuesCount - 1].Yvals[xparam];
                                     PositionDownload++;
-                                    if (valuesX[valuesCount - 1][xparam] + 1 != valuesX[valuesCount - 1][xparam + 1])
+                                    if (values[valuesCount - 1].Xvals[xparam] + 1 != values[valuesCount - 1].Xvals[xparam + 1])
                                         PositionDownload++;
                                 }
                                 catch
@@ -91,7 +90,6 @@ namespace ssh_test1
                             os2.Values = collection[indexOfCol].get_Range("E3", $"E{PositionDownload}");
                             os2.XValues = collection[indexOfCol].get_Range("F3", $"F{PositionDownload}");
                             indexOfCol--;
-                            nameIndex -= 1;
                             valuesCount -= 2;
                         }
                     }

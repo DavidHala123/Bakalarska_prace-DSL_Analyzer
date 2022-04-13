@@ -30,11 +30,41 @@ namespace ssh_test1
         }
         public string name = "";
 
-        public GraphLogic(string outputOfDSLAFar, string outputOfDSLAMNear, List<bool> graphSelector, string currentMode)
+        private double _hzConstant = 1;
+        public double hzConstant 
+        {
+            get { return _hzConstant;}
+            set 
+            {
+                _hzConstant = value;
+            }
+        }
+
+        public GraphLogic(string outputOfDSLAFar, string outputOfDSLAMNear, List<bool> graphSelector, string currentMode, bool hertz)
         {
             this.outputOfDSLAMFar = outputOfDSLAFar;
             this.outputOfDSLAMNear = outputOfDSLAMNear;
             this.graphSelector = graphSelector;
+            if (hertz)
+                _hzConstant = gethzConstant(currentMode);
+        }
+
+        private double gethzConstant(string mode) 
+        {
+            double output = 0;
+            switch (mode)
+            {
+                case string modeis when modeis.Contains("g992-2-30a"):
+                    output = 4.3125;
+                    break;
+                case string modeis when modeis.Contains("gfast"):
+                    output = 51.75;
+                    break;
+                default:
+                    output = 8.625;
+                    break;
+            }
+            return output;
         }
 
 
@@ -196,7 +226,7 @@ namespace ssh_test1
                     if (GetDecValues(input) != valsToSkip)
                     {
                         yVals.Add(adder + GetDecValues(input) / divider);
-                        xVals.Add((startIndex + i) * carrGrp + k);
+                        xVals.Add(Convert.ToInt32(((startIndex + i) * carrGrp + k) * _hzConstant));
                     }
                 }
                 charIndex += NumberOfNibble;

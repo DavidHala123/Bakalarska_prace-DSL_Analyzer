@@ -21,12 +21,14 @@ namespace ssh_test1
     /// </summary>
     public partial class ChartViewUC : UserControl
     {
-        public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i, SolidColorBrush up, SolidColorBrush down)
+        public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i, SolidColorBrush up, SolidColorBrush down, string currm, bool hz)
         {
             DataContext = this;
             this.up = up;
             this.down = down;
             InitializeComponent();
+            if (hz)
+                offset = gethzOffset(currm);
             ChartGraph(dataFarEnd, dataNearEnd, i);
         }
         private SolidColorBrush _up;
@@ -80,7 +82,7 @@ namespace ssh_test1
                     _YaxisName = value;
             }
         }
-
+        private int offset = 1;
 
         List<string> YaxisNames = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]" };
         private async void ChartGraph(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
@@ -89,8 +91,28 @@ namespace ssh_test1
             {
                 getChart(dataFarEnd, dataNearEnd);
                 chart.LeftTitle = YaxisNames[i];
+                if(offset > 1)
+                    chart.BottomTitle = "Hertz [kHz]";
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+        }
+
+        private int gethzOffset(string mode) 
+        {
+            int output = 0;
+            switch (mode) 
+            {
+                case string modeis when modeis.Contains("g992-2-30a"):
+                    output = 5;
+                    break;
+                case string modeis when modeis.Contains("gfast"):
+                    output = 52;
+                    break;
+                default:
+                    output = 9;
+                    break;
+            }
+            return output;
         }
 
         private void getChart(ChartValues chartVnear, ChartValues chartVfar)
@@ -140,7 +162,7 @@ namespace ssh_test1
             {
                 try
                 {
-                    if (graphValuesX[j + 1] != graphValuesX[j] + 1)
+                    if (graphValuesX[j + 1] > graphValuesX[j] + offset)
                     {
                         output.Add(graphValuesX.GetRange(xInd, j + 1 - xInd));
                         output.Add(graphValuesY.GetRange(xInd, j + 1 - xInd));

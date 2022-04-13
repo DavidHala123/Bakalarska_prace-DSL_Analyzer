@@ -171,6 +171,7 @@
         </Grid>
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Background="GhostWhite">
             <local:ConsoleUC x:Name="Console"/>
+            <Button x:Name="hzCarBt" Width="60" BorderThickness="0" Background="Transparent" Content="Carriers" HorizontalAlignment="Right" Click="hzCarBt_Click"/>
         </Grid>
     </Grid>
 </Window>

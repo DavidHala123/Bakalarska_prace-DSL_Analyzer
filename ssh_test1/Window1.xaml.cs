@@ -19,6 +19,7 @@ namespace ssh_test1
     /// </summary>
     public partial class Window1 : Window
     {
+        GraphLogic graphLog;
         public Window1()
         {
             try 
@@ -42,10 +43,6 @@ namespace ssh_test1
             }
             catch { }
         }
-
-        List<List<int>> GraphYvalues = new List<List<int>>();
-        List<List<int>> GraphXvalues = new List<List<int>>();
-        List<string> GraphListOfNames = new List<string>();
         string dataFarEnd = "";
         string dataNearEnd = "";
         string selectedPort;
@@ -91,6 +88,8 @@ namespace ssh_test1
 
         bool fromFile = false;
 
+        private bool _hz = false;
+
         public void ErrorMessage(string errorText)
         {
             MessageBox.Show(errorText);
@@ -110,10 +109,7 @@ namespace ssh_test1
         private async void send_Click(object sender, RoutedEventArgs e)
         {
             ConsoleUC.ConsoleText = "3";
-            GraphListOfNames.Clear();
             GraphField.Items.Clear();
-            GraphYvalues.Clear();
-            GraphXvalues.Clear();
             int realtimeInfo = 0;
             int charVindex = 0;
             if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd) && !String.IsNullOrEmpty(infoTable.portIndex))
@@ -122,7 +118,7 @@ namespace ssh_test1
                 dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
                 realtimeInfo = 1;
             }
-            GraphLogic graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector, infoTable.current_mode));
+            graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector, infoTable.current_mode, _hz));
             for (int i = 0; i < graphSelector.Count(); i++)
             {
                 if (graphSelector[i])
@@ -131,13 +127,8 @@ namespace ssh_test1
                     GraphField.Items.Add(new TabItem
                     {
                         Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
-                        Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload),
+                        Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload, infoTable.current_mode, _hz),
                     });
-                    GraphXvalues.Add(graphLog.chartV[charVindex].Xvals);
-                    GraphXvalues.Add(graphLog.chartV[charVindex + 1].Xvals);
-                    GraphYvalues.Add(graphLog.chartV[charVindex].Yvals);
-                    GraphYvalues.Add(graphLog.chartV[charVindex + 1].Yvals);
-                    GraphListOfNames.Add(graphLog.name);
                     charVindex += 2;
                 }
             }
@@ -176,8 +167,16 @@ namespace ssh_test1
                             numCarrDOWN++;
                         }
                     }
-                    infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
-                    infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
+                    if(infoTable.current_mode == "gfast") 
+                    {
+                        infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
+                        infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
+                    }
+                    else 
+                    {
+                        infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
+                        infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
+                    }
                     infoTable.chartValuesCount = numCarrUP + numCarrDOWN;
                     infoTable.chartValuesUP = numCarrUP;
                     infoTable.realtime = true;
@@ -196,12 +195,6 @@ namespace ssh_test1
             GraphField.Items.Clear();
             dataFarEnd = "";
             dataNearEnd = "";
-            if(GraphYvalues != null && GraphXvalues != null) 
-            {
-                GraphYvalues.Clear();
-                GraphXvalues.Clear();
-                GraphListOfNames.Clear();
-            }
             if (fromFile && PortBox.SelectedIndex == 0) 
             {
                 return;
@@ -257,7 +250,7 @@ namespace ssh_test1
 
         private async void ExportExcel_Click(object sender, RoutedEventArgs e)
         {
-            ExcelExport exc = await Task.Run(() => new ExcelExport(GraphYvalues, GraphXvalues, GraphListOfNames, graphSelector));
+            ExcelExport exc = await Task.Run(() => new ExcelExport(graphLog.chartV, graphSelector));
             ConsoleUC.ConsoleText = "0";
         }
 
@@ -275,7 +268,7 @@ namespace ssh_test1
 
         private void ExportMatlab_Click(object sender, RoutedEventArgs e)
         {
-            MatlabExport me = new MatlabExport(GraphXvalues, GraphYvalues, graphSelector, GraphListOfNames);
+           MatlabExport me = new MatlabExport(graphLog.chartV, graphSelector);
         }
 
         private void ConDetails_Click(object sender, RoutedEventArgs e)
@@ -291,6 +284,14 @@ namespace ssh_test1
         {
             base.OnClosed(e);
             Application.Current.Shutdown();
+        }
+
+        private void hzCarBt_Click(object sender, RoutedEventArgs e)
+        {
+            _hz = !_hz;
+            hzCarBt.Content = _hz ? "Hertz" : "Carriers";
+            if(GraphField.HasItems)
+                send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
     }
 }

@@ -296,10 +296,20 @@ namespace ssh_test1
                 NotifyPropertyChanged();
             }
         }
-
+        private int _suppm_fontSize = 12;
+        public int suppm_fontSize
+        {
+            get { return _suppm_fontSize; }
+            set 
+            {
+                _suppm_fontSize = value;
+                NotifyPropertyChanged();
+            }
+        }
         private async Task populateGeneralInfo()
         {
             suppm_value.Items.Clear();
+            suppm_fontSize = 12;
             string supmodes = "";
             string generalInfo1 = await Task.Run(() => (new SendData("show xdsl operational-data line " + portIndex + " detail").getResponse()) + new SendData("show xdsl operational-data near-end line " + portIndex + " detail").getResponse());
             string[] output = generalInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
@@ -328,10 +338,17 @@ namespace ssh_test1
                         if (!suppmoOutput[1].Contains("dis") && !suppmoOutput[0].Contains("actual-opmode"))
                             suppm_value.Items.Add(suppmoOutput[1].Replace(" ", "-"));
                         break;
+                    case string generaldata when generaldata.Replace("-", " ").Contains("profcap"):
+                        string[] suppmoOutputGf = generaldata.Split(':'); ;
+                        if (suppmoOutputGf[0].Contains("profcap") && !suppmoOutputGf[1].Contains("not")) 
+                        {
+                            suppm_value.Items.Add(suppmoOutputGf[0].Replace(" ", "-"));
+                            suppm_fontSize = 10;
+                        }
+                        break;
                 }
             }
             supported_mode = supmodes;
-            //getMaxBitrate();
         }
 
 
@@ -374,19 +391,19 @@ namespace ssh_test1
                         break;
                     case string generaldata when generaldata.Contains("noise-margin-up"):
                         string[] nmUP = generaldata.Split(':');
-                        noiseMUP = nmUP[1];
+                        noiseMUP = Convert.ToString(Int32.Parse(nmUP[1].Trim())/10);
                         break;
                     case string generaldata when generaldata.Contains("noise-margin-down"):
                         string[] nmDOWN = generaldata.Split(':');
-                        noiseMDOWN = nmDOWN[1];
+                        noiseMDOWN = Convert.ToString(Int32.Parse(nmDOWN[1].Trim()) / 10);
                         break;
                     case string generaldata when generaldata.Contains("output-power-up"):
                         string[] opUP = generaldata.Split(':');
-                        outputPUP = opUP[1];
+                        outputPUP = Convert.ToString(Int32.Parse(opUP[1].Trim()) / 10);
                         break;
                     case string generaldata when generaldata.Contains("output-power-down"):
                         string[] opDOWN = generaldata.Split(':');
-                        outputPDOWN = opDOWN[1];
+                        outputPDOWN = Convert.ToString(Int32.Parse(opDOWN[1].Trim()) / 10);
                         break;
                     case string generaldata when generaldata.Contains("sig-attenuation-up"):
                         string[] saUP = generaldata.Split(':');
@@ -398,79 +415,17 @@ namespace ssh_test1
                         break;
                     case string generaldata when generaldata.Contains("actual-psd-up"):
                         string[] txpUP = generaldata.Split(':');
-                        txPsdUP = txpUP[1];
+                        txPsdUP = Convert.ToString(Int32.Parse(txpUP[1].Trim()) / 10);
                         break;
                     case string generaldata when generaldata.Contains("actual-psd-down"):
                         string[] txpDOWN = generaldata.Split(':');
-                        txPsdDOWN = txpDOWN[1];
+                        txPsdDOWN = Convert.ToString(Int32.Parse(txpDOWN[1].Trim()) / 10);
                         break;
                 }
-            }
-            //getMaxBitrate(current_mode);
+            }  
             actBitrateUP = Convert.ToDouble(actbrUP.Trim()) / 1000;
             actBitrateDOWN = Convert.ToDouble(actbrDOWN.Trim()) / 1000;
         }
-
-        //private void getMaxBitrate(string currMode)
-        //{
-        //    switch (currMode)
-        //    {
-        //        case string mode when mode.Contains("g992-1-a") || mode.Contains("g992-1-b"):
-        //            attaBitrateUP = 1.5;
-        //            attaBitrateDOWN = 8;
-        //            break;
-        //        case string mode when mode.Contains("g992-2-a"):
-        //            attaBitrateUP = 0.5;
-        //            attaBitrateDOWN = 1.5;
-        //            break;
-        //        case string mode when mode.Contains("g992-3-a") || mode.Contains("g922-3-b"):
-        //            attaBitrateUP = 1;
-        //            attaBitrateDOWN = 12;
-        //            break;
-        //        case string mode when mode.Contains("g992-3-aj") || mode.Contains("g992-3-am"):
-        //            attaBitrateUP = 3;
-        //            attaBitrateDOWN = 12;
-        //            break;
-        //        case string mode when mode.Contains("g992-3-l1") || mode.Contains("g992-3-l2"):
-        //            attaBitrateUP = 0.8;
-        //            attaBitrateDOWN = 5;
-        //            break;
-        //        case string mode when mode.Contains("g992-5-a") || mode.Contains("g992-5-b"):
-        //            attaBitrateUP = 1;
-        //            attaBitrateDOWN = 25;
-        //            break;
-        //        case string mode when mode.Contains("g992-5-am"):
-        //            attaBitrateUP = 3;
-        //            attaBitrateDOWN = 25;
-        //            break;
-        //        case string mode when mode.Contains("g992-5-aj"):
-        //            attaBitrateUP = 3;
-        //            attaBitrateDOWN = 25;
-        //            break;
-        //        case string mode when mode.Contains("g993-2-8a") || mode.Contains("g993-2-8b") || mode.Contains("g993-2-8c") || mode.Contains("g993-2-8d"):
-        //            attaBitrateUP = 12;
-        //            attaBitrateDOWN = 24;
-        //            break;
-        //        case string mode when mode.Contains("g993-2-12a") || mode.Contains("g993-2-12b"):
-        //            attaBitrateUP = 24;
-        //            attaBitrateDOWN = 24;
-        //            break;
-
-        //        case string mode when mode.Contains("g993-2-17a"):
-        //            attaBitrateUP = 24;
-        //            attaBitrateDOWN = 48;
-        //            break;
-        //        case string mode when mode.Contains("g993-2-30a"):
-        //            attaBitrateUP = 28;
-        //            attaBitrateDOWN = 28;
-        //            break;
-        //        case string mode when mode.Contains("g993-2-35b"):
-        //            attaBitrateUP = 100;
-        //            attaBitrateDOWN = 300;
-        //            break;
-
-        //    }
-        //}
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
