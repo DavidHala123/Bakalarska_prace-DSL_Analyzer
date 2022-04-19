@@ -30,11 +30,15 @@ namespace ssh_test1
             DataContext = this;
             InitializeComponent();
         }
+
         public bool realtime 
         {
             set 
             {
-                populateRealTimeInfo();
+                if(value == true) 
+                {
+                    populateRealTimeInfo();
+                }
                 NotifyPropertyChanged();
             }
         }

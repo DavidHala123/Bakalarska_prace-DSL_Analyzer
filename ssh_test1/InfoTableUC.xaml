@@ -17,7 +17,7 @@
         <Grid Grid.Row="0" Background="#FFE7E7F0">
             <TextBlock Text="General Information:" Margin="10,0,0,0" FontSize="16" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
         </Grid>
-        <Grid Grid.Row="1" x:Name="generalGrid" xmlns:sys="clr-namespace:System;assembly=mscorlib" Visibility="Visible">
+        <Grid Grid.Row="1" x:Name="generalGrid" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.45*"/>
                 <ColumnDefinition Width="0.55*"/>
