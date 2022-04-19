@@ -112,7 +112,7 @@ namespace ssh_test1
             GraphField.Items.Clear();
             int realtimeInfo = 0;
             int charVindex = 0;
-            if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd) && !String.IsNullOrEmpty(infoTable.portIndex))
+            if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd))
             {
                 dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
                 dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
@@ -262,16 +262,30 @@ namespace ssh_test1
 
         private void ExportMatlab_Click(object sender, RoutedEventArgs e)
         {
-           MatlabExport me = new MatlabExport(graphLog.chartV, graphSelector);
+            MatlabExport me = new MatlabExport(graphLog.chartV, graphSelector);
+        }
+
+        private void ExportCSV_Click(object sender, RoutedEventArgs e)
+        {
+            if(graphSelector.Where(c => c).Count() > 1) 
+            {
+                CsvWarning csvw = new CsvWarning();
+                csvw.ShowDialog();
+                if (csvw.showCsvExport)
+                {
+                    CsvExport csve = new CsvExport(graphLog.chartV, graphSelector);
+                }
+            }
+            else 
+            {
+                CsvExport csve = new CsvExport(graphLog.chartV, graphSelector);
+            }
         }
 
         private void ConDetails_Click(object sender, RoutedEventArgs e)
         {
-            //OptionsBase opt = new OptionsBase(2, graphSelector, BrushUpload, BrushDownload);
-            //opt.ShowDialog();
-            //BrushUpload = opt.brushUP;
-            //BrushDownload = opt.brushDOWN;
-            //graphSelector = opt.charts;
+            OptionsBase optb = new OptionsBase(2, this);
+            optb.Show();
         }
 
         protected override void OnClosed(EventArgs e)

@@ -39,9 +39,6 @@
             <TextBlock Width="60" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Connected: "/>
             <Rectangle x:Name="connRec" Stroke="DarkGray" Width="100" Height="20" Margin="120,0,0,0" RadiusX="0" RadiusY="0" VerticalAlignment="Top" HorizontalAlignment="Left" Fill="Green"/>
         </Grid>
-        <Grid Grid.Row="3">
-            <Button x:Name="changeConn" Content="Change conn." Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="100" Margin="10,0,0,10" VerticalAlignment="Bottom" Click="changeConn_Click"/>
-            <Button x:Name="checkConn" Content="Check conn." Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="100" Margin="0,0,10,10" VerticalAlignment="Bottom" Click="checkConn_Click"/>
-        </Grid>
+
     </Grid>
 </UserControl>

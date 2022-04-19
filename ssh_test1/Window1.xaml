@@ -65,51 +65,32 @@
                                 </Style>
                             </MenuItem.Style>
                         </MenuItem>
-                        <MenuItem Header="Export to...">
-                            <MenuItem Header="Excel" Click="ExportExcel_Click" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                <MenuItem.Style>
-                                    <Style TargetType="MenuItem">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
+                        <MenuItem Header="Export to..." xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <MenuItem.Style>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
                                                      Value="True">
-                                                <Setter Property="IsEnabled" Value="True"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
                                                      Value="0">
-                                                <Setter Property="IsEnabled" Value="True"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </MenuItem.Style>
-                            </MenuItem>
-                            <MenuItem Header="Matlab" Click="ExportMatlab_Click" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                <MenuItem.Style>
-                                    <Style TargetType="MenuItem">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
-                                                     Value="True">
-                                                <Setter Property="IsEnabled" Value="True"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ElementName=GraphField, Path=HasItems}"
-                                                     Value="0">
-                                                <Setter Property="IsEnabled" Value="True"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </MenuItem.Style>
-                            </MenuItem>
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                            <MenuItem Header="Excel" Click="ExportExcel_Click"/>
+                            <MenuItem Header="Matlab" Click="ExportMatlab_Click"/>
+                            <MenuItem Header="CSV" Click="ExportCSV_Click"/>
                         </MenuItem>
                     </MenuItem>
                     <MenuItem Header="Edit">
                         <MenuItem Header="Select Charts" Click="OptionsButton_Click" x:Name="OptionsButton"/>
                         <MenuItem Header="Chart appearance" Click="ChartAppearence_Click" x:Name="ChartApp"/>
                     </MenuItem>
-                    <MenuItem Header="Connection">
-                        <MenuItem Header="Connection details" Click="ConDetails_Click"/>
-                        <MenuItem Header="Change connection"/>
-                    </MenuItem>
+                    <MenuItem Header="Connection" Click="ConDetails_Click"/>
                 </Menu>
             </DockPanel>
         </Grid>

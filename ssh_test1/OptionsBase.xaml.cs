@@ -72,6 +72,7 @@ namespace ssh_test1
                     CharAppe.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                     break;
                 case 2:
+                    Con.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                     break;
             }
         }
@@ -89,6 +90,13 @@ namespace ssh_test1
             optCont.Children.Clear();
             ChartAppearenceUC selc = new ChartAppearenceUC(wind, this);
             optCont.Children.Add(selc);
+        }
+
+        private void conClick(object sender, RoutedEventArgs e)
+        {
+            optCont.Children.Clear();
+            ConnectionUC conuc = new ConnectionUC();
+            optCont.Children.Add(conuc);
         }
     }
 }
