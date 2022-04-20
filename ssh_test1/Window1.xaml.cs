@@ -46,7 +46,7 @@ namespace ssh_test1
         }
         string dataFarEnd = "";
         string dataNearEnd = "";
-        string selectedPort;
+        //string selectedPort;
 
         private SolidColorBrush _BrushUpload = new SolidColorBrush(Colors.Red);
         public SolidColorBrush BrushUpload
@@ -95,11 +95,12 @@ namespace ssh_test1
             set 
             {
                 _fromFile = value;
-                if(value == true && infoGrid.Children.Count == 1) 
+                if(value == true) 
                 {
                     infoTable.suppm_value.Items.Clear();
                     infoTable.txPsdDOWN = "";
-                    infoGrid.Children.Add(infoNot);
+                    if(infoGrid.Children.Count < 2)
+                        infoGrid.Children.Add(infoNot);
                 }
                 else 
                 {
