@@ -20,6 +20,13 @@ namespace ssh_test1
             password.Foreground = new SolidColorBrush(Colors.Gray);
         }
 
+        private bool _openMain = true;
+        public bool openMain 
+        { 
+            get { return _openMain; } 
+            set { _openMain = value; } 
+        }
+
         public void ErrorMessage(string errorText)
         {
             MessageBox.Show(errorText);
@@ -41,10 +48,13 @@ namespace ssh_test1
             ConData.name = Name.Text.ToString();
             ConData.password = password.Password.ToString();
             Connect connect = new Connect();
-            if (connect.con() == true)
+            if (connect.con())
             {
-                Window1 wind = new Window1();
-                wind.Show();
+                if(openMain)
+                {
+                    Window1 wind = new Window1();
+                    wind.Show();
+                }
                 this.Hide();
             }
         }
@@ -92,8 +102,11 @@ namespace ssh_test1
 
         protected override void OnClosed(EventArgs e)
         {
-            base.OnClosed(e);
-            Application.Current.Shutdown();
+            if (openMain) 
+            {
+                base.OnClosed(e);
+                Application.Current.Shutdown();
+            }
         }
     }
 }

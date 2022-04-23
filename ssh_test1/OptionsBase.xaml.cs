@@ -57,6 +57,7 @@ namespace ssh_test1
                 }
             }
         }
+
         Window1 wind;
 
         public OptionsBase(int choice, Window1 wind)
@@ -95,7 +96,7 @@ namespace ssh_test1
         private void conClick(object sender, RoutedEventArgs e)
         {
             optCont.Children.Clear();
-            ConnectionUC conuc = new ConnectionUC();
+            ConnectionUC conuc = new ConnectionUC(wind, this);
             optCont.Children.Add(conuc);
         }
     }

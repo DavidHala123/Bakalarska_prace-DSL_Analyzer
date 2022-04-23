@@ -23,30 +23,33 @@ namespace ssh_test1
         InfoNotAvailable infoNot = new InfoNotAvailable();
         public Window1()
         {
+            InitializeComponent();
             try 
             {
-                async Task Initialize() 
-                {
-                    List<PortData> listofobj = await Task.Run(() => new PortBoxLogic(new SendData
-                       ("show xdsl operational-data line").getResponse() ?? throw new ArgumentNullException()).getPortDataCombo());
-                    foreach (PortData obj in listofobj)
-                    {
-                        PortBox.Items.Add(obj);
-                    }
-                    string xdslStandartStr = await Task.Run(() => new SendData("show xdsl operational-data line | match match exact:gfast").getResponse());
-                    if (!xdslStandartStr.Contains("up"))
-                        Console.XDSLStandartS = "ADSL/VDSL";
-                    else
-                        Console.XDSLStandartS = "G-fast";
-                }
-                InitializeComponent();
-                Initialize();
+                getPortInfo();
             }
-            catch { }
+            catch 
+            {
+                MessageBox.Show("Unable to load port information. Please check your connection to the DSLAM");
+            }
         }
         string dataFarEnd = "";
         string dataNearEnd = "";
-        //string selectedPort;
+        private bool _conChanged = false;
+        public bool conChanged 
+        {
+            set 
+            {
+                _conChanged = value;
+                if(value == true) 
+                {
+                    PortBox.SelectedIndex = -1;
+                    reload.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                    _conChanged = false;
+                }
+
+            }
+        }
 
         private SolidColorBrush _BrushUpload = new SolidColorBrush(Colors.Red);
         public SolidColorBrush BrushUpload
@@ -110,6 +113,7 @@ namespace ssh_test1
         }
 
         private bool _hz = false;
+        private List<PortData> listofobj = new List<PortData>();
 
         public void ErrorMessage(string errorText)
         {
@@ -126,6 +130,30 @@ namespace ssh_test1
 
         }
 
+        private async Task getPortInfo()
+        {
+            int previouslySelected = -1;
+            if (PortBox.SelectedIndex >= 0) 
+            {
+                previouslySelected = PortBox.SelectedIndex;
+                PortBox.SelectedIndex = -1;
+            }
+            if (PortBox.Items.Count > 0)
+                PortBox.Items.Clear();
+            listofobj = await Task.Run(() => new PortBoxLogic(new SendData
+                ("show xdsl operational-data line").getResponse() ?? throw new ArgumentNullException()).getPortDataCombo());
+            foreach (PortData obj in listofobj)
+            {
+                PortBox.Items.Add(obj);
+            }
+            string xdslStandartStr = await Task.Run(() => new SendData("show xdsl operational-data line | match match exact:gfast").getResponse());
+            if (!xdslStandartStr.Contains("up"))
+                Console.XDSLStandartS = "ADSL/VDSL";
+            else
+                Console.XDSLStandartS = "G-fast";
+            if (previouslySelected != -1)
+                PortBox.SelectedIndex = previouslySelected;
+        }
 
         private async void send_Click(object sender, RoutedEventArgs e)
         {
@@ -135,7 +163,7 @@ namespace ssh_test1
                 GraphField.Items.Clear();
                 int realtimeInfo = 0;
                 int charVindex = 0;
-                if (!fromFile && String.IsNullOrEmpty(dataFarEnd) && String.IsNullOrEmpty(dataNearEnd))
+                if (!fromFile)
                 {
                     dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
                     dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
@@ -210,29 +238,32 @@ namespace ssh_test1
 
         private void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GraphField.Items.Clear();
-            dataFarEnd = "";
-            dataNearEnd = "";
-            if (fromFile && PortBox.SelectedIndex == 0) 
+            if(PortBox.SelectedIndex >= 0) 
             {
-                return;
-            }
-            var selected = (PortData)PortBox.SelectedItem;
-            if (selected.portState.Contains("down.png"))
-            {
-                MessageBox.Show("Port you are trying to access is currently down. Values that are going to be displayed are values obtained by port's last showtime.");
-                return;
-            }
-            else
-            {
-                infoTable.current_mode = "";
-                infoTable.txPsdDOWN = "";
-                if (fromFile) 
+                GraphField.Items.Clear();
+                dataFarEnd = "";
+                dataNearEnd = "";
+                if (fromFile && PortBox.SelectedIndex == 0)
                 {
-                    PortBox.Items.RemoveAt(0);
+                    return;
                 }
-                fromFile = false;
-                infoTable.portIndex = selected.portName.ToString();
+                var selected = (PortData)PortBox.SelectedItem;
+                if (selected.portState.Contains("down.png"))
+                {
+                    MessageBox.Show("Port you are trying to access is currently down. Values that are going to be displayed are values obtained by port's last showtime.");
+                    return;
+                }
+                else
+                {
+                    infoTable.suppm_value.Items.Clear();
+                    infoTable.txPsdDOWN = "";
+                    if (fromFile)
+                    {
+                        PortBox.Items.RemoveAt(0);
+                    }
+                    fromFile = false;
+                    infoTable.portIndex = selected.portName.ToString();
+                }
             }
         }
 
@@ -324,6 +355,11 @@ namespace ssh_test1
             hzCarBt.Content = _hz ? "Hertz" : "Carriers";
             if(GraphField.HasItems)
                 send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+        }
+
+        private void reload_Click(object sender, RoutedEventArgs e)
+        {
+            getPortInfo();
         }
     }
 }

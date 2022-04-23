@@ -27,7 +27,6 @@ namespace ssh_test1
         private List<bool> listOfChecks;
         public SelectChartsUC(Window1 wind, OptionsBase optb)
         {
-            this.optb = optb;
             this.wind = wind;
             listOfChecks = wind.graphSelector;
             InitializeComponent();

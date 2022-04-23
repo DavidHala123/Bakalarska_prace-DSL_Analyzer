@@ -20,6 +20,8 @@ namespace ssh_test1
     /// </summary>
     public partial class ConnectionUC : UserControl
     {
+
+
         private bool _IsOn = true;
         public bool IsOn
         {
@@ -70,10 +72,15 @@ namespace ssh_test1
                 }
             }
         }
-        public ConnectionUC()
+
+        Window1 wind;
+        OptionsBase optb;
+        public ConnectionUC(Window1 wind, OptionsBase optb)
         {
+            this.optb = optb;
             DataContext = this;
             InitializeComponent();
+            this.wind = wind;
             passText.Text = "*****";
         }
 
@@ -87,13 +94,16 @@ namespace ssh_test1
 
         }
 
-        private void changeConn_Click(object sender, RoutedEventArgs e)
+        private void changeCon_Click(object sender, RoutedEventArgs e)
         {
-            ConData.ipv4 = "192.168.10.18";
-            ConData.name = "isuser";
-            ConData.password = "USER#10";
-            //MessageBox.Show(window);
-            Connect con = new Connect();
+            string name = ConData.name;
+            string ipv4 = ConData.ipv4;
+            MainWindow main = new MainWindow();
+            main.openMain = false;
+            main.ShowDialog();
+            optb.Close();
+            if (ConData.name != name || ConData.ipv4 != ipv4)
+                wind.conChanged = true;
         }
     }
 }
