@@ -11,6 +11,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using LiveCharts;
 using System.ComponentModel;
+using System.IO;
 
 namespace ssh_test1
 {
@@ -160,6 +161,7 @@ namespace ssh_test1
             try
             {
                 ConsoleUC.ConsoleText = "3";
+                bool fromConfig = false;
                 GraphField.Items.Clear();
                 int realtimeInfo = 0;
                 int charVindex = 0;
@@ -185,45 +187,59 @@ namespace ssh_test1
                 }
                 if (realtimeInfo == 1)
                 {
-                    int maxBitUP = 0;
-                    int maxBitDOWN = 0;
-                    if (infoTable.current_mode == "gfast")
+                    var fileLines = File.ReadAllLines(@"Config\Bitrate.txt");
+                    foreach (string line in fileLines)
                     {
-                        infoTable.attaBitrateUP = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5) / 7000000);
-                        infoTable.attaBitrateDOWN = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5 * 6) / 7000000);
-                    }
-                    else
-                    {
-                        if (!graphSelector[0])
+                        string[] values = line.Split(':');
+                        if (values[0] == infoTable.current_mode)
                         {
-                            graphLog.SelectGraphNeeeded(0);
-                            foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 2].Yvals)
-                            {
-                                maxBitUP += integer;
-                            }
-                            foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 1].Yvals)
-                            {
-                                maxBitDOWN += integer;
-                            }
+                            infoTable.attaBitrateUP = Int32.Parse(values[1]);
+                            infoTable.attaBitrateDOWN = Int32.Parse(values[2]);
+                            fromConfig = true;
+                        }
+                    }
+                    if (!fromConfig)
+                    {
+                        int maxBitUP = 0;
+                        int maxBitDOWN = 0;
+                        if (infoTable.current_mode == "gfast")
+                        {
+                            infoTable.attaBitrateUP = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5) / 7000000);
+                            infoTable.attaBitrateDOWN = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5 * 6) / 7000000);
                         }
                         else
                         {
-                            foreach (int integer in graphLog.chartV[0].Yvals)
+                            if (!graphSelector[0])
                             {
-                                maxBitUP += integer;
+                                graphLog.SelectGraphNeeeded(0);
+                                foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 2].Yvals)
+                                {
+                                    maxBitUP += integer;
+                                    MessageBox.Show(maxBitUP.ToString());
+                                }
+                                foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 1].Yvals)
+                                {
+                                    maxBitDOWN += integer;
+                                }
                             }
-                            foreach (int integer in graphLog.chartV[1].Yvals)
+                            else
                             {
-                                maxBitDOWN += integer;
+                                foreach (int integer in graphLog.chartV[0].Yvals)
+                                {
+                                    maxBitUP += integer;
+                                }
+                                foreach (int integer in graphLog.chartV[1].Yvals)
+                                {
+                                    maxBitDOWN += integer;
+                                }
                             }
+                            infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
+                            infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
                         }
-                        infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
-                        infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
                     }
                     infoTable.chartValuesCount = graphLog.chartV[0].Xvals.Count() + graphLog.chartV[1].Xvals.Count;
                     infoTable.chartValuesUP = graphLog.chartV[0].Xvals.Count;
                     infoTable.realtime = true;
-
                     realtimeInfo += 1;
                 }
             }

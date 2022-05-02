@@ -426,7 +426,7 @@ namespace ssh_test1
                         txPsdDOWN = Convert.ToString(Int32.Parse(txpDOWN[1].Trim()) / 10);
                         break;
                 }
-            }  
+            }
             actBitrateUP = Convert.ToDouble(actbrUP.Trim()) / 1000;
             actBitrateDOWN = Convert.ToDouble(actbrDOWN.Trim()) / 1000;
         }
