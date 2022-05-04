@@ -89,6 +89,7 @@
                     <MenuItem Header="Edit">
                         <MenuItem Header="Select Charts" Click="OptionsButton_Click" x:Name="OptionsButton"/>
                         <MenuItem Header="Chart appearance" Click="ChartAppearence_Click" x:Name="ChartApp"/>
+                        <MenuItem Header="Set static Bitrate" Click="setStaticBit_Click" x:Name="StaticBitr"/>
                     </MenuItem>
                     <MenuItem Header="Connection" Click="ConDetails_Click"/>
                 </Menu>

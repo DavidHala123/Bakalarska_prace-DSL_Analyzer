@@ -3,6 +3,7 @@ using LiveCharts.Configurations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -308,6 +309,17 @@ namespace ssh_test1
             {
                 _suppm_fontSize = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        private bool _fromConfig = false;
+        public bool fromConfig 
+        {
+            get { return _fromConfig;}
+            set 
+            { 
+                _fromConfig = value; 
+                NotifyPropertyChanged(); 
             }
         }
         private async Task populateGeneralInfo()

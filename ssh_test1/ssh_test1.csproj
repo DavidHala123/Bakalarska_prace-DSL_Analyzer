@@ -11,11 +11,18 @@
     <None Remove="ajax-loader.gif" />
     <None Remove="Config\Bitrate.txt" />
     <None Remove="down.png" />
-    <None Remove="Images\options-icon.png" />
+    <None Remove="Images\minusIcon.png" />
+    <None Remove="Images\plusIcon.png" />
     <None Remove="Images\reload_but.png" />
     <None Remove="Images\show_icon.png" />
     <None Remove="Images\txt_file.png" />
     <None Remove="up.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Config\Bitrate.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -36,24 +43,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Config\Bitrate.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <Resource Include="Images\ajax-loader.gif" />
     <Resource Include="Images\down.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\options-icon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Resource Include="Images\minusIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\plusIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\reload_but.png" />
     <Resource Include="Images\show_icon.png" />
     <Resource Include="Images\txt_file.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\up.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\hide_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

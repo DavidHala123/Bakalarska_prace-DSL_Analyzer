@@ -85,6 +85,18 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Bitrate [Mbps]: " Padding="10,0,0,0" VerticalAlignment="Bottom"/>
+                <TextBlock Grid.Column="1" Text="S" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,15,0" Foreground="Crimson" FontWeight="Medium">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=fromConfig}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
             <Grid Grid.Row="1" x:Name="realtimeGrid">
                 <Grid.ColumnDefinitions>

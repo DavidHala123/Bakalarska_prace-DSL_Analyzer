@@ -161,7 +161,7 @@ namespace ssh_test1
             try
             {
                 ConsoleUC.ConsoleText = "3";
-                bool fromConfig = false;
+                infoTable.fromConfig = false;
                 GraphField.Items.Clear();
                 int realtimeInfo = 0;
                 int charVindex = 0;
@@ -187,18 +187,22 @@ namespace ssh_test1
                 }
                 if (realtimeInfo == 1)
                 {
-                    var fileLines = File.ReadAllLines(@"Config\Bitrate.txt");
-                    foreach (string line in fileLines)
+                    if (File.Exists(@"Config\Bitrate.txt")) 
                     {
-                        string[] values = line.Split(':');
-                        if (values[0] == infoTable.current_mode)
+                        MessageBox.Show("ppc");
+                        var fileLines = File.ReadAllLines(@"Config\Bitrate.txt");
+                        foreach (string line in fileLines)
                         {
-                            infoTable.attaBitrateUP = Int32.Parse(values[1]);
-                            infoTable.attaBitrateDOWN = Int32.Parse(values[2]);
-                            fromConfig = true;
+                            string[] values = line.Split(';');
+                            if (values[0] == infoTable.current_mode)
+                            {
+                                infoTable.attaBitrateUP = Int32.Parse(values[1]);
+                                infoTable.attaBitrateDOWN = Int32.Parse(values[2]);
+                                infoTable.fromConfig = true;
+                            }
                         }
                     }
-                    if (!fromConfig)
+                    if (!infoTable.fromConfig)
                     {
                         int maxBitUP = 0;
                         int maxBitDOWN = 0;
@@ -356,6 +360,11 @@ namespace ssh_test1
         private void ConDetails_Click(object sender, RoutedEventArgs e)
         {
             OptionsBase optb = new OptionsBase(2, this);
+            optb.Show();
+        }
+        private void setStaticBit_Click(object sender, RoutedEventArgs e)
+        {
+            OptionsBase optb = new OptionsBase(3, this);
             optb.Show();
         }
 

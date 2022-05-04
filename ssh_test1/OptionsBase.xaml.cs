@@ -75,6 +75,9 @@ namespace ssh_test1
                 case 2:
                     Con.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                     break;
+                case 3:
+                    staticBitr.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    break;
             }
         }
         private void SelChart_Click(object sender, RoutedEventArgs e)
@@ -98,6 +101,13 @@ namespace ssh_test1
             optCont.Children.Clear();
             ConnectionUC conuc = new ConnectionUC(wind, this);
             optCont.Children.Add(conuc);
+        }
+
+        private void staticBitrClick(object sender, RoutedEventArgs e)
+        {
+            optCont.Children.Clear();
+            SetStaticBitrate setbr = new SetStaticBitrate(this);
+            optCont.Children.Add(setbr);
         }
     }
 }
