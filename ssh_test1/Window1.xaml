@@ -7,10 +7,10 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
         mc:Ignorable="d"
-        Title="Window1" Height="600" Width="800" ResizeMode="CanResize" MinHeight="600" MinWidth="800">
+        Title="DSL ANALYZER" Height="600" Width="800" ResizeMode="CanResize" MinHeight="600" MinWidth="800">
     <Window.Resources>
         <DataTemplate x:Key="cmbTemplate">
-            <WrapPanel Margin="0 5 0 5" Height="22">
+            <WrapPanel Margin="0,5,0,5" Height="22">
                 <Grid Grid.Column="0" Width="80">
                     <Label Content="{Binding portName}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="10"/>
                 </Grid>
