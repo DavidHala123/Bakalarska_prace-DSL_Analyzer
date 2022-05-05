@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ssh_test1"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="240">
+             d:DesignHeight="284" d:DesignWidth="270">
     <Grid>
         <Grid.RowDefinitions >
             <RowDefinition Height="60">
@@ -15,7 +15,7 @@
             <RowDefinition Height="*">
 
             </RowDefinition>
-            <RowDefinition Height="20">
+            <RowDefinition Height="40">
 
             </RowDefinition>
             <RowDefinition Height="60">
@@ -26,22 +26,31 @@
             <TextBlock Text="Connection information:" Padding="10,10,0,0" Margin="0,0,0,0" FontSize="18" Grid.ColumnSpan="2"/>
         </Grid>
         <Grid Grid.Row="1">
-            <TextBlock HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Width="100" Text="IP Address: "/>
-            <TextBlock x:Name="ipAddrText" HorizontalAlignment="Left" Margin="120,20,0,0" VerticalAlignment="Top" Width="100" Text="{Binding Path=ipAddr}"/>
-            <TextBlock HorizontalAlignment="Left" Margin="20,50,0,0" VerticalAlignment="Top" Width="100" Text="Name: "/>
-            <TextBlock x:Name="nameText" HorizontalAlignment="Left" Margin="120,50,0,0" VerticalAlignment="Top" Width="100" Text="{Binding Path=name}"/>
-            <TextBlock HorizontalAlignment="Left" Margin="20,80,0,0" VerticalAlignment="Top" Width="100" Text="Password: "/>
-            <TextBlock x:Name="passText" HorizontalAlignment="Left" Margin="120,80,0,0" VerticalAlignment="Top" Width="65"/>
-            <Button x:Name="ShowHideButton" HorizontalAlignment="Right" Margin="0,80,20,0" VerticalAlignment="Top" Width="25" Height="20" Click="ShowHideButton_Click">
-                <Image Source="Images/show_icon.png"/>
-            </Button>
+            <StackPanel>
+                <DockPanel>
+                    <TextBlock HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Width="100" Text="IP Address: "/>
+                    <TextBlock x:Name="ipAddrText" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Text="{Binding Path=ipAddr}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Width="100" Text="Name: "/>
+                    <TextBlock x:Name="nameText" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Text="{Binding Path=name}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Width="100" Text="Password: "/>
+                    <TextBlock x:Name="passText" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100"/>
+                    <Button x:Name="ShowHideButton" HorizontalAlignment="Right" Margin="0,7,20,0" VerticalAlignment="Top" Width="25" Height="20" Click="ShowHideButton_Click">
+                        <Image Source="Images/show_icon.png"/>
+                    </Button>
+                </DockPanel>
+
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="2">
             <TextBlock Width="60" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Connected: "/>
-            <Rectangle x:Name="connRec" Stroke="DarkGray" Width="100" Height="20" Margin="120,0,0,0" RadiusX="0" RadiusY="0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Rectangle x:Name="connRec" Stroke="DarkGray" Width="130" Height="20" Margin="120,0,0,0" RadiusX="0" RadiusY="0" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Rectangle.Style>
                     <Style TargetType="Rectangle">
-                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Setter Property="Visibility" Value="Visible"/>
                         <Style.Triggers>
                             <Trigger Property="Fill" Value="Red">
                                 <Setter Property="Visibility" Value="Visible"/>
@@ -53,7 +62,7 @@
                     </Style>
                 </Rectangle.Style>
             </Rectangle>
-            <Image gif:ImageBehavior.RepeatBehavior="Forever" gif:ImageBehavior.AnimatedSource="Images/ajax-loader.gif" HorizontalAlignment="Left" Margin="145,2,0,2">
+            <Image gif:ImageBehavior.RepeatBehavior="Forever" gif:ImageBehavior.AnimatedSource="Images/ajax-loader.gif" HorizontalAlignment="Left" VerticalAlignment="Top" Height="16" Margin="155,2,0,0">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Setter Property="Visibility" Value="Visible"/>
@@ -71,8 +80,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Change connection" Click="changeCon_Click" Height="25" Margin="10,0"/>
-            <Button Grid.Column="1" Content="Check connection" Click="checkCon_Click" Height="25" Margin="10,0"/>
+            <Button Grid.Column="0" Content="Change connection" Click="changeCon_Click" Height="25" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10"/>
+            <Button Grid.Column="1" Content="Check connection" Click="checkCon_Click" Height="25" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10"/>
         </Grid>
 
     </Grid>

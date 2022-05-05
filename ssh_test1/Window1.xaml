@@ -96,7 +96,7 @@
             </DockPanel>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
-            <ComboBox x:Name="PortBox" ItemTemplate="{StaticResource cmbTemplate}" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="35" Width="180" SelectionChanged="PortBox_SelectionChanged" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+            <ComboBox x:Name="PortBox" ItemTemplate="{StaticResource cmbTemplate}" Margin="-30,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35" Width="180" SelectionChanged="PortBox_SelectionChanged" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                 <ComboBox.Style>
                     <Style TargetType="ComboBox">
                         <Setter Property="IsEnabled" Value="False"/>
@@ -113,7 +113,7 @@
                     </Style>
                 </ComboBox.Style>
             </ComboBox>
-            <Button x:Name="reload" Width="25" Height="25" Margin="195,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="reload_Click" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+            <Button x:Name="reload" Width="25" Height="25" Margin="190,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="reload_Click" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="IsEnabled" Value="False"/>

@@ -34,6 +34,7 @@ namespace ssh_test1
                 MessageBox.Show("Unable to load port information. Please check your connection to the DSLAM");
             }
         }
+
         string dataFarEnd = "";
         string dataNearEnd = "";
         private bool _conChanged = false;

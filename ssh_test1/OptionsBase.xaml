@@ -8,8 +8,8 @@
         Title="OptionsBase" Height="300" Width="400" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.4*"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="270"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <StackPanel Grid.Row="0" Margin="0,5" Background="WhiteSmoke">

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ssh_test1"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="240">
+             d:DesignHeight="300" d:DesignWidth="270">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -20,15 +20,15 @@
             <StackPanel Grid.Column="0" Margin="10,0,0,0">
                 <DockPanel HorizontalAlignment="Left" Margin="0,5">
                     <TextBlock Text="Annex: " HorizontalAlignment="Left" Width="70"/>
-                    <TextBox x:Name="annexText" Grid.Row="0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox x:Name="annexText" Grid.Row="0" Height="20" Width="110" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 </DockPanel>
                 <DockPanel HorizontalAlignment="Left">
                     <TextBlock Text="Bitrate UP: " Width="70"/>
-                    <TextBox x:Name="upbitrText" Grid.Row="0" Height="20" Width="80"/>
+                    <TextBox x:Name="upbitrText" Grid.Row="0" Height="20" Width="110"/>
                 </DockPanel>
                 <DockPanel HorizontalAlignment="Left" Margin="0,5">
                     <TextBlock Text="Bitrate DN: " Width="70"/>
-                    <TextBox x:Name="downbitrText" Grid.Row="0" Height="20" Width="80"/>
+                    <TextBox x:Name="downbitrText" Grid.Row="0" Height="20" Width="110"/>
                 </DockPanel>
             </StackPanel>
             <DockPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,5" Height="20">
