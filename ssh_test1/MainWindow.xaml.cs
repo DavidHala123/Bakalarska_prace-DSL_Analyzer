@@ -21,10 +21,10 @@ namespace ssh_test1
         }
 
         private bool _openMain = true;
-        public bool openMain 
-        { 
-            get { return _openMain; } 
-            set { _openMain = value; } 
+        public bool openMain
+        {
+            get { return _openMain; }
+            set { _openMain = value; }
         }
 
         public void ErrorMessage(string errorText)
@@ -48,9 +48,9 @@ namespace ssh_test1
             ConData.name = Name.Text.ToString();
             ConData.password = password.Password.ToString();
             Connect connect = new Connect();
-            if (connect.con())
+            if (connect.con(false))
             {
-                if(openMain)
+                if (openMain)
                 {
                     Window1 wind = new Window1();
                     wind.Show();
@@ -66,7 +66,7 @@ namespace ssh_test1
 
         private void ipv4_GotFocus(object sender, RoutedEventArgs e)
         {
-            if(ipv4.Text == "IP Address") 
+            if (ipv4.Text == "IP Address")
             {
                 ipv4.Foreground = new SolidColorBrush(Colors.Black);
                 ipv4.Text = "";
@@ -75,7 +75,7 @@ namespace ssh_test1
 
         private void ipv4_LostFocus(object sender, RoutedEventArgs e)
         {
-            if(ipv4.Text == "") 
+            if (ipv4.Text == "")
             {
                 ipv4.Foreground = new SolidColorBrush(Colors.Gray);
                 ipv4.Text = "IP Address";
@@ -102,7 +102,7 @@ namespace ssh_test1
 
         protected override void OnClosed(EventArgs e)
         {
-            if (openMain) 
+            if (openMain)
             {
                 base.OnClosed(e);
                 Application.Current.Shutdown();

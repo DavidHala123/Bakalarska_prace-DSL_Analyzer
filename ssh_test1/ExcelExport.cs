@@ -79,14 +79,16 @@ namespace ssh_test1
                             Excel.ChartObject myChart = (Excel.ChartObject)xlCharts.Add(500, 80, 400, 200);
                             Excel.Chart chartPage = myChart.Chart;
                             chartPage.ChartType = Excel.XlChartType.xlXYScatterSmoothNoMarkers;
+                            chartPage.HasTitle = true;
+                            chartPage.ChartTitle.Text = values[valuesCount].name.Replace("-up", "").Replace("-down", "").Replace("-dn", "").Trim();
                             myChart.Select();
                             Excel.SeriesCollection seriesCollection = (Excel.SeriesCollection)chartPage.SeriesCollection();
                             Excel.Series os1 = seriesCollection.NewSeries();
-                            os1.Name = "UPLOAD";
+                            os1.Name = "DOWNLOAD";
                             os1.Values = collection[indexOfCol].get_Range("A3", $"A{PositionUpload}");
                             os1.XValues = collection[indexOfCol].get_Range("B3", $"B{PositionUpload}");
                             Excel.Series os2 = seriesCollection.NewSeries();
-                            os2.Name = "DOWNLOAD";
+                            os2.Name = "UPLOAD";
                             os2.Values = collection[indexOfCol].get_Range("E3", $"E{PositionDownload}");
                             os2.XValues = collection[indexOfCol].get_Range("F3", $"F{PositionDownload}");
                             indexOfCol--;

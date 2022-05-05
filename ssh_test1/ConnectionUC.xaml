@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ssh_test1"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="240">
     <Grid>
@@ -37,10 +38,41 @@
         </Grid>
         <Grid Grid.Row="2">
             <TextBlock Width="60" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Connected: "/>
-            <Rectangle x:Name="connRec" Stroke="DarkGray" Width="100" Height="20" Margin="120,0,0,0" RadiusX="0" RadiusY="0" VerticalAlignment="Top" HorizontalAlignment="Left" Fill="Green"/>
+            <Rectangle x:Name="connRec" Stroke="DarkGray" Width="100" Height="20" Margin="120,0,0,0" RadiusX="0" RadiusY="0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Rectangle.Style>
+                    <Style TargetType="Rectangle">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <Trigger Property="Fill" Value="Red">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Fill" Value="Green">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Rectangle.Style>
+            </Rectangle>
+            <Image gif:ImageBehavior.RepeatBehavior="Forever" gif:ImageBehavior.AnimatedSource="Images/ajax-loader.gif" HorizontalAlignment="Left" Margin="145,2,0,2">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=connRec, Path=Visibility}" Value="Visible">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
         </Grid>
         <Grid Grid.Row="3">
-            <Button Content="Change connection" Click="changeCon_Click"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Change connection" Click="changeCon_Click" Height="25" Margin="10,0"/>
+            <Button Grid.Column="1" Content="Check connection" Click="checkCon_Click" Height="25" Margin="10,0"/>
         </Grid>
 
     </Grid>

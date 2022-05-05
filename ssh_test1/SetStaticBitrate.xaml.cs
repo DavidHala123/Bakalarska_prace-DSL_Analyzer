@@ -30,19 +30,35 @@ namespace ssh_test1
         }
         private void populateListData() 
         {
-            var lines = File.ReadAllLines(@"Config\Bitrate.txt");
-            foreach(string line in lines) 
+            try 
             {
-                string[] parts = line.Split(';');
-                lw.Items.Add(new BitrateInfo { name = parts[0], upbitr = Convert.ToDouble(parts[1]), downbitr = Convert.ToDouble(parts[2]) });
+                var lines = File.ReadAllLines(@"Config\Bitrate.txt");
+                foreach (string line in lines)
+                {
+                    string[] parts = line.Split(';');
+                    lw.Items.Add(new BitrateInfo { name = parts[0], upbitr = Convert.ToDouble(parts[1]), downbitr = Convert.ToDouble(parts[2]) });
+                }
+            }
+            catch 
+            {
+                MessageBox.Show("File you are trying to read located at: " + System.IO.Path.GetFullPath(@"Config\Bitrate.txt").ToString() + " does not have the right format");
             }
         }
 
         private void plusBut_Click(object sender, RoutedEventArgs e)
         {
-            File.AppendAllText(@"Config\Bitrate.txt",$"{annexText.Text};{upbitrText.Text};{downbitrText.Text}\n");
-            lw.Items.Clear();
-            populateListData();
+            try 
+            {
+                double upbr = Convert.ToDouble(upbitrText.Text);
+                double downbr = Convert.ToDouble(downbitrText.Text);
+                File.AppendAllText(@"Config\Bitrate.txt", $"{annexText.Text};{upbitrText.Text};{downbitrText.Text}\n");
+                lw.Items.Clear();
+                populateListData();
+            }
+            catch 
+            {
+                MessageBox.Show("Please provide bitrate input with numbers only.");
+            }
 
         }
 

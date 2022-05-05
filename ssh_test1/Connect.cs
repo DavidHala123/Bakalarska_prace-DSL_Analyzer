@@ -8,7 +8,8 @@ namespace ssh_test1
         public Connect()
         {
         }
-        public bool con()
+
+        public bool con(bool isCheck)
         {
             AuthenticationMethod method = new PasswordAuthenticationMethod(ConData.name, ConData.password);
             ConnectionInfo connection = new ConnectionInfo(ConData.ipv4, ConData.name, method);
@@ -19,12 +20,14 @@ namespace ssh_test1
             }
             catch
             {
-                MessageBox.Show("An error has occured please check your connection data");
+                if (!isCheck)
+                    MessageBox.Show("An error has occured please check your connection data");
                 return false;
             }
             if (client.IsConnected)
             {
-                MessageBox.Show("Connection has been successful");
+                if (!isCheck)
+                    MessageBox.Show("Connection has been successful");
                 client.Disconnect();
                 return true;
             }

@@ -37,36 +37,36 @@ namespace ssh_test1
         }
 
         private string _ipAddr = ConData.ipv4;
-        public string ipAddr 
+        public string ipAddr
         {
             get { return _ipAddr; }
-            set 
+            set
             {
-                if(_ipAddr != value) 
+                if (_ipAddr != value)
                 {
                     _ipAddr = value;
                 }
             }
         }
         private string _name = ConData.name;
-        public string name 
+        public string name
         {
             get { return _name; }
-            set 
+            set
             {
-                if(_name != value) 
+                if (_name != value)
                 {
                     _name = value;
                 }
             }
         }
         private string _pass = ConData.password;
-        public string pass 
+        public string pass
         {
             get { return _pass; }
-            set 
+            set
             {
-                if(_pass != value)
+                if (_pass != value)
                 {
                     _pass = value;
                 }
@@ -80,8 +80,20 @@ namespace ssh_test1
             this.optb = optb;
             DataContext = this;
             InitializeComponent();
+            RectangeFill();
             this.wind = wind;
             passText.Text = "*****";
+        }
+
+        private async Task RectangeFill()
+        {
+            connRec.Visibility = Visibility.Collapsed;
+            bool connection = await Task.Run(() => new Connect().con(true));
+            if (connection)
+                connRec.Fill = new SolidColorBrush(Colors.Green);
+            else
+                connRec.Fill = new SolidColorBrush(Colors.Red);
+            connRec.Visibility = Visibility.Visible;
         }
 
         private void ShowHideButton_Click(object sender, RoutedEventArgs e)
@@ -104,6 +116,11 @@ namespace ssh_test1
             optb.Close();
             if (ConData.name != name || ConData.ipv4 != ipv4)
                 wind.conChanged = true;
+        }
+
+        private void checkCon_Click(object sender, RoutedEventArgs e)
+        {
+            RectangeFill();
         }
     }
 }
