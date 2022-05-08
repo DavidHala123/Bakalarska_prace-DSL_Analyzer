@@ -11,6 +11,9 @@
     <None Remove="ajax-loader.gif" />
     <None Remove="Config\Bitrate.txt" />
     <None Remove="down.png" />
+    <None Remove="Images\con_cion.png" />
+    <None Remove="Images\edit_icon.png" />
+    <None Remove="Images\file_icon.png" />
     <None Remove="Images\minusIcon.png" />
     <None Remove="Images\plusIcon.png" />
     <None Remove="Images\reload_but.png" />
@@ -44,7 +47,16 @@
 
   <ItemGroup>
     <Resource Include="Images\ajax-loader.gif" />
+    <Resource Include="Images\con_cion.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\down.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\edit_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\file_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\minusIcon.png">

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ssh_test1"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="240">
+             d:DesignHeight="300" d:DesignWidth="275">
     <Grid>
         <Grid.ColumnDefinitions>
 
@@ -17,7 +17,7 @@
             <RowDefinition Height="*">
 
             </RowDefinition>
-            <RowDefinition Height="50">
+            <RowDefinition Height="40">
 
             </RowDefinition>
         </Grid.RowDefinitions>
@@ -25,7 +25,7 @@
             <TextBlock Text="Select charts:" Padding="10,10,0,0" Margin="0,0,0,0" FontSize="18" Grid.ColumnSpan="2"/>
         </Grid>
         <Grid Grid.Row="1">
-            <StackPanel VerticalAlignment="Center">
+            <StackPanel VerticalAlignment="Center" Grid.Row="0">
                 <CheckBox  x:Name="LoadDistribution" Content="load-distribution" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="LoadDistribution_Checked" Unchecked="LoadDistribution_Unchecked"/>
                 <CheckBox x:Name="GainAllocation" Content="gain-allocation" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="GainAllocation_Checked" Unchecked="GainAllocation_Unchecked"/>
                 <CheckBox x:Name="Snr" Content="snr" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="Snr_Checked" Unchecked="Snr_Unchecked"/>
@@ -33,7 +33,6 @@
                 <CheckBox x:Name="FuncComplex" Content="char-func-complex" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="FuncComplex_Checked" Unchecked="FuncComplex_Unchecked"/>
                 <CheckBox x:Name="FuncReal" Content="char-func-real" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="FuncReal_Checked" Unchecked="FuncReal_Unchecked"/>
                 <CheckBox x:Name="TxPsd" Content="tx-psd" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="TxPsd_Checked" Unchecked="TxPsd_Unchecked"/>
-
             </StackPanel>
         </Grid>
         <Grid Grid.Row="2">

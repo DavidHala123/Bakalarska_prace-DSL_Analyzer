@@ -47,6 +47,9 @@
             <DockPanel>
                 <Menu VerticalAlignment="Center">
                     <MenuItem Header="File">
+                        <MenuItem.Icon>
+                            <Image Source="Images/file_icon.png" Width="12" Opacity="0.8"/>
+                        </MenuItem.Icon>
                         <MenuItem Header="Open" Click="Open_Click" x:Name="LoadButton"/>
                         <MenuItem Header="Save" Click="Save_Click" x:Name="SaveButton">
                             <MenuItem.Style>
@@ -86,12 +89,45 @@
                             <MenuItem Header="CSV" Click="ExportCSV_Click"/>
                         </MenuItem>
                     </MenuItem>
+                    <Separator Width="1" Height="14">
+                        <Separator.Style>
+                            <Style TargetType="{x:Type Separator}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Separator}">
+                                            <Border Padding="0" Margin="0" BorderThickness="0" Background="#40000000"></Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Separator.Style>
+                    </Separator>
                     <MenuItem Header="Edit">
+                        <MenuItem.Icon>
+                            <Image Source="Images/edit_icon.png" Width="12" Opacity="0.8"/>
+                        </MenuItem.Icon>
                         <MenuItem Header="Select Charts" Click="OptionsButton_Click" x:Name="OptionsButton"/>
                         <MenuItem Header="Chart appearance" Click="ChartAppearence_Click" x:Name="ChartApp"/>
                         <MenuItem Header="Set static Bitrate" Click="setStaticBit_Click" x:Name="StaticBitr"/>
                     </MenuItem>
-                    <MenuItem Header="Connection" Click="ConDetails_Click"/>
+                    <Separator Width="1" Height="14">
+                        <Separator.Style>
+                            <Style TargetType="{x:Type Separator}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Separator}">
+                                            <Border Padding="0" Margin="0" BorderThickness="0" Background="#40000000"></Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Separator.Style>
+                    </Separator>
+                    <MenuItem Header="Connection" Click="ConDetails_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Images/con_cion.png" Width="10" Opacity="0.8"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </Menu>
             </DockPanel>
         </Grid>
