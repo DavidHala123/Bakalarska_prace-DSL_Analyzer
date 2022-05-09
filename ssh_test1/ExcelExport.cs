@@ -12,7 +12,7 @@ namespace ssh_test1
 {
     internal class ExcelExport
     {
-        public ExcelExport(List<ChartValues> values, List<bool> graphs)
+        public ExcelExport(List<ChartValues> values, List<bool> graphs, double hzCons)
         {
             var _excel = new Excel.Application();
             try
@@ -48,7 +48,7 @@ namespace ssh_test1
                                     collection[indexOfCol].Cells[PositionUpload, 2] = values[valuesCount].Xvals[y];
                                     collection[indexOfCol].Cells[PositionUpload, 1] = values[valuesCount].Yvals[y];
                                     PositionUpload++;
-                                    if (values[valuesCount].Xvals[y] + 1 != values[valuesCount].Xvals[y + 1])
+                                    if ((values[valuesCount].Xvals[y + 1]) - (values[valuesCount].Xvals[y]) > Math.Ceiling(hzCons))
                                         PositionUpload++;
                                 }
                                 catch
@@ -67,7 +67,7 @@ namespace ssh_test1
                                     collection[indexOfCol].Cells[PositionDownload, 6] = values[valuesCount - 1].Xvals[xparam];
                                     collection[indexOfCol].Cells[PositionDownload, 5] = values[valuesCount - 1].Yvals[xparam];
                                     PositionDownload++;
-                                    if (values[valuesCount - 1].Xvals[xparam] + 1 != values[valuesCount - 1].Xvals[xparam + 1])
+                                    if ((values[valuesCount - 1].Xvals[xparam + 1]) - (values[valuesCount - 1].Xvals[xparam]) > Math.Ceiling(hzCons))
                                         PositionDownload++;
                                 }
                                 catch

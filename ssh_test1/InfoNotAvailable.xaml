@@ -8,7 +8,7 @@
              d:DesignHeight="505" d:DesignWidth="220">
     <Grid Background="White" Opacity="0.6">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Margin="10" MaxHeight="505" MaxWidth="220" Text="INFORMATION ARE NOT AVAILABLE IF DATA WAS RETRIEVED FROM FILE" FontSize="15" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock Margin="10" MaxHeight="505" MaxWidth="220" Text="INFORMATION ARE NOT AVAILABLE IN THIS FILE" FontSize="15" TextAlignment="Center" TextWrapping="Wrap"/>
         </StackPanel>
     </Grid>
 </UserControl>

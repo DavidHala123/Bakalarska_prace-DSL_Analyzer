@@ -61,7 +61,6 @@ namespace ssh_test1
         {
             ConsoleUC.ConsoleText = "2";
             StreamReader reader = new StreamReader(shell);
-            int lengthBefore = -1;
             while (true)
             {
                 string line = reader.ReadLine();

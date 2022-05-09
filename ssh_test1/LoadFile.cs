@@ -11,6 +11,8 @@ namespace ssh_test1
 {
     internal class LoadFile
     {
+        private string generalInfo = "";
+        private string rtInfo = "";
         private string farEnd = "";
         private string nearEnd = "";
         private string textOfFile = "";
@@ -33,6 +35,15 @@ namespace ssh_test1
                 textOfFile = File.ReadAllText(opf.FileName);
                 try 
                 {
+                    try 
+                    {
+                        generalInfo = textOfFile.Substring(textOfFile.IndexOf("---GENERAL INFO---"), textOfFile.IndexOf("---RT INFO---") - textOfFile.IndexOf("---GENERAL INFO---"));
+                        rtInfo = textOfFile.Substring(textOfFile.IndexOf("---RT INFO---"), textOfFile.IndexOf("---FAR END---") - textOfFile.IndexOf("---RT INFO---"));
+                    }
+                    catch 
+                    {
+    
+                    }
                     farEnd = textOfFile.Substring(textOfFile.IndexOf("---FAR END---"), textOfFile.IndexOf("---NEAR END---") - textOfFile.IndexOf("---FAR END---"));
                     nearEnd = textOfFile.Substring(textOfFile.IndexOf("---NEAR END---"), textOfFile.IndexOf("---END OF FILE---") - textOfFile.IndexOf("---NEAR END---"));
                     isOk = true;
@@ -51,9 +62,11 @@ namespace ssh_test1
 
         public string[] getFarNearData() 
         {
-            string[] output = {"", "" };
-            output[0] = farEnd;
-            output[1] = nearEnd;
+            string[] output = {"", "", "", "" };
+            output[0] = generalInfo;
+            output[1] = rtInfo;
+            output[2] = farEnd;
+            output[3] = nearEnd;
             return output;
         }
         public string getFileName() 

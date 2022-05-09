@@ -34,9 +34,11 @@ namespace ssh_test1
                 MessageBox.Show("Unable to load port information. Please check your connection to the DSLAM");
             }
         }
-
+        private double hzCons = 1;
         string dataFarEnd = "";
         string dataNearEnd = "";
+        string generalInfo = "";
+        string rtInfo = "";
         private bool _conChanged = false;
         public bool conChanged 
         {
@@ -100,17 +102,6 @@ namespace ssh_test1
             set 
             {
                 _fromFile = value;
-                if(value == true) 
-                {
-                    infoTable.suppm_value.Items.Clear();
-                    infoTable.txPsdDOWN = "";
-                    if(infoGrid.Children.Count < 2)
-                        infoGrid.Children.Add(infoNot);
-                }
-                else 
-                {
-                    infoGrid.Children.Remove(infoNot);
-                }
             } 
         }
 
@@ -164,15 +155,20 @@ namespace ssh_test1
                 ConsoleUC.ConsoleText = "3";
                 infoTable.fromConfig = false;
                 GraphField.Items.Clear();
-                int realtimeInfo = 0;
                 int charVindex = 0;
                 if (!fromFile)
                 {
                     dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
                     dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
-                    realtimeInfo = 1;
                 }
+                else 
+                {
+                    infoTable.generalInfo = generalInfo;
+                    infoTable.rtInfo = rtInfo;
+                }
+                infoTable.fromfile = fromFile;
                 graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector, infoTable.current_mode, _hz));
+                hzCons = graphLog.hzConstant;
                 for (int i = 0; i < graphSelector.Count(); i++)
                 {
                     if (graphSelector[i])
@@ -183,69 +179,10 @@ namespace ssh_test1
                             Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
                             Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload, infoTable.current_mode, _hz),
                         });
+                        if (charVindex == 0)
+                            await Task.Run(() => getAttainableBitrate());
                         charVindex += 2;
                     }
-                }
-                if (realtimeInfo == 1)
-                {
-                    if (File.Exists(@"Config\Bitrate.txt")) 
-                    {
-                        MessageBox.Show("ppc");
-                        var fileLines = File.ReadAllLines(@"Config\Bitrate.txt");
-                        foreach (string line in fileLines)
-                        {
-                            string[] values = line.Split(';');
-                            if (values[0] == infoTable.current_mode)
-                            {
-                                infoTable.attaBitrateUP = Int32.Parse(values[1]);
-                                infoTable.attaBitrateDOWN = Int32.Parse(values[2]);
-                                infoTable.fromConfig = true;
-                            }
-                        }
-                    }
-                    if (!infoTable.fromConfig)
-                    {
-                        int maxBitUP = 0;
-                        int maxBitDOWN = 0;
-                        if (infoTable.current_mode == "gfast")
-                        {
-                            infoTable.attaBitrateUP = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5) / 7000000);
-                            infoTable.attaBitrateDOWN = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5 * 6) / 7000000);
-                        }
-                        else
-                        {
-                            if (!graphSelector[0])
-                            {
-                                graphLog.SelectGraphNeeeded(0);
-                                foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 2].Yvals)
-                                {
-                                    maxBitUP += integer;
-                                    MessageBox.Show(maxBitUP.ToString());
-                                }
-                                foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 1].Yvals)
-                                {
-                                    maxBitDOWN += integer;
-                                }
-                            }
-                            else
-                            {
-                                foreach (int integer in graphLog.chartV[0].Yvals)
-                                {
-                                    maxBitUP += integer;
-                                }
-                                foreach (int integer in graphLog.chartV[1].Yvals)
-                                {
-                                    maxBitDOWN += integer;
-                                }
-                            }
-                            infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
-                            infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
-                        }
-                    }
-                    infoTable.chartValuesCount = graphLog.chartV[0].Xvals.Count() + graphLog.chartV[1].Xvals.Count;
-                    infoTable.chartValuesUP = graphLog.chartV[0].Xvals.Count;
-                    infoTable.realtime = true;
-                    realtimeInfo += 1;
                 }
             }
             catch
@@ -257,9 +194,71 @@ namespace ssh_test1
             infoTable.realtime = false;
         }
 
+        private void getAttainableBitrate() 
+        {
+            if(!fromFile)
+                infoTable.realtime = true;
+            if (File.Exists(@"Config\Bitrate.txt"))
+            {
+                var fileLines = File.ReadAllLines(@"Config\Bitrate.txt");
+                foreach (string line in fileLines)
+                {
+                    string[] values = line.Split(';');
+                    if (values[0] == infoTable.current_mode)
+                    {
+                        infoTable.attaBitrateUP = Int32.Parse(values[1]);
+                        infoTable.attaBitrateDOWN = Int32.Parse(values[2]);
+                        infoTable.fromConfig = true;
+                    }
+                }
+            }
+            if (!infoTable.fromConfig)
+            {
+                int maxBitUP = 0;
+                int maxBitDOWN = 0;
+                if (infoTable.current_mode == "gfast")
+                {
+                    infoTable.attaBitrateUP = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5) / 7000000);
+                    infoTable.attaBitrateDOWN = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5 * 6) / 7000000);
+                }
+                else
+                {
+                    if (!graphSelector[0])
+                    {
+                        graphLog.SelectGraphNeeeded(0);
+                        foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 2].Yvals)
+                        {
+                            maxBitUP += integer;
+                        }
+                        foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 1].Yvals)
+                        {
+                            maxBitDOWN += integer;
+                        }
+                    }
+                    else
+                    {
+                        foreach (int integer in graphLog.chartV[0].Yvals)
+                        {
+                            maxBitUP += integer;
+                        }
+                        foreach (int integer in graphLog.chartV[1].Yvals)
+                        {
+                            maxBitDOWN += integer;
+                        }
+                    }
+                    infoTable.attaBitrateUP = (maxBitUP * 4000) / 1000000;
+                    infoTable.attaBitrateDOWN = (maxBitDOWN * 4000) / 1000000;
+                }
+            }
+            infoTable.chartValuesCount = graphLog.chartV[0].Xvals.Count() + graphLog.chartV[1].Xvals.Count;
+            infoTable.chartValuesUP = graphLog.chartV[0].Xvals.Count;
+        }
+
         private void PortBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(PortBox.SelectedIndex >= 0) 
+            if (infoGrid.Children.Count >= 2)
+                infoGrid.Children.Remove(infoNot);
+            if (PortBox.SelectedIndex >= 0) 
             {
                 GraphField.Items.Clear();
                 dataFarEnd = "";
@@ -295,7 +294,7 @@ namespace ssh_test1
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            SaveFile svfl = new SaveFile(dataFarEnd, dataNearEnd);
+            SaveFile svfl = new SaveFile(dataFarEnd, dataNearEnd, infoTable.generalInfo, infoTable.rtInfo);
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -307,12 +306,21 @@ namespace ssh_test1
                 string[] dataFile = lofl.getFarNearData();
                 PortBox.Items.Insert(0, new PortData { portName = lofl.getFileName(), portState = @"Images\txt_file.png" });
                 PortBox.SelectedIndex = 0;
-                dataFarEnd = dataFile[0];
-                dataNearEnd = dataFile[1];
+                generalInfo = dataFile[0];
+                rtInfo = dataFile[1];
+                dataFarEnd = dataFile[2];
+                dataNearEnd = dataFile[3];
                 var itemAtOne = (PortData)PortBox.Items[1];
                 if (itemAtOne.portName.Contains(".txt"))
                 {
                     PortBox.Items.RemoveAt(1);
+                }
+                if (String.IsNullOrEmpty(generalInfo) || String.IsNullOrEmpty(rtInfo))
+                {
+                    infoTable.suppm_value.Items.Clear();
+                    infoTable.txPsdDOWN = "";
+                    if (infoGrid.Children.Count < 2)
+                        infoGrid.Children.Add(infoNot);
                 }
                 send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
@@ -320,7 +328,7 @@ namespace ssh_test1
 
         private async void ExportExcel_Click(object sender, RoutedEventArgs e)
         {
-            ExcelExport exc = await Task.Run(() => new ExcelExport(graphLog.chartV, graphSelector));
+            ExcelExport exc = await Task.Run(() => new ExcelExport(graphLog.chartV, graphSelector, hzCons));
             ConsoleUC.ConsoleText = "0";
         }
 
@@ -378,6 +386,8 @@ namespace ssh_test1
         private void hzCarBt_Click(object sender, RoutedEventArgs e)
         {
             _hz = !_hz;
+            if (!_hz)
+                hzCons = 1;
             hzCarBt.Content = _hz ? "Hertz" : "Carriers";
             if(GraphField.HasItems)
                 send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));

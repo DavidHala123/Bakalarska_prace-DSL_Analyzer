@@ -32,6 +32,21 @@ namespace ssh_test1
             InitializeComponent();
         }
 
+        private bool _fromfile = false;
+        public bool fromfile 
+        {
+            get { return _fromfile; }
+            set 
+            {
+                _fromfile = value; 
+                if(value == true) 
+                {
+                    populateGeneralInfo();
+                    populateRealTimeInfo();
+                }
+            }
+        }
+
         public bool realtime 
         {
             set 
@@ -322,13 +337,27 @@ namespace ssh_test1
                 NotifyPropertyChanged(); 
             }
         }
+        private string _generalInfo;
+        public string generalInfo 
+        {
+            get { return _generalInfo; }
+            set { _generalInfo = value; }
+        }
+        private string _rtInfo;
+        public string rtInfo
+        {
+            get { return _rtInfo; }
+            set { _rtInfo = value; }
+        }
+
         private async Task populateGeneralInfo()
         {
             suppm_value.Items.Clear();
             suppm_fontSize = 12;
             string supmodes = "";
-            string generalInfo1 = await Task.Run(() => (new SendData("show xdsl operational-data line " + portIndex + " detail").getResponse()) + new SendData("show xdsl operational-data near-end line " + portIndex + " detail").getResponse());
-            string[] output = generalInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+            if (!fromfile)
+                generalInfo = await Task.Run(() => (new SendData("show xdsl operational-data line " + portIndex + " detail").getResponse()) + new SendData("show xdsl operational-data near-end line " + portIndex + " detail").getResponse());
+            string[] output = generalInfo.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < output.Length; i++)
             {
                 switch (output[i])
@@ -374,20 +403,17 @@ namespace ssh_test1
             string attbrUP = "";
             string actbrDOWN = "";
             string attbrDOWN = "";
-            string rtInfo1 = await Task.Run(() => new SendData("show xdsl operational-data near-end channel " + portIndex + " detail").getResponse());
-            string rtInfo2 = await Task.Run(() => new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse());
-            string rtInfo3 = await Task.Run(() => new SendData("show xdsl operational-data near-end line " + portIndex + " detail").getResponse());
-            string rtInfo4 = await Task.Run(() => new SendData("show xdsl operational-data far-end line " + portIndex + " detail").getResponse());
-            string[] output1 = rtInfo1.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-            string[] output2 = rtInfo2.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-            string[] output3 = rtInfo3.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-            string[] output4 = rtInfo4.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-            string[] outputCombined1 = output1.Concat(output2).ToArray();
-            string[] outputCombined2 = output3.Concat(output4).ToArray();
-            string[] outputCombined = outputCombined1.Concat(outputCombined2).ToArray();
-            for (int i = 0; i < outputCombined.Length; i++)
+            if(!fromfile) 
             {
-                switch (outputCombined[i])
+                rtInfo = await Task.Run(() => new SendData("show xdsl operational-data near-end channel " + portIndex + " detail").getResponse() +
+                                                new SendData("show xdsl operational-data far-end channel " + portIndex + " detail").getResponse() +
+                                                new SendData("show xdsl operational-data near-end line " + portIndex + " detail").getResponse() +
+                                                new SendData("show xdsl operational-data far-end line " + portIndex + " detail").getResponse());
+            }
+            string[] output = rtInfo.Replace(" : ", ":").Split(new String[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < output.Length; i++)
+            {
+                switch (output[i])
                 {
                     case string generaldata when generaldata.Contains("attain-bitrate-up"):
                         string[] attBUP = generaldata.Split(':');
