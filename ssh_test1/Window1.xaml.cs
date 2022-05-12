@@ -169,6 +169,7 @@ namespace ssh_test1
                     infoTable.generalInfo = varData.generalInfo;
                     infoTable.rtInfo = varData.rtInfo;
                 }
+                infoTable.fromfile = fromFile;
                 graphLog = await Task.Run(() => new GraphLogic(varData.dataFarEnd, varData.dataNearEnd, graphSelector, infoTable.current_mode, _hz));
                 varData.hzCons = graphLog.hzConstant;
                 for (int i = 0; i < graphSelector.Count(); i++)
@@ -284,7 +285,6 @@ namespace ssh_test1
                         PortBox.Items.RemoveAt(0);
                     }
                     fromFile = false;
-                    infoTable.fromfile = fromFile;
                     infoTable.portIndex = selected.portName.ToString();
                 }
             }
