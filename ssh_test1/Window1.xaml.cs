@@ -22,8 +22,11 @@ namespace ssh_test1
     {
         GraphLogic graphLog;
         InfoNotAvailable infoNot = new InfoNotAvailable();
+        VarData varData = new VarData();
         public Window1()
         {
+            varData.hzCons = 1;
+            varData.conChanged = false;
             InitializeComponent();
             try 
             {
@@ -34,22 +37,22 @@ namespace ssh_test1
                 MessageBox.Show("Unable to load port information. Please check your connection to the DSLAM");
             }
         }
-        private double hzCons = 1;
-        string dataFarEnd = "";
-        string dataNearEnd = "";
-        string generalInfo = "";
-        string rtInfo = "";
-        private bool _conChanged = false;
+        //private double hzCons = 1;
+        //string dataFarEnd = "";
+        //string dataNearEnd = "";
+        //string generalInfo = "";
+        //string rtInfo = "";
+        //private bool _conChanged = false;
         public bool conChanged 
         {
             set 
             {
-                _conChanged = value;
+                varData.conChanged = value;
                 if(value == true) 
                 {
                     PortBox.SelectedIndex = -1;
                     reload.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    _conChanged = false;
+                    varData.conChanged = false;
                 }
 
             }
@@ -158,17 +161,16 @@ namespace ssh_test1
                 int charVindex = 0;
                 if (!fromFile)
                 {
-                    dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
-                    dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
+                    varData.dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
+                    varData.dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
                 }
                 else 
                 {
-                    infoTable.generalInfo = generalInfo;
-                    infoTable.rtInfo = rtInfo;
+                    infoTable.generalInfo = varData.generalInfo;
+                    infoTable.rtInfo = varData.rtInfo;
                 }
-                infoTable.fromfile = fromFile;
-                graphLog = await Task.Run(() => new GraphLogic(dataFarEnd, dataNearEnd, graphSelector, infoTable.current_mode, _hz));
-                hzCons = graphLog.hzConstant;
+                graphLog = await Task.Run(() => new GraphLogic(varData.dataFarEnd, varData.dataNearEnd, graphSelector, infoTable.current_mode, _hz));
+                varData.hzCons = graphLog.hzConstant;
                 for (int i = 0; i < graphSelector.Count(); i++)
                 {
                     if (graphSelector[i])
@@ -261,8 +263,8 @@ namespace ssh_test1
             if (PortBox.SelectedIndex >= 0) 
             {
                 GraphField.Items.Clear();
-                dataFarEnd = "";
-                dataNearEnd = "";
+                varData.dataFarEnd = String.Empty;
+                varData.dataNearEnd = String.Empty;
                 if (fromFile && PortBox.SelectedIndex == 0)
                 {
                     return;
@@ -282,6 +284,7 @@ namespace ssh_test1
                         PortBox.Items.RemoveAt(0);
                     }
                     fromFile = false;
+                    infoTable.fromfile = fromFile;
                     infoTable.portIndex = selected.portName.ToString();
                 }
             }
@@ -294,7 +297,7 @@ namespace ssh_test1
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            SaveFile svfl = new SaveFile(dataFarEnd, dataNearEnd, infoTable.generalInfo, infoTable.rtInfo);
+            SaveFile svfl = new SaveFile(varData.dataFarEnd, varData.dataNearEnd, infoTable.generalInfo, infoTable.rtInfo);
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -306,16 +309,16 @@ namespace ssh_test1
                 string[] dataFile = lofl.getFarNearData();
                 PortBox.Items.Insert(0, new PortData { portName = lofl.getFileName(), portState = @"Images\txt_file.png" });
                 PortBox.SelectedIndex = 0;
-                generalInfo = dataFile[0];
-                rtInfo = dataFile[1];
-                dataFarEnd = dataFile[2];
-                dataNearEnd = dataFile[3];
+                varData.generalInfo = dataFile[0];
+                varData.rtInfo = dataFile[1];
+                varData.dataFarEnd = dataFile[2];
+                varData.dataNearEnd = dataFile[3];
                 var itemAtOne = (PortData)PortBox.Items[1];
                 if (itemAtOne.portName.Contains(".txt"))
                 {
                     PortBox.Items.RemoveAt(1);
                 }
-                if (String.IsNullOrEmpty(generalInfo) || String.IsNullOrEmpty(rtInfo))
+                if (String.IsNullOrEmpty(varData.generalInfo) || String.IsNullOrEmpty(varData.rtInfo))
                 {
                     infoTable.suppm_value.Items.Clear();
                     infoTable.txPsdDOWN = "";
@@ -328,7 +331,7 @@ namespace ssh_test1
 
         private async void ExportExcel_Click(object sender, RoutedEventArgs e)
         {
-            ExcelExport exc = await Task.Run(() => new ExcelExport(graphLog.chartV, graphSelector, hzCons));
+            ExcelExport exc = await Task.Run(() => new ExcelExport(graphLog.chartV, graphSelector, varData.hzCons));
             ConsoleUC.ConsoleText = "0";
         }
 
@@ -387,7 +390,7 @@ namespace ssh_test1
         {
             _hz = !_hz;
             if (!_hz)
-                hzCons = 1;
+                varData.hzCons = 1;
             hzCarBt.Content = _hz ? "Hertz" : "Carriers";
             if(GraphField.HasItems)
                 send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));

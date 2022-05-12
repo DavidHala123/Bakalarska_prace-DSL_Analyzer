@@ -352,7 +352,8 @@ namespace ssh_test1
 
         private async Task populateGeneralInfo()
         {
-            suppm_value.Items.Clear();
+            if(suppm_value.HasItems)
+                suppm_value.Items.Clear();
             suppm_fontSize = 12;
             string supmodes = "";
             if (!fromfile)
