@@ -80,8 +80,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Change connection" Click="changeCon_Click" Height="25" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10"/>
-            <Button Grid.Column="1" Content="Check connection" Click="checkCon_Click" Height="25" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10"/>
+            <Button Grid.Column="0" Content="Change connection" Click="changeCon_Click" Height="25" Width="110" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10"/>
+            <Button Grid.Column="1" Content="Check connection" Click="checkCon_Click" Height="25" Width="110" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10"/>
         </Grid>
 
     </Grid>

@@ -91,12 +91,13 @@ namespace ssh_test1
                 if (_graphSelector != value)
                 {
                     _graphSelector = value;
+                    selectionChanged = true;
                     if(GraphField.HasItems)
                         send.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                 }
             }
         }
-
+        private bool selectionChanged = false;
         private bool _fromFile = false;
 
         public bool fromFile 
@@ -159,12 +160,12 @@ namespace ssh_test1
                 infoTable.fromConfig = false;
                 GraphField.Items.Clear();
                 int charVindex = 0;
-                if (!fromFile)
+                if (!fromFile && !selectionChanged)
                 {
                     varData.dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
                     varData.dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
                 }
-                else 
+                else if(!selectionChanged)
                 {
                     infoTable.generalInfo = varData.generalInfo;
                     infoTable.rtInfo = varData.rtInfo;
@@ -182,11 +183,12 @@ namespace ssh_test1
                             Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
                             Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload, infoTable.current_mode, _hz),
                         });
-                        if (charVindex == 0)
+                        if (charVindex == 0 && !selectionChanged)
                             await Task.Run(() => getAttainableBitrate());
                         charVindex += 2;
                     }
                 }
+                selectionChanged = false;
             }
             catch
             {
