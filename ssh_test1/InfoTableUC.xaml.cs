@@ -379,7 +379,7 @@ namespace ssh_test1
                         string[] curopOutput = generaldata.Split(':');
                         current_mode = curopOutput[1];
                         break;
-                    case string generaldata when generaldata.Replace("-", " ").Contains("g992") || generaldata.Replace("-", " ").Contains("g993"):
+                    case string generaldata when generaldata.Replace("-", " ").Contains("g992") || generaldata.Replace("-", " ").Contains("g993") || generaldata.Replace("-", " ").Contains("ansi") || generaldata.Replace("-", " ").Contains("etsi") || generaldata.Replace("-", " ").Contains("itu") || generaldata.Replace("-", " ").Contains("ieee"):
                             string[] suppmoOutput = generaldata.Split(':');;
                         if (!suppmoOutput[1].Contains("dis") && !suppmoOutput[0].Contains("actual-opmode"))
                             suppm_value.Items.Add(suppmoOutput[1].Replace(" ", "-"));

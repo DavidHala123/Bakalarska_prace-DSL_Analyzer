@@ -173,6 +173,22 @@ namespace ssh_test1
                     }
                     break;
                 case string name when inputSplit[0].Contains("char-func-complex"):
+                    //adder = 6;
+                    //string scale = 
+                    //while ((check) * 2 + adder < bitload.Length)
+                    //{
+                    //    string startIndex = "";
+                    //    string stopIndex = "";
+                    //    for (i = (check) * 2 + adder; i < (check) * 2 + adder + 8; i++)
+                    //    {
+                    //        if (i < (check) * 2 + adder + 4)
+                    //            startIndex += bitload[i];
+                    //        else
+                    //            stopIndex += bitload[i];
+                    //    }
+                    //    adder += 8;
+                    //    check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -32, 2, carrGrp, 255, name);
+                    //}
                     break;
                 case string name when inputSplit[0].Contains("char-func-real"):
                     adder = 4;
