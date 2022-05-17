@@ -22,101 +22,51 @@ namespace ssh_test1
     {
         Window1 wind;
         OptionsBase optb;
-        private List<bool> output = new List<bool>();
-        private String[] outputString = new String[7];
+        private string mode;
         private List<bool> listOfChecks;
-        public SelectChartsUC(Window1 wind, OptionsBase optb)
+        public SelectChartsUC(Window1 wind, OptionsBase optb, string mode)
         {
             this.optb = optb;
             this.wind = wind;
+            this.mode = mode;
             listOfChecks = wind.graphSelector;
             InitializeComponent();
             LoadDistribution.IsChecked = listOfChecks[0];
             GainAllocation.IsChecked = listOfChecks[1];
             Snr.IsChecked = listOfChecks[2];
-            Qln.IsChecked = listOfChecks[3];
+            if(mode == "G-fast")
+                Qln.IsChecked = listOfChecks[8];
+            else
+                Qln.IsChecked = listOfChecks[3];
             FuncComplex.IsChecked = listOfChecks[4];
             FuncReal.IsChecked = listOfChecks[5];
             TxPsd.IsChecked = listOfChecks[6];
-        }
-
-        private void LoadDistribution_Checked(object sender, RoutedEventArgs e)
-        {
-            outputString[0] = "1";
-        }
-
-        private void GainAllocation_Checked(object sender, RoutedEventArgs e)
-        {
-            outputString[1] = "1";
-        }
-
-        private void Snr_Checked(object sender, RoutedEventArgs e)
-        {
-            outputString[2] = "1";
-        }
-        private void Qln_Checked(object sender, RoutedEventArgs e)
-        {
-            outputString[3] = "1";
-        }
-
-        private void FuncComplex_Checked(object sender, RoutedEventArgs e)
-        {
-            outputString[4] = "1";
-        }
-
-        private void FuncReal_Checked(object sender, RoutedEventArgs e)
-        {
-            outputString[5] = "1";
-        }
-
-        private void TxPsd_Checked(object sender, RoutedEventArgs e)
-        {
-            outputString[6] = "1";
-        }
-
-        private void LoadDistribution_Unchecked(object sender, RoutedEventArgs e)
-        {
-            outputString[0] = "0";
-        }
-
-        private void GainAllocation_Unchecked(object sender, RoutedEventArgs e)
-        {
-            outputString[1] = "0";
-        }
-
-        private void Snr_Unchecked(object sender, RoutedEventArgs e)
-        {
-            outputString[2] = "0";
-        }
-        private void Qln_Unchecked(object sender, RoutedEventArgs e)
-        {
-            outputString[3] = "0";
-        }
-
-        private void FuncComplex_Unchecked(object sender, RoutedEventArgs e)
-        {
-            outputString[4] = "0";
-        }
-
-        private void FuncReal_Unchecked(object sender, RoutedEventArgs e)
-        {
-            outputString[5] = "0";
-        }
-
-        private void TxPsd_Unchecked(object sender, RoutedEventArgs e)
-        {
-            outputString[6] = "0";
+            if(mode != "G-fast") 
+            {
+                mcr_carr.IsEnabled = false;
+                aln.IsEnabled = false;
+            }
+            else 
+            {
+                mcr_carr.IsChecked = listOfChecks[7];
+                aln.IsChecked = listOfChecks[9];
+            }
         }
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i <= 6; i++)
+            if(mode == "G-fast") 
             {
-                if (outputString[i] != "1")
-                    output.Add(false);
-                else
-                    output.Add(true);
+                wind.graphSelector = new List<bool>() { LoadDistribution.IsChecked ?? false, GainAllocation.IsChecked ?? false,
+                    Snr.IsChecked ?? false, false, FuncComplex.IsChecked ?? false, FuncReal.IsChecked ?? false, 
+                    TxPsd.IsChecked ?? false, mcr_carr.IsChecked ?? false , Qln.IsChecked ?? false, 
+                    aln.IsChecked ?? false };
             }
-            wind.graphSelector = output;
+            else 
+            {
+                wind.graphSelector = new List<bool>() { LoadDistribution.IsChecked ?? false, GainAllocation.IsChecked ?? false,
+                    Snr.IsChecked ?? false, Qln.IsChecked ?? false, FuncComplex.IsChecked ?? false,
+                    FuncReal.IsChecked ?? false, TxPsd.IsChecked ?? false };
+            }
             optb.Close();
         }
     }

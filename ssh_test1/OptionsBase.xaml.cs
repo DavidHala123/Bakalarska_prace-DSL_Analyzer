@@ -57,11 +57,12 @@ namespace ssh_test1
                 }
             }
         }
-
+        private string mode;
         Window1 wind;
 
-        public OptionsBase(int choice, Window1 wind)
+        public OptionsBase(int choice, Window1 wind, string mode)
         {
+            this.mode = mode;
             this.wind = wind;
             InitializeComponent();
             switch (choice) 
@@ -83,7 +84,7 @@ namespace ssh_test1
         private void SelChart_Click(object sender, RoutedEventArgs e)
         {
             optCont.Children.Clear();
-            SelectChartsUC selc = new SelectChartsUC(wind, this);
+            SelectChartsUC selc = new SelectChartsUC(wind, this, mode);
             optCont.Children.Add(selc);
         }
 

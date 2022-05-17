@@ -47,6 +47,17 @@
             <DockPanel>
                 <Menu VerticalAlignment="Center">
                     <MenuItem Header="File">
+                        <MenuItem.Style>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Console, Path=XDSLStandartS}"
+                                        Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
                         <MenuItem.Icon>
                             <Image Source="Images/file_icon.png" Width="12" Opacity="0.8"/>
                         </MenuItem.Icon>
@@ -106,7 +117,19 @@
                         <MenuItem.Icon>
                             <Image Source="Images/edit_icon.png" Width="12" Opacity="0.8"/>
                         </MenuItem.Icon>
-                        <MenuItem Header="Select Charts" Click="OptionsButton_Click" x:Name="OptionsButton"/>
+                        <MenuItem Header="Select Charts" Click="OptionsButton_Click" x:Name="OptionsButton">
+                            <MenuItem.Style>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=Console, Path=XDSLStandartS}"
+                                        Value="{x:Null}">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
                         <MenuItem Header="Chart appearance" Click="ChartAppearence_Click" x:Name="ChartApp"/>
                         <MenuItem Header="Set static Bitrate" Click="setStaticBit_Click" x:Name="StaticBitr"/>
                     </MenuItem>

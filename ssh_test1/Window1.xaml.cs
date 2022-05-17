@@ -108,7 +108,7 @@ namespace ssh_test1
                 _fromFile = value;
             } 
         }
-
+        private bool isGfast { get; set; }
         private bool _hz = false;
         private List<PortData> listofobj = new List<PortData>();
 
@@ -144,10 +144,28 @@ namespace ssh_test1
                 PortBox.Items.Add(obj);
             }
             string xdslStandartStr = await Task.Run(() => new SendData("show xdsl operational-data line | match match exact:gfast").getResponse());
-            if (!xdslStandartStr.Contains("up"))
+            if (!xdslStandartStr.Contains("up")) 
+            {
                 Console.XDSLStandartS = "ADSL/VDSL";
-            else
+                if (_graphSelector.Count > 7)
+                {
+                    _graphSelector.RemoveAt(9);
+                    _graphSelector.RemoveAt(8);
+                    _graphSelector.RemoveAt(7);
+                }
+                isGfast = false;
+            }
+            else 
+            {
                 Console.XDSLStandartS = "G-fast";
+                if (_graphSelector.Count == 7)
+                {
+                    _graphSelector.Add(true);
+                    _graphSelector.Add(true);
+                    _graphSelector.Add(true);
+                }
+                isGfast = true;
+            }
             if (previouslySelected != -1)
                 PortBox.SelectedIndex = previouslySelected;
         }
@@ -165,7 +183,7 @@ namespace ssh_test1
                     varData.dataFarEnd = await Task.Run(() => new SendData("show xdsl carrier-data far-end " + infoTable.portIndex + " detail").getResponse());
                     varData.dataNearEnd = await Task.Run(() => new SendData("show xdsl carrier-data near-end " + infoTable.portIndex + " detail").getResponse());
                 }
-                else if(!selectionChanged)
+                else
                 {
                     infoTable.generalInfo = varData.generalInfo;
                     infoTable.rtInfo = varData.rtInfo;
@@ -177,19 +195,22 @@ namespace ssh_test1
                 {
                     if (graphSelector[i])
                     {
-                        graphLog.SelectGraphNeeeded(i);
-                        GraphField.Items.Add(new TabItem
+                        await Task.Run(() => graphLog.SelectGraphNeeeded(i, isGfast));
+                        if (graphLog.chartV[charVindex].Xvals.Count > 0 || graphLog.chartV[charVindex + 1].Xvals.Count > 0)
                         {
-                            Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
-                            Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload, infoTable.current_mode, _hz),
-                        });
+                            GraphField.Items.Add(new TabItem
+                            {
+                                Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
+                                Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload, infoTable.current_mode, _hz),
+                            });
+                        }
                         if (charVindex == 0 && !selectionChanged)
                             await Task.Run(() => getAttainableBitrate());
                         charVindex += 2;
                     }
                 }
                 selectionChanged = false;
-            }
+        }
             catch
             {
                 GraphField.Items.Clear();
@@ -230,7 +251,7 @@ namespace ssh_test1
                 {
                     if (!graphSelector[0])
                     {
-                        graphLog.SelectGraphNeeeded(0);
+                        graphLog.SelectGraphNeeeded(0, isGfast);
                         foreach (int integer in graphLog.chartV[graphLog.chartV.Count - 2].Yvals)
                         {
                             maxBitUP += integer;
@@ -339,13 +360,13 @@ namespace ssh_test1
 
         private async void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            OptionsBase opt = new OptionsBase(0, this);
+            OptionsBase opt = new OptionsBase(0, this, Console.XDSLStandartS);
             opt.Show();
         }
 
         private void ChartAppearence_Click(object sender, RoutedEventArgs e)
         {
-            OptionsBase opt = new OptionsBase(1, this);
+            OptionsBase opt = new OptionsBase(1, this, Console.XDSLStandartS);
             opt.Show();
         }
 
@@ -373,12 +394,12 @@ namespace ssh_test1
 
         private void ConDetails_Click(object sender, RoutedEventArgs e)
         {
-            OptionsBase optb = new OptionsBase(2, this);
+            OptionsBase optb = new OptionsBase(2, this, Console.XDSLStandartS);
             optb.Show();
         }
         private void setStaticBit_Click(object sender, RoutedEventArgs e)
         {
-            OptionsBase optb = new OptionsBase(3, this);
+            OptionsBase optb = new OptionsBase(3, this, Console.XDSLStandartS);
             optb.Show();
         }
 

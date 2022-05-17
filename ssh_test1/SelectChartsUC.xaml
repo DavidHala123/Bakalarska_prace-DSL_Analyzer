@@ -17,7 +17,7 @@
             <RowDefinition Height="*">
 
             </RowDefinition>
-            <RowDefinition Height="40">
+            <RowDefinition Height="45">
 
             </RowDefinition>
         </Grid.RowDefinitions>
@@ -25,15 +25,17 @@
             <TextBlock Text="Select charts:" Padding="10,10,0,0" Margin="0,0,0,0" FontSize="18" Grid.ColumnSpan="2"/>
         </Grid>
         <Grid Grid.Row="1">
-            <StackPanel VerticalAlignment="Center" Grid.Row="0">
-                <CheckBox  x:Name="LoadDistribution" Content="load-distribution" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="LoadDistribution_Checked" Unchecked="LoadDistribution_Unchecked"/>
-                <CheckBox x:Name="GainAllocation" Content="gain-allocation" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="GainAllocation_Checked" Unchecked="GainAllocation_Unchecked"/>
-                <CheckBox x:Name="Snr" Content="snr" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="Snr_Checked" Unchecked="Snr_Unchecked"/>
-                <CheckBox x:Name="Qln" Content="qln" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="Qln_Checked" Unchecked="Qln_Unchecked"/>
-                <CheckBox x:Name="FuncComplex" Content="char-func-complex" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="FuncComplex_Checked" Unchecked="FuncComplex_Unchecked"/>
-                <CheckBox x:Name="FuncReal" Content="char-func-real" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="FuncReal_Checked" Unchecked="FuncReal_Unchecked"/>
-                <CheckBox x:Name="TxPsd" Content="tx-psd" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="TxPsd_Checked" Unchecked="TxPsd_Unchecked"/>
-            </StackPanel>
+            <ListView VerticalAlignment="Top" Grid.Row="0" Margin="5,0,5,0">
+                <CheckBox  x:Name="LoadDistribution" Content="load-distribution" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="GainAllocation" Content="gain-allocation" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="Snr" Content="snr" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="Qln" Content="qln" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="FuncComplex" Content="char-func-complex" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="FuncReal" Content="char-func-real" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="TxPsd" Content="tx-psd" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="mcr_carr" Content="rmc-carr-load (Gfast only)" HorizontalAlignment="Left" Margin="20,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="aln" Content="gf-aln (Gfast only)" HorizontalAlignment="Left" Margin="20,5" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+            </ListView>
         </Grid>
         <Grid Grid.Row="2">
             <Button x:Name="OkButton" Content="Ok" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50" Height="25" Margin="0,0,10,10" Click="OkButton_Click"/>
