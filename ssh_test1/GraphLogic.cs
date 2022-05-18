@@ -75,7 +75,7 @@ namespace ssh_test1
 
         public void SelectGraphNeeeded(int i, bool isGfast)
         {
-            try 
+            try
             {
                 string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd", "tx-psd-carr-grop" };
                 string[] carrGrpindex = { "load-carr-grp :", "gain-carr-grp :", "snr-carr-grp :", "qln-carr-grp :", "hlin-carr-grp :", "hlog-carr-grp :", "tx-psd-carr-grop :" };
@@ -86,7 +86,7 @@ namespace ssh_test1
                 getGraphLogic(substringFarEnd, Int32.Parse(carrGrpFarEnd));
                 getGraphLogic(substringNearEnd, Int32.Parse(carrGrpNearEnd));
             }
-            catch 
+            catch
             {
                 if (i >= 7 && isGfast)
                 {
@@ -162,7 +162,7 @@ namespace ssh_test1
                         }
                         else
                             adder += 8;
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 1, 0, 1, carrGrp, null, name);
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 1, 0, 1, carrGrp, new int[] { }, name);
                     }
                     break;
                 case string name when inputSplit[0].Contains("gain-allocation"):
@@ -178,7 +178,7 @@ namespace ssh_test1
                                 stopIndex += bitload[i];
                         }
                         adder += 8;
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 4, 0, 512, carrGrp, null, name);
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 4, 0, 512, carrGrp, new int[] { }, name);
                     }
                     break;
                 case string name when inputSplit[0].Contains("snr"):
@@ -195,7 +195,7 @@ namespace ssh_test1
                                 stopIndex += bitload[i];
                         }
                         adder += 8;
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -32, 2, carrGrp, 255, name);
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -32, 2, carrGrp, new int[] {255}, name);
                     }
                     break;
                 case string name when inputSplit[0].Contains("char-func-complex"):
@@ -213,7 +213,7 @@ namespace ssh_test1
                     //            stopIndex += bitload[i];
                     //    }
                     //    adder += 8;
-                    //    check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -32, 2, carrGrp, 255, name);
+                    //    check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -32, 2, carrGrp, new int[] { 255 }, name);
                     //}
                     break;
                 case string name when inputSplit[0].Contains("char-func-real"):
@@ -230,7 +230,7 @@ namespace ssh_test1
                                 stopIndex += bitload[i];
                         }
                         adder += 8;
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 4, 6, -10, carrGrp, null, name);
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 4, 6, -10, carrGrp, new int[] { }, name);
                     }
                     break;
                 case string name when inputSplit[0].Contains("tx-psd"):
@@ -246,7 +246,7 @@ namespace ssh_test1
                                 stopIndex += bitload[i];
                         }
                         adder += 8;
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, 0, -2, carrGrp, null, name);
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, 0, -2, carrGrp, new int[] { }, name);
                     }
                     break;
                 case string name when inputSplit[0].Contains("gf-qln"):
@@ -265,7 +265,7 @@ namespace ssh_test1
                                     stopIndex += bitload[i];
                             }
                             adder += 8;
-                            check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -35, -2, carrGrp, null, name);
+                            check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -35, -2, carrGrp, new int[] { 254, 255 }, name);
                         }
                     }
                     break;
@@ -278,7 +278,7 @@ namespace ssh_test1
                             startIndex += bitload[i];
                         }
                         adder += 4;
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(startIndex), i, 4, 0, 256, carrGrp, null, name);
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(startIndex), i, 2, 0, 1, carrGrp, new int[] { }, name);
                     }
                     break;
                 case string name when inputSplit[0].Contains("gf-aln"):
@@ -297,7 +297,7 @@ namespace ssh_test1
                                     stopIndex += bitload[i];
                             }
                             adder += 8;
-                            check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -35, -2, carrGrp, null, name);
+                            check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -35, -2, carrGrp, new int[] { }, name);
                         }
                     }
                     break;
@@ -315,7 +315,8 @@ namespace ssh_test1
                                 stopIndex += bitload[i];
                         }
                         adder += 8;
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -23, -2, carrGrp, null, name);
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -23, -2, carrGrp, new int[] { }, name);
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -23, -2, carrGrp, new int[] { }, name);
                     }
                     break;
             }
@@ -323,7 +324,7 @@ namespace ssh_test1
             _chartV.Add(new ChartValues { name = inputSplit[0], Xvals = xVals, Yvals = yVals });
         }
 
-        private int SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int adder, int divider, int carrGrp, int? valsToSkip, string name)
+        private int SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int adder, int divider, int carrGrp, int[]? valsToSkip, string name)
         {
             int charIndex = charIndexOfStart;
             counter = 0;
@@ -334,7 +335,7 @@ namespace ssh_test1
                     input += inputString[charIndex + j];
                 for (int k = 0; k < carrGrp; k++)
                 {
-                    if (GetDecValues(input) != valsToSkip)
+                    if (!valsToSkip.Contains(GetDecValues(input)))
                     {
                         yVals.Add(adder + GetDecValues(input) / divider);
                         xVals.Add(Convert.ToInt32(((startIndex + i) * carrGrp + k) * _hzConstant));

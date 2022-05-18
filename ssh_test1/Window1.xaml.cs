@@ -210,9 +210,10 @@ namespace ssh_test1
                     }
                 }
                 selectionChanged = false;
-        }
-            catch
+            }
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.ToString());
                 GraphField.Items.Clear();
                 MessageBox.Show("Something went wrong.");
             }
