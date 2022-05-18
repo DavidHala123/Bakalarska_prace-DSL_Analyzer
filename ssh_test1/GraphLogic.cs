@@ -75,8 +75,8 @@ namespace ssh_test1
 
         public void SelectGraphNeeeded(int i, bool isGfast)
         {
-            try
-            {
+            //try
+            //{
                 string[] substringIndexes = { "load-distribution", "gain-allocation", "snr", "qln", "char-func-complex", "char-func-real", "tx-psd", "tx-psd-carr-grop" };
                 string[] carrGrpindex = { "load-carr-grp :", "gain-carr-grp :", "snr-carr-grp :", "qln-carr-grp :", "hlin-carr-grp :", "hlog-carr-grp :", "tx-psd-carr-grop :" };
                 string substringFarEnd = outputOfDSLAMFar.Substring(outputOfDSLAMFar.IndexOf(substringIndexes[i]), outputOfDSLAMFar.IndexOf(substringIndexes[i + 1]) - outputOfDSLAMFar.IndexOf(substringIndexes[i]));
@@ -85,14 +85,14 @@ namespace ssh_test1
                 string carrGrpNearEnd = outputOfDSLAMNear.Substring(outputOfDSLAMNear.IndexOf(carrGrpindex[i]) + carrGrpindex[i].Length, 3).Trim();
                 getGraphLogic(substringFarEnd, Int32.Parse(carrGrpFarEnd));
                 getGraphLogic(substringNearEnd, Int32.Parse(carrGrpNearEnd));
-            }
-            catch
-            {
-                if (i >= 7 && isGfast)
-                {
-                    getAdditionalGfastInfo(i);
-                }
-            }
+            //}
+            //catch
+            //{
+            //    if (i >= 7 && isGfast)
+            //    {
+            //        getAdditionalGfastInfo(i);
+            //    }
+            //}
         }
 
         private void getAdditionalGfastInfo(int i)
@@ -315,9 +315,7 @@ namespace ssh_test1
                                 stopIndex += bitload[i];
                         }
                         adder += 8;
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -23, -2, carrGrp, new int[] { }, name);
-                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -23, -2, carrGrp, new int[] { }, name);
-                    }
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -23, -2, carrGrp, new int[] { }, name);                    }
                     break;
             }
             name = inputSplit[0];
