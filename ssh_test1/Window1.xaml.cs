@@ -211,9 +211,8 @@ namespace ssh_test1
                 }
                 selectionChanged = false;
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show(ex.ToString());
                 GraphField.Items.Clear();
                 MessageBox.Show("Something went wrong.");
             }
@@ -371,9 +370,9 @@ namespace ssh_test1
             opt.Show();
         }
 
-        private void ExportMatlab_Click(object sender, RoutedEventArgs e)
+        private async void ExportMatlab_Click(object sender, RoutedEventArgs e)
         {
-            MatlabExport me = new MatlabExport(graphLog.chartV, graphSelector);
+            MatlabExport me = await Task.Run(() => new MatlabExport(graphLog.chartV, graphSelector, varData.hzCons));
         }
 
         private void ExportCSV_Click(object sender, RoutedEventArgs e)
