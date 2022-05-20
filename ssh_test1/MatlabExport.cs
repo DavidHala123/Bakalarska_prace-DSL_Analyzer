@@ -25,25 +25,27 @@ namespace ssh_test1
             if (sf.ShowDialog() == true)
             {
                 ConsoleUC.ConsoleText = "4";
-                string appednString = "";
                 List<double> xVals = new List<double>();
                 List<double> yVals = new List<double>();
                 var matrices = new List<MatlabMatrix>();
                 int valuesIndex = 0;
                 int nameIndex = 0;
+                string appednString;
                 for (int i = 0; i < graphSelector.Count; i++)
                 {
                     if (graphSelector[i])
                     {
                         for (int j = 0; j < 2; j++)
                         {
-                            row = -1;
-                            if (valuesIndex % 2 == 0)
+                            if (j % 2 == 0)
                                 appednString = "_down";
                             else
                                 appednString = "_up";
+                            row = -1;
                             if (values[valuesIndex].Xvals.Count > 0)
                             {
+                                xVals.Clear();
+                                yVals.Clear();
                                 matriceIndexer = 0;
                                 for (int k = 0; k < values[valuesIndex].Xvals.Count; k++)
                                 {
@@ -63,7 +65,7 @@ namespace ssh_test1
                                     {
                                         var ma = Matrix<double>.Build.Dense(xVals.Count, 2);
                                         populateMatrix(ma, xVals, yVals);
-                                        matrices.Add(MatlabWriter.Pack(ma, values[nameIndex].name.Replace("-up", "").Replace("-down", "").Replace("-dn", "").Replace("-", "_").Trim() + appednString + matriceIndexer.ToString()));
+                                        matrices.Add(MatlabWriter.Pack(ma, values[valuesIndex].name.Replace("-down", "").Replace("-up", "").Replace("-dn", "").Replace("-", "_").Trim() + appednString + matriceIndexer.ToString()));
                                         xVals.Clear();
                                         yVals.Clear();
                                         yVals.Add(Convert.ToDouble(values[valuesIndex].Yvals[k]));
@@ -72,11 +74,9 @@ namespace ssh_test1
                                         matriceIndexer++;
                                     }
                                 }
-                                var m = Matrix<double>.Build.Dense(values[valuesIndex].Xvals.Count, 2);
+                                var m = Matrix<double>.Build.Dense(xVals.Count, 2);
                                 populateMatrix(m, xVals, yVals);
-                                matrices.Add(MatlabWriter.Pack(m, values[nameIndex].name.Replace("-up", "").Replace("-down", "").Replace("-dn", "").Replace("-", "_").Trim() + appednString + matriceIndexer.ToString()));
-                                xVals.Clear();
-                                yVals.Clear();
+                                matrices.Add(MatlabWriter.Pack(m, values[valuesIndex].name.Replace("-down", "").Replace("-up", "").Replace("-dn", "").Replace("-", "_").Trim() + appednString + matriceIndexer.ToString()));
                             }
                             valuesIndex++;
                         }
