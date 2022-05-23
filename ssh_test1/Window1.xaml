@@ -43,17 +43,21 @@
             <ColumnDefinition Width="0.7*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <DockPanel>
                 <Menu VerticalAlignment="Center">
                     <MenuItem Header="File">
                         <MenuItem.Style>
                             <Style TargetType="MenuItem">
-                                <Setter Property="IsEnabled" Value="True"/>
+                                <Setter Property="IsEnabled" Value="False"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=Console, Path=XDSLStandartS}"
+                                    <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
                                         Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                                        Value="{x:Static sys:String.Empty}">
+                                        <Setter Property="IsEnabled" Value="True"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -120,11 +124,15 @@
                         <MenuItem Header="Select Charts" Click="OptionsButton_Click" x:Name="OptionsButton">
                             <MenuItem.Style>
                                 <Style TargetType="MenuItem">
-                                    <Setter Property="IsEnabled" Value="True"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=Console, Path=XDSLStandartS}"
-                                        Value="{x:Null}">
-                                            <Setter Property="IsEnabled" Value="False"/>
+                                        <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                                            Value="{x:Null}">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                                            Value="{x:Static sys:String.Empty}">
+                                            <Setter Property="IsEnabled" Value="True"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -150,6 +158,21 @@
                         <MenuItem.Icon>
                             <Image Source="Images/con_cion.png" Width="10" Opacity="0.8"/>
                         </MenuItem.Icon>
+                        <MenuItem.Style>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                                        Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Console, Path=ConsoleText}"
+                                        Value="{x:Static sys:String.Empty}">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
                     </MenuItem>
                 </Menu>
             </DockPanel>

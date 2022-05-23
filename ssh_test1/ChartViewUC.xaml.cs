@@ -84,7 +84,7 @@ namespace ssh_test1
         }
         private int offset = 1;
 
-        List<string> YaxisNames = new List<string>() { "number of bits [-]", "gain [-]", "snr [Hz]", "qln [dBmHz]", "HLIN [db]", "HLOG [dB]", "Tx-PSD [dbmHz]", "", "qln [dbmHz]", "aln [dDmHz]" };
+        List<string> YaxisNames = new List<string>() { "number of bits [bit]", "gain [dB]", "snr [dB]", "qln [dBm/Hz]", "HLIN [dB]", "HLOG [dB]", "Tx-PSD [dbm/Hz]", "", "qln [dbm/Hz]", "aln [dBm/Hz]" };
         private async void ChartGraph(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
         {
             try
@@ -134,7 +134,7 @@ namespace ssh_test1
                 LineGraph lineGraphFar = new LineGraph()
                 {
                     Stroke = down,
-                    Padding = new System.Windows.Thickness(0, 30, 0, 0),
+                    Padding = new System.Windows.Thickness(0, 30, 0, 1),
                 };
                 lineGraphFar.Plot(BandFar[j], BandFar[j + 1]);
                 chartGrid.Children.Add(lineGraphFar);

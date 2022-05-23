@@ -150,10 +150,10 @@
                 </Grid>
 
                 <Grid Grid.Column="0" Grid.Row="1">
-                    <TextBlock Height="20" Margin="10,5,0,0" VerticalAlignment="Top" Text="Noise margin [dBm]: "/>
-                    <TextBlock Height="20" Margin="10,25,0,0" VerticalAlignment="Top" Text="Output power [W]: "/>
+                    <TextBlock Height="20" Margin="10,5,0,0" VerticalAlignment="Top" Text="Noise margin [dB]: "/>
+                    <TextBlock Height="20" Margin="10,25,0,0" VerticalAlignment="Top" Text="Output power [dBm]: "/>
                     <TextBlock Height="20" Margin="10,45,0,0" VerticalAlignment="Top" Text="Signal attent. [dB]: "/>
-                    <TextBlock Height="20" Margin="10,65,0,0" VerticalAlignment="Top" Text="Tx psd [W/Hz]: "/>
+                    <TextBlock Height="20" Margin="10,65,0,0" VerticalAlignment="Top" Text="Tx psd [dBm/Hz]: "/>
                 </Grid>
                 <Grid Grid.Column="1" Grid.Row="1">
                     <Grid.ColumnDefinitions>
