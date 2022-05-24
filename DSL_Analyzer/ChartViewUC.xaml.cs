@@ -21,14 +21,13 @@ namespace DSL_Analyzer
     /// </summary>
     public partial class ChartViewUC : UserControl
     {
-        public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i, SolidColorBrush up, SolidColorBrush down, string currm, bool hz)
+        public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i, SolidColorBrush up, SolidColorBrush down, string currm, double hz)
         {
             DataContext = this;
             this.up = up;
             this.down = down;
             InitializeComponent();
-            if (hz)
-                offset = gethzOffset(currm);
+            this.offset = hz;
             ChartGraph(dataFarEnd, dataNearEnd, i);
         }
         private SolidColorBrush _up;
@@ -82,7 +81,7 @@ namespace DSL_Analyzer
                     _YaxisName = value;
             }
         }
-        private int offset = 1;
+        private double offset;
 
         List<string> YaxisNames = new List<string>() { "number of bits [bit]", "gain [dB]", "snr [dB]", "qln [dBm/Hz]", "HLIN [dB]", "HLOG [dB]", "Tx-PSD [dbm/Hz]", "", "qln [dbm/Hz]", "aln [dBm/Hz]" };
         private async void ChartGraph(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
@@ -94,7 +93,9 @@ namespace DSL_Analyzer
                 if(offset > 1)
                     chart.BottomTitle = "f [kHz]";
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            catch 
+            {
+            }
         }
 
         private int gethzOffset(string mode) 
@@ -117,8 +118,8 @@ namespace DSL_Analyzer
 
         private void getChart(ChartValues chartVnear, ChartValues chartVfar)
         {
-            List<List<int>> BandFar = new List<List<int>>();
-            List<List<int>> BandNear = new List<List<int>>();
+            List<List<double>> BandFar = new List<List<double>>();
+            List<List<double>> BandNear = new List<List<double>>();
             if (chartVnear.name.Contains("down") || chartVnear.name.Contains("char-func-real"))
             {
                 BandFar = splitListForBands(chartVnear.Xvals, chartVnear.Yvals);
@@ -152,17 +153,17 @@ namespace DSL_Analyzer
         }
 
 
-        private List<List<int>> splitListForBands(List<int> graphValuesX, List<int> graphValuesY)
+        private List<List<double>> splitListForBands(List<double> graphValuesX, List<double> graphValuesY)
         {
-            List<int> valsX = new List<int>();
-            List<int> valsY = new List<int>();
-            List<List<int>> output = new List<List<int>>();
+            List<double> valsX = new List<double>();
+            List<double> valsY = new List<double>();
+            List<List<double>> output = new List<List<double>>();
             int xInd = 0;
             for (int j = 0; j < graphValuesX.Count; j++)
             {
                 try
                 {
-                    if (graphValuesX[j + 1] > graphValuesX[j] + offset)
+                    if (graphValuesX[j + 1] > graphValuesX[j] + Math.Ceiling(offset))
                     {
                         output.Add(graphValuesX.GetRange(xInd, j + 1 - xInd));
                         output.Add(graphValuesY.GetRange(xInd, j + 1 - xInd));

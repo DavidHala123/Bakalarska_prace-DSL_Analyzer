@@ -16,8 +16,8 @@ namespace DSL_Analyzer
         private string outputOfDSLAMFar;
         private string outputOfDSLAMNear;
         int counter;
-        List<int> yVals;
-        List<int> xVals;
+        List<double> yVals;
+        List<double> xVals;
         private List<ChartValues> _chartV = new List<ChartValues>();
         public List<ChartValues> chartV
         {
@@ -124,14 +124,14 @@ namespace DSL_Analyzer
             }
             else
             {
-                chartV.Add(new ChartValues { name = substringIndexesNear[i], Xvals = new List<int>(), Yvals = new List<int>() });
+                chartV.Add(new ChartValues { name = substringIndexesNear[i], Xvals = new List<double>(), Yvals = new List<double>() });
             }
         }
 
         private void getGraphLogic(string inputString, int carrGrp)
         {
-            yVals = new List<int>();
-            xVals = new List<int>();
+            yVals = new List<double>();
+            xVals = new List<double>();
             List<int> outputListY = new List<int>();
             List<int> outputListX = new List<int>();
             List<List<int>> outputVals = new List<List<int>>();
@@ -367,7 +367,7 @@ namespace DSL_Analyzer
                 }
                 charIndex += NumberOfNibble;
                 counter++;
-            }
+            }       
             return counter;
         }
     }

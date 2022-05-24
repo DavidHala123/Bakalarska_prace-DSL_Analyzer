@@ -201,7 +201,7 @@ namespace DSL_Analyzer
                             GraphField.Items.Add(new TabItem
                             {
                                 Header = graphLog.name.Replace("-up", "").Replace("-down", "").Replace("-dn", ""),
-                                Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload, infoTable.current_mode, _hz),
+                                Content = new ChartViewUC(graphLog.chartV[charVindex], graphLog.chartV[charVindex + 1], i, BrushUpload, BrushDownload, infoTable.current_mode, varData.hzCons),
                             });
                         }
                         if (charVindex == 0 && !selectionChanged)
