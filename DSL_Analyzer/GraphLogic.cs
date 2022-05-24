@@ -199,22 +199,33 @@ namespace DSL_Analyzer
                     }
                     break;
                 case string name when inputSplit[0].Contains("char-func-complex"):
-                    //adder = 6;
-                    //string scale = 
-                    //while ((check) * 2 + adder < bitload.Length)
-                    //{
-                    //    string startIndex = "";
-                    //    string stopIndex = "";
-                    //    for (i = (check) * 2 + adder; i < (check) * 2 + adder + 8; i++)
-                    //    {
-                    //        if (i < (check) * 2 + adder + 4)
-                    //            startIndex += bitload[i];
-                    //        else
-                    //            stopIndex += bitload[i];
-                    //    }
-                    //    adder += 8;
-                    //    check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 2, -32, 2, carrGrp, new int[] { 255 }, name);
-                    //}
+                    adder = 4;
+                    while ((check) * 8 + adder < bitload.Length)
+                    {
+                        string startIndex = "";
+                        string stopIndex = "";
+                        string scale = "";
+                        for (i = (check) * 8 + adder; i < (check) * 8 + adder + 12; i++)
+                        {
+                            if(i <= (check) * 8 + adder + 3) 
+                            {
+                                scale += bitload[i];
+                                continue;
+                            }
+                            else if(i < (check) * 8 + adder + 8) 
+                            {
+                                startIndex += bitload[i];
+                                continue;
+                            }
+                            else if (i < (check) * 8 + adder + 12) 
+                            {
+                                stopIndex += bitload[i];
+                                continue;
+                            }
+                        }
+                        adder += 12;
+                        check += SetGraphValues(bitload, GetDecValues(startIndex), GetDecValues(stopIndex), i, 8, GetDecValues(scale)/(2^15), 2^15, carrGrp, new int[] { 255 }, name);
+                    }
                     break;
                 case string name when inputSplit[0].Contains("char-func-real"):
                     adder = 4;
@@ -328,9 +339,24 @@ namespace DSL_Analyzer
             counter = 0;
             for (int i = 0; i <= (stopIndex - startIndex); i++)
             {
+                string[] complexS = {"", ""};
                 string input = "";
-                for (int j = 0; j < NumberOfNibble; j++)
-                    input += inputString[charIndex + j];
+                for (int j = 0; j < NumberOfNibble; j++) 
+                {
+                    if (name.Contains("complex")) 
+                    {
+                        if (j < 4)
+                            complexS[0] += inputString[charIndex + j];
+                        else
+                            complexS[1] += inputString[charIndex + j];
+                        if (complexS[1].Length >= 2)
+                        {
+                            input = Convert.ToInt32(Math.Sqrt(GetDecValues(complexS[0]) + GetDecValues(complexS[1]))).ToString();
+                        }
+                    }
+                    else
+                        input += inputString[charIndex + j];
+                }
                 for (int k = 0; k < carrGrp; k++)
                 {
                     if (!valsToSkip.Contains(GetDecValues(input)))

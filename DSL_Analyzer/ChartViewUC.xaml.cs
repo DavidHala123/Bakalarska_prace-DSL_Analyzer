@@ -92,7 +92,7 @@ namespace DSL_Analyzer
                 getChart(dataFarEnd, dataNearEnd);
                 chart.LeftTitle = YaxisNames[i];
                 if(offset > 1)
-                    chart.BottomTitle = "Hertz [kHz]";
+                    chart.BottomTitle = "f [kHz]";
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
         }

@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:DSL_Analyzer"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
+        WindowStartupLocation = "CenterScreen"
+        Icon="Images/icon.ico"
         mc:Ignorable="d"
         Title="DSL ANALYZER" Height="600" Width="800" ResizeMode="CanResize" MinHeight="600" MinWidth="800">
     <Window.Resources>

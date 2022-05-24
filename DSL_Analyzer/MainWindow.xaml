@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DSL_Analyzer"
         mc:Ignorable="d"
+        WindowStartupLocation = "CenterScreen"
+        Icon="Images/icon.ico"
         Title="DSL ANALYZER" Height="330" Width="400" ResizeMode="NoResize">
     <Border CornerRadius="20" Padding="15">
         <Grid>
