@@ -17,12 +17,13 @@ namespace DSL_Analyzer
 {
     /// <summary>
     /// Interaction logic for ConnectionUC.xaml
-    /// </summary>
-    public partial class ConnectionUC : UserControl
+    /// </summary> 
+
+    //LETS USER TO CHECK/CHANGE CONNECTION
+    public partial class ChangeConWindow : UserControl
     {
-
-
         private bool _IsOn = true;
+        // SHOWS/HIDES PASSWORD
         public bool IsOn
         {
             get
@@ -36,6 +37,7 @@ namespace DSL_Analyzer
             }
         }
 
+        //HOLDS INFORMATION OF CONNECTION
         private string _ipAddr = ConData.ipv4;
         public string ipAddr
         {
@@ -73,9 +75,9 @@ namespace DSL_Analyzer
             }
         }
 
-        Window1 wind;
+        MainWindow wind;
         OptionsBase optb;
-        public ConnectionUC(Window1 wind, OptionsBase optb)
+        public ChangeConWindow(MainWindow wind, OptionsBase optb)
         {
             this.optb = optb;
             DataContext = this;
@@ -85,6 +87,7 @@ namespace DSL_Analyzer
             passText.Text = "*****";
         }
 
+        //CHECKS CONNECTION, CONNECTION IDNICATOR (RED == NOT CONNECTED, GREEN == CONNECTED)
         private async Task RectangeFill()
         {
             connRec.Visibility = Visibility.Collapsed;
@@ -96,6 +99,7 @@ namespace DSL_Analyzer
             connRec.Visibility = Visibility.Visible;
         }
 
+        // SHOWS/HIDES PASSWORD
         private void ShowHideButton_Click(object sender, RoutedEventArgs e)
         {
             IsOn = !IsOn;
@@ -106,18 +110,20 @@ namespace DSL_Analyzer
 
         }
 
+        //CHANGES CONNECTION
         private void changeCon_Click(object sender, RoutedEventArgs e)
         {
             string name = ConData.name;
             string ipv4 = ConData.ipv4;
-            MainWindow main = new MainWindow();
-            main.openMain = false;
-            main.ShowDialog();
+            ConnectionWindow conW = new ConnectionWindow();
+            conW.openMain = false;
+            conW.ShowDialog();
             optb.Close();
-            if (ConData.name != name || ConData.ipv4 != ipv4)
+            if (ConData.name != name || ConData.ipv4 != ipv4 && conW._connected)
                 wind.conChanged = true;
         }
 
+        //CHECKS CONNECTION
         private void checkCon_Click(object sender, RoutedEventArgs e)
         {
             RectangeFill();

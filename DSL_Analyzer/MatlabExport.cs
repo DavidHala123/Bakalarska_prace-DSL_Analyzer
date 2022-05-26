@@ -11,6 +11,7 @@ using Microsoft.Win32;
 
 namespace DSL_Analyzer
 {
+    //EXPORTS DATA TO MATLAB
     internal class MatlabExport
     {
         public MatlabExport(List<ChartValues> values, List<bool> graphSelector, double hzConstant)
@@ -38,9 +39,9 @@ namespace DSL_Analyzer
                         for (int j = 0; j < 2; j++)
                         {
                             if (j % 2 == 0)
-                                appednString = "_down";
-                            else
                                 appednString = "_up";
+                            else
+                                appednString = "_down";
                             row = -1;
                             if (values[valuesIndex].Xvals.Count > 0)
                             {
@@ -65,7 +66,7 @@ namespace DSL_Analyzer
                                     {
                                         var ma = Matrix<double>.Build.Dense(xVals.Count, 2);
                                         populateMatrix(ma, xVals, yVals);
-                                        matrices.Add(MatlabWriter.Pack(ma, values[valuesIndex].name.Replace("-down", "").Replace("-up", "").Replace("-dn", "").Replace("-", "_").Trim() + appednString + matriceIndexer.ToString()));
+                                        matrices.Add(MatlabWriter.Pack(ma, values[valuesIndex].name.Replace("-", "_").Trim() + matriceIndexer.ToString()));
                                         xVals.Clear();
                                         yVals.Clear();
                                         yVals.Add(Convert.ToDouble(values[valuesIndex].Yvals[k]));
@@ -76,7 +77,7 @@ namespace DSL_Analyzer
                                 }
                                 var m = Matrix<double>.Build.Dense(xVals.Count, 2);
                                 populateMatrix(m, xVals, yVals);
-                                matrices.Add(MatlabWriter.Pack(m, values[valuesIndex].name.Replace("-down", "").Replace("-up", "").Replace("-dn", "").Replace("-", "_").Trim() + appednString + matriceIndexer.ToString()));
+                                matrices.Add(MatlabWriter.Pack(m, values[valuesIndex].name.Replace("-", "_").Trim() + matriceIndexer.ToString()));
                             }
                             valuesIndex++;
                         }

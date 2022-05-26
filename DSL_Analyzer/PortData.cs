@@ -1,5 +1,6 @@
 ﻿namespace DSL_Analyzer
 {
+    //HOLDS DATA ABOUT PORT
     class PortData
     {
         public string portName { get; set; }

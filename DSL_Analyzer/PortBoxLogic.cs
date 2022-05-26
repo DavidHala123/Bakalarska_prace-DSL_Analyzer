@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DSL_Analyzer
 {
+    //PROJECTING PORT NAME AND PORT STATE AS AN IMAGE TO PORTBOX IN MAIN WINDOW
     internal class PortBoxLogic
     {
         private List<PortData> portDatasCombo = new List<PortData>();

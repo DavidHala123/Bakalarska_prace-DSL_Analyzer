@@ -28,6 +28,7 @@ namespace DSL_Analyzer
             InitializeComponent();
         }
 
+        //HOLDS INFORMATION OF WHAT STANDART DSLAM SUPPORTS (ADSL/VDSL / GFAST)
         private string _XDSLStandartS;
         public string XDSLStandartS
         {
@@ -42,7 +43,7 @@ namespace DSL_Analyzer
             }
         }
 
-
+        //SETTING CONSOLE TEXT
         private static string consoleText;
         public static string ConsoleText
         {
@@ -74,7 +75,6 @@ namespace DSL_Analyzer
                 }
                 consoleText = output;
                 StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(nameof(ConsoleText)));
-                //NotifyPropertyChanged();
             }
         }
 

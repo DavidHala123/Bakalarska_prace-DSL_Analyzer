@@ -19,6 +19,8 @@ namespace DSL_Analyzer
     /// <summary>
     /// Interaction logic for SetStaticBitrate.xaml
     /// </summary>
+    
+    //SETS VALUE IN BITRATE.TXT INCLUDED IN PROGRAMME TO SPECIFY STATIC VALUES IN BITRATE FOR CERTAIN ANNEXES
     public partial class SetStaticBitrate : UserControl
     {
         OptionsBase options;
@@ -32,6 +34,7 @@ namespace DSL_Analyzer
         {
             try 
             {
+                //READING AND SPLITTING CSV FILE ON NAME AND VALUES
                 var lines = File.ReadAllLines(@"Config\Bitrate.txt");
                 foreach (string line in lines)
                 {
@@ -45,6 +48,7 @@ namespace DSL_Analyzer
             }
         }
 
+        //ADDS VALUES TO BITRATE.TXT
         private void plusBut_Click(object sender, RoutedEventArgs e)
         {
             try 
@@ -62,6 +66,7 @@ namespace DSL_Analyzer
 
         }
 
+        //DELETES VALUES FROM BITRATE.TXT
         private void minusBut_Click(object sender, RoutedEventArgs e)
         {
 

@@ -17,6 +17,8 @@ namespace DSL_Analyzer
     /// <summary>
     /// Interaction logic for CsvWarning.xaml
     /// </summary>
+
+    //WARNS USER OF HAVING TO SAVE EVERY FILE SEPARATELY (CSV)
     public partial class CsvWarning : Window
     {
         public bool showCsvExport = false;

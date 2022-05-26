@@ -10,13 +10,14 @@ using System.Windows;
 
 namespace DSL_Analyzer
 {
+    //EXPORTS DATA TO CSV
     internal class CsvExport
     {
         public CsvExport(List<ChartValues> chartV, List<bool> graphSelector)
         {
             ConsoleUC.ConsoleText = "4";
             int chartIndex = 0;
-            for (int i = 0; i < graphSelector.Count; i++)
+            for (int i = 0; i < graphSelector.Count; i++) //ITERATES THROUGH EVERY CHART THAT IS TRUE IN GRAPHSELECTOR AND CREATES CSV FILE
             {
                 if (graphSelector[i])
                 {

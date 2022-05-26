@@ -20,6 +20,7 @@ namespace DSL_Analyzer
     /// </summary>
     public partial class InfoNotAvailable : UserControl
     {
+        //OVERLAY FOR INFORMATION WINDOW IF DATA ARE NOT AVAILABLE
         public InfoNotAvailable()
         {
             InitializeComponent();

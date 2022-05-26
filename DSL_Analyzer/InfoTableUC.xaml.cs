@@ -32,6 +32,7 @@ namespace DSL_Analyzer
             InitializeComponent();
         }
 
+        //HOLDS ADDITIONAL INFORMATION
         private bool _fromfile = false;
         public bool fromfile 
         {
@@ -350,6 +351,7 @@ namespace DSL_Analyzer
             set { _rtInfo = value; }
         }
 
+        //GETS DATA FROM DSLAM IF NEEDED, SPLITTING DATA BY NAME AND VALUE (FOR GENERAL INFORMATION)
         private async Task populateGeneralInfo()
         {
             if(suppm_value.HasItems)
@@ -397,7 +399,7 @@ namespace DSL_Analyzer
             supported_mode = supmodes;
         }
 
-
+        //GETS DATA FROM DSLAM IF NEEDED, SPLITTING DATA BY NAME AND VALUE (FOR REALTIME INFORMATION)
         private async Task populateRealTimeInfo()
         {
             string actbrUP = "";

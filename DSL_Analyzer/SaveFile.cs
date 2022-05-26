@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DSL_Analyzer
 {
+    //SAVES FILE, ADDS FLAGS NEEDED
     internal class SaveFile
     {
         public SaveFile(string dataFarEnd, string dataNearEnd, string generalInfo, string rtInfo) 

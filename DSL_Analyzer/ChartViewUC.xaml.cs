@@ -21,6 +21,7 @@ namespace DSL_Analyzer
     /// </summary>
     public partial class ChartViewUC : UserControl
     {
+        //SHOWS CERTAIN CHARTS
         public ChartViewUC(ChartValues dataFarEnd, ChartValues dataNearEnd, int i, SolidColorBrush up, SolidColorBrush down, string currm, double hz)
         {
             DataContext = this;
@@ -84,6 +85,8 @@ namespace DSL_Analyzer
         private double offset;
 
         List<string> YaxisNames = new List<string>() { "number of bits [bit]", "gain [dB]", "snr [dB]", "qln [dBm/Hz]", "HLIN [dB]", "HLOG [dB]", "Tx-PSD [dbm/Hz]", "", "qln [dbm/Hz]", "aln [dBm/Hz]" };
+        
+        //CREATES FINAL CHARTS
         private async void ChartGraph(ChartValues dataFarEnd, ChartValues dataNearEnd, int i)
         {
             try
@@ -98,24 +101,7 @@ namespace DSL_Analyzer
             }
         }
 
-        private int gethzOffset(string mode) 
-        {
-            int output = 0;
-            switch (mode) 
-            {
-                case string modeis when modeis.Contains("g992-2-30a"):
-                    output = 5;
-                    break;
-                case string modeis when modeis.Contains("gfast"):
-                    output = 52;
-                    break;
-                default:
-                    output = 9;
-                    break;
-            }
-            return output;
-        }
-
+        //CREATING AND FILLINF CHART OBJECTS
         private void getChart(ChartValues chartVnear, ChartValues chartVfar)
         {
             List<List<double>> BandFar = new List<List<double>>();
@@ -152,7 +138,7 @@ namespace DSL_Analyzer
             }
         }
 
-
+        //SPLITTING DATA TO DISCONTINUOUS PLOTS IF NEEDED
         private List<List<double>> splitListForBands(List<double> graphValuesX, List<double> graphValuesY)
         {
             List<double> valsX = new List<double>();

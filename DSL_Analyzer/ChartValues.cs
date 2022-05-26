@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DSL_Analyzer
 {
+    //HOLDS VALUES FOR CERTAIN CHARTS
     public class ChartValues
     {
         public string name { get; set; }

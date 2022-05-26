@@ -10,6 +10,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace DSL_Analyzer
 {
+    //CREATES EXCEL WORKBOOK AND WORKSHEET AND FILLS DATA, CREATES EXCEL GRAPH
     internal class ExcelExport
     {
         public ExcelExport(List<ChartValues> values, List<bool> graphs, double hzCons)

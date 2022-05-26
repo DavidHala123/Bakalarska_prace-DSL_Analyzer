@@ -3,6 +3,7 @@ using System.Windows;
 
 namespace DSL_Analyzer
 {
+    //CONNECTS VIA SSH TO DSLAM (OPENS AND CLOSES SSH STREAM)
     class Connect
     {
         public Connect()

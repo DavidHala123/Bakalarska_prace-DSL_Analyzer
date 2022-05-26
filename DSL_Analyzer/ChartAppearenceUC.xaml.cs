@@ -22,7 +22,8 @@ namespace DSL_Analyzer
     /// </summary>
     public partial class ChartAppearenceUC : INotifyPropertyChanged
     {
-        public ChartAppearenceUC(Window1 wind, OptionsBase optb)
+        //GETS R,G,B VALUES AND APPLIES THEM ON PLOT
+        public ChartAppearenceUC(MainWindow wind, OptionsBase optb)
         {
             this.optb = optb;
             this.wind = wind;
@@ -30,9 +31,10 @@ namespace DSL_Analyzer
             InitializeComponent();
         }
         OptionsBase optb;
-        Window1 wind;
+        MainWindow wind;
         private bool setUpb = false;
         private bool setDownb = false;
+        //HOLDS R VALUE
         private int _Rval;
         public byte Rval 
         {
@@ -46,6 +48,7 @@ namespace DSL_Analyzer
                 }
             }
         }
+        //HOLDS G VALUE
         private int _Gval;
         public byte Gval
         {
@@ -59,6 +62,7 @@ namespace DSL_Analyzer
                 }
             }
         }
+        //HOLDS B VALUE
         private int _Bval;
         public byte Bval
         {
@@ -72,7 +76,7 @@ namespace DSL_Analyzer
                 }
             }
         }
-
+        //CHANGES COLOR OF RECTANGLE TO SHOW FINAL COLOR
         private void blueSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             colorRect.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)System.Convert.ToByte(Rval), (byte)System.Convert.ToByte(Gval), (byte)System.Convert.ToByte(Bval)));
@@ -97,6 +101,7 @@ namespace DSL_Analyzer
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        //APPLIES COLOR ON PLOT
         private void setUpload_Click(object sender, RoutedEventArgs e)
         {
             wind.BrushUpload = new SolidColorBrush(Color.FromArgb(255, Rval, Gval, Bval));

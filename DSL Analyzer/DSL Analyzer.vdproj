@@ -15,13 +15,13 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_47627371C037424D95E045DFD6FC418D"
+        "MsmKey" = "8:_35F903E6BB9841889BADB4707EE38F4A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C1BF413AA36E409199ADE3DDE2673A2E"
+        "MsmKey" = "8:_47627371C037424D95E045DFD6FC418D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -43,6 +43,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -59,6 +75,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -80,7 +112,7 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C1BF413AA36E409199ADE3DDE2673A2E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_35F903E6BB9841889BADB4707EE38F4A"
             {
             "SourcePath" = "8:..\\DSL_Analyzer\\Images\\icon.ico"
             "TargetName" = "8:icon.ico"
@@ -168,7 +200,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DSL Analyzer"
         "ProductCode" = "8:{8752B38C-2B33-438B-B631-1237398AB212}"
-        "PackageCode" = "8:{E242949F-3D59-433B-9764-6A96100B72C8}"
+        "PackageCode" = "8:{1C9959BC-66D0-4519-894B-133467FCD27C}"
         "UpgradeCode" = "8:{10FB694A-8C7D-4A74-B46B-F2BACF6CE148}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -299,7 +331,7 @@
             "Target" = "8:_47627371C037424D95E045DFD6FC418D"
             "Folder" = "8:_EF6F2CE1DE26417CAA51453FC3891DB2"
             "WorkingFolder" = "8:_45E76B421E2441E7856982F3820A9AC6"
-            "Icon" = "8:_C1BF413AA36E409199ADE3DDE2673A2E"
+            "Icon" = "8:_35F903E6BB9841889BADB4707EE38F4A"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_9C01879CA4D348BD9530FA172095D218"
@@ -313,7 +345,7 @@
             "Target" = "8:_47627371C037424D95E045DFD6FC418D"
             "Folder" = "8:_4819393F50074FB5930DFB7B84937D0B"
             "WorkingFolder" = "8:_45E76B421E2441E7856982F3820A9AC6"
-            "Icon" = "8:_C1BF413AA36E409199ADE3DDE2673A2E"
+            "Icon" = "8:_35F903E6BB9841889BADB4707EE38F4A"
             "Feature" = "8:"
             }
         }

@@ -1,5 +1,6 @@
 ﻿namespace DSL_Analyzer
 {
+    //HOLDS INFORMATION OF CONNECTION
     static class ConData
     {
         public static string ipv4 { get; set; }

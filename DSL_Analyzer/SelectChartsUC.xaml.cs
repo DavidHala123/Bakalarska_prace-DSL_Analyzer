@@ -18,13 +18,15 @@ namespace DSL_Analyzer
     /// <summary>
     /// Interaction logic for SelectChartsUC.xaml
     /// </summary>
+    
+    //SELECTING CHARTS TO PROCESS, RETURNING LIST<BOOL> TO GRAPH SELECTOR IN MAIN WINDOW
     public partial class SelectChartsUC : UserControl
     {
-        Window1 wind;
+        MainWindow wind;
         OptionsBase optb;
         private string mode;
         private List<bool> listOfChecks;
-        public SelectChartsUC(Window1 wind, OptionsBase optb, string mode)
+        public SelectChartsUC(MainWindow wind, OptionsBase optb, string mode)
         {
             this.optb = optb;
             this.wind = wind;

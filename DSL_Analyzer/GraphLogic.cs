@@ -10,6 +10,7 @@ using InteractiveDataDisplay.WPF;
 
 namespace DSL_Analyzer
 {
+    //CONVERTING DATA FROM DSLAM RESPONSE TO DECIMAL VALUES
     internal class GraphLogic
     {
         private List<bool> graphSelector = new List<bool>();
@@ -49,6 +50,7 @@ namespace DSL_Analyzer
                 _hzConstant = gethzConstant(currentMode);
         }
 
+        //SETS HERTZ CONSTANT IF CHARTS SHOULD BE PROCESSED WITH FREQUENCY, OTHERWISE HERTZ CONSTANT == 1
         private double gethzConstant(string mode) 
         {
             double output = 0;
@@ -67,12 +69,13 @@ namespace DSL_Analyzer
             return output;
         }
 
-
+        //CONVERTS HEXADECIMAL VALUE TO DECIMAL
         private int GetDecValues(string c)
         {
             return Int32.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
         }
 
+        //SPLITS DSLAM RESPONSE BY CHARTS
         public void SelectGraphNeeeded(int i, bool isGfast)
         {
             try
@@ -86,6 +89,7 @@ namespace DSL_Analyzer
                 getGraphLogic(substringFarEnd, Int32.Parse(carrGrpFarEnd));
                 getGraphLogic(substringNearEnd, Int32.Parse(carrGrpNearEnd));
             }
+            //IF STANDART IS GFAST CHARTS COUNT IS EXTENDED BY 2 --> ORIGINAL FUNCTION(TRY BLOCK) OVERFLOWS TO CATCH
             catch
             {
                 if (i >= 7 && isGfast)
@@ -95,6 +99,7 @@ namespace DSL_Analyzer
             }
         }
 
+        //SPLITS DATA FROM DSLAM RESPONSE BY CHARTS FOR ADDITIONAL GFAST CHARTS
         private void getAdditionalGfastInfo(int i)
         {
             i -= 7;
@@ -128,6 +133,7 @@ namespace DSL_Analyzer
             }
         }
 
+        //APPLIES LOGIC FOR CERTAIN CHARTS
         private void getGraphLogic(string inputString, int carrGrp)
         {
             yVals = new List<double>();
@@ -142,6 +148,7 @@ namespace DSL_Analyzer
             string bitload = String.Concat(inputSplit[1].Replace(":", "").Where(c => !Char.IsWhiteSpace(c)));
             switch (inputSplit[0])
             {
+                //ITERATES THROUGH SPLITTED RESPONSE AND SETTING STARTINDEX AND STOPINDEX ADN OTHER INFORMATION NEEDED TO CALCULATE PLOT
                 case string name when inputSplit[0].Contains("load-distribution"):
                     while ((check) + adder < bitload.Length)
                     {
@@ -333,6 +340,7 @@ namespace DSL_Analyzer
             _chartV.Add(new ChartValues { name = inputSplit[0], Xvals = xVals, Yvals = yVals });
         }
 
+        //CALCULATES VALUES AND ADDS THEM TO LIST, RETURNS INDEX POSITION OF LAST VALUE 
         private int SetGraphValues(string inputString, int startIndex, int stopIndex, int charIndexOfStart, int NumberOfNibble, int adder, int divider, int carrGrp, int[]? valsToSkip, string name)
         {
             int charIndex = charIndexOfStart;

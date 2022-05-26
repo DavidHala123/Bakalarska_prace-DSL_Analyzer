@@ -9,6 +9,7 @@ using System.Windows;
 
 namespace DSL_Analyzer
 {
+    //OPENING FILES WITH DATA
     internal class LoadFile
     {
         private string generalInfo = "";
@@ -32,7 +33,7 @@ namespace DSL_Analyzer
                     MessageBox.Show($"File was modified. Shown data may be corrupted.\nDate and time of last change: {File.GetLastWriteTimeUtc(opf.FileName).ToString()}");
                 }
                 fileName = opf.SafeFileName;
-                textOfFile = File.ReadAllText(opf.FileName);
+                textOfFile = File.ReadAllText(opf.FileName);    //READING TILL FLAG IS FOUND, SPLITING DATA BY FLAGS
                 try 
                 {
                     try 

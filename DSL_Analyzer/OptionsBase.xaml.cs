@@ -17,6 +17,8 @@ namespace DSL_Analyzer
     /// <summary>
     /// Interaction logic for OptionsBase.xaml
     /// </summary>
+    
+    //WORKS AS A PARENT WINDOW FOR ANY OPTIONS TIED CHOICE
     public partial class OptionsBase : Window
     {
         SelectChartsUC selc;
@@ -58,9 +60,10 @@ namespace DSL_Analyzer
             }
         }
         private string mode;
-        Window1 wind;
+        MainWindow wind;
 
-        public OptionsBase(int choice, Window1 wind, string mode)
+        //OPENS CERTAIN OPTIONS WINDOW INSIDE THIS WINDOW
+        public OptionsBase(int choice, MainWindow wind, string mode)
         {
             this.mode = mode;
             this.wind = wind;
@@ -89,7 +92,7 @@ namespace DSL_Analyzer
         }
 
 
-
+        //SWITCHES OPTIONS CHOICE INSIDE A WINDOW
         private void CharAppe_Click(object sender, RoutedEventArgs e)
         {
             optCont.Children.Clear();
@@ -100,7 +103,7 @@ namespace DSL_Analyzer
         private void conClick(object sender, RoutedEventArgs e)
         {
             optCont.Children.Clear();
-            ConnectionUC conuc = new ConnectionUC(wind, this);
+            ChangeConWindow conuc = new ChangeConWindow(wind, this);
             optCont.Children.Add(conuc);
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DSL_Analyzer
 {
+    //HOLDS VARIBALE DATA,, SPECIFIC TO CERTAIN PORT
     internal class VarData
     {
         public double hzCons { get; set; }

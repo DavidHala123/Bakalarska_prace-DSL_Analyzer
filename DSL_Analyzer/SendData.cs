@@ -9,6 +9,7 @@ using System.Windows;
 
 namespace DSL_Analyzer
 {
+    //SENDS REQUEST AND GETS RESPONSE
     class SendData
     {
         public int lengthNow = 0;
@@ -23,6 +24,7 @@ namespace DSL_Analyzer
             return output;
         }
 
+        //OPENING NEW SSH CONNECTION AND SENDING REQUEST
         private void sendCommandGetResponse(string command)
         {
             try
@@ -57,6 +59,7 @@ namespace DSL_Analyzer
             }
         }
 
+        //GETS RESPONSE, READING UNTIL WORDS COUNT FUNCTION PRIOVIDED BY DSLAM
         private void GetFullResponse(ref string output, ShellStream shell)
         {
             ConsoleUC.ConsoleText = "2";
