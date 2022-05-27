@@ -247,10 +247,12 @@ namespace DSL_Analyzer
             {
                 int maxBitUP = 0;
                 int maxBitDOWN = 0;
+                long bitrateBase = 0;
                 if (infoTable.current_mode == "gfast")
                 {
-                    infoTable.attaBitrateUP = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5) / 7000000);
-                    infoTable.attaBitrateDOWN = Convert.ToInt32((15 * graphLog.chartV[0].Xvals.Count() * 12 * 4312.5 * 6) / 7000000);
+                    bitrateBase = ((graphLog.chartV[0].Xvals.Count() * 48000) / 7000000) * 15;
+                    infoTable.attaBitrateUP = bitrateBase;
+                    infoTable.attaBitrateDOWN = bitrateBase * 6;
                 }
                 else
                 {
